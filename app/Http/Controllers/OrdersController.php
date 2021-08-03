@@ -30,7 +30,8 @@ class OrdersController extends Controller
 
     public function index()
     {
-        $orders = Orders::leftJoin('users', 'Orders.user_id', 'users.id')->leftJoin('drivers', 'Orders.driver_id', 'drivers.id')
+        $orders = Orders::leftJoin('users', 'Orders.user_id', 'users.id')
+            ->leftJoin('drivers', 'Orders.driver_id', 'drivers.id')
             ->select(
                 'Orders.*',
                 'drivers.id as driver_id',
@@ -41,8 +42,7 @@ class OrdersController extends Controller
                 'users.email',
                 'users.name as userName'
             )
-            ->paginate(40);
-        //        paginate(20)->with('users:id,name' )->get();
+            ->paginate(30);
         return BaseController::successData($orders, "تم جلب البيانات بنجاح");
     }
 
@@ -55,7 +55,6 @@ class OrdersController extends Controller
         $order = Orders::create($validator->validate());
         if ($order) {
             $drivers = Driver::all();
-
             foreach ($drivers as $driver) {
                 DriverController::sendNotification($driver["token"], "يوجد طلب جديد", " انقر هنا ");
             }
@@ -78,7 +77,7 @@ class OrdersController extends Controller
                 'users.email',
                 'users.name as userName'
 
-            )->where("user_id", "=", $user_id)->paginate(40);
+            )->where("user_id", "=", $user_id)->paginate(50);
         return BaseController::successData($orders, "تم جلب البيانات بنجاح");
     }
 
@@ -96,7 +95,7 @@ class OrdersController extends Controller
                 'users.email',
                 'users.name as userName'
 
-            )->where("driver_id", "=", $driver_id)->paginate(40);
+            )->where("driver_id", "=", $driver_id)->paginate(50);
         return BaseController::successData($orders, "تم جلب البيانات بنجاح");
     }
 
