@@ -41,10 +41,10 @@ class OfferController extends Controller
 
     public function getUserByOrdersId($order_id, $price)
     {
-        $orders = Orders::leftJoin('users', 'Orders.user_id', 'users.id')
-            ->leftJoin('drivers', 'Orders.driver_id', 'drivers.id')
+        $orders = Orders::leftJoin('users', 'orders.user_id', 'users.id')
+            ->leftJoin('drivers', 'orders.driver_id', 'drivers.id')
             ->select(
-                'Orders.*',
+                'orders.*',
                 'users.id as user_id',
                 'users.tel as telClient',
                 'users.token',
@@ -59,9 +59,9 @@ class OfferController extends Controller
 
     public function index(Request $request)
     {
-        $offers = Offer::leftJoin('drivers', 'Offer.driver_id', 'drivers.id')
+        $offers = Offer::leftJoin('drivers', 'offer.driver_id', 'drivers.id')
             ->select(
-                'Offer.*',
+                'offer.*',
                 'drivers.id as driver_id',
                 'drivers.name as driverName',
                 'drivers.rate as driverRate',

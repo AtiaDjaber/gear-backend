@@ -6,11 +6,16 @@ use App\Http\Controllers\BaseController as BaseController;
 use App\Driver;
 use App\model\Orders;
 use Illuminate\Http\Request;
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
+use FCM;
 
 class DriverController extends Controller
 {
     public function index()
     {
+
         $drivers = Driver::all();
         return BaseController::successData($drivers, "تم جلب البيانات بنجاح");
     }
@@ -46,40 +51,60 @@ class DriverController extends Controller
 
     public static function sendNotification($token, $title, $body)
     {
-        $SERVER_API_KEY =
-            "AAAA7giRrx0:APA91bFOZ2ZzFBF1TF2E0Y4veEQyuQyXgPd8EJVX_L_ixi0k6D49CiwHZ0lYcFBiwoM8PvmPisNG5QtVhT79-PWAAq--iuXYQFYc1bKnt6Vy44OBxRrXgqptHbguWcTSVZcoVnUBJF9g";
+        $optionBuilder = new OptionsBuilder();
+        $optionBuilder->setTimeToLive(60 * 20);
 
-        $data = [
+        $notificationBuilder = new PayloadNotificationBuilder($title);
+        $notificationBuilder->setBody($body)
+            ->setSound('default');
 
-            "registration_ids" => [
-                $token
-            ],
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['a_data' => 'my_data']);
 
-            "notification" => [
-                "title" => $title,
-                "body" => $body,
-                "sound" => "default" // required for sound on ios
+        $option = $optionBuilder->build();
+        $notification = $notificationBuilder->build();
+        $data = $dataBuilder->build();
 
-            ],
 
-        ];
+        $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
 
-        $dataString = json_encode($data);
+        $downstreamResponse->numberSuccess();
 
-        $headers = [
-            'Authorization: key=' . $SERVER_API_KEY,
-            'Content-Type: application/json',
-        ];
 
-        $ch = curl_init();
+        // $SERVER_API_KEY =
+        //     "AAAA7giRrx0:APA91bFOZ2ZzFBF1TF2E0Y4veEQyuQyXgPd8EJVX_L_ixi0k6D49CiwHZ0lYcFBiwoM8PvmPisNG5QtVhT79-PWAAq--iuXYQFYc1bKnt6Vy44OBxRrXgqptHbguWcTSVZcoVnUBJF9g";
 
-        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+        // $data = [
 
-        $response = curl_exec($ch);
+        //     "registration_ids" => [
+        //         $token
+        //     ],
+
+        //     "notification" => [
+        //         "title" => $title,
+        //         "body" => $body,
+        //         "sound" => "default" // required for sound on ios
+
+        //     ],
+
+        // ];
+
+        // $dataString = json_encode($data);
+
+        // $headers = [
+        //     'Authorization: key=' . $SERVER_API_KEY,
+        //     'Content-Type: application/json',
+        // ];
+
+        // $ch = curl_init();
+
+        // curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        // curl_setopt($ch, CURLOPT_POST, true);
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+
+        // $response = curl_exec($ch);
     }
 }

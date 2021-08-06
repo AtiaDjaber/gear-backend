@@ -30,10 +30,10 @@ class OrdersController extends Controller
 
     public function index()
     {
-        $orders = Orders::leftJoin('users', 'Orders.user_id', 'users.id')
-            ->leftJoin('drivers', 'Orders.driver_id', 'drivers.id')
+        $orders = Orders::leftJoin('users', 'orders.user_id', 'users.id')
+            ->leftJoin('drivers', 'orders.driver_id', 'drivers.id')
             ->select(
-                'Orders.*',
+                'orders.*',
                 'drivers.id as driver_id',
                 'drivers.name as driverName',
                 'drivers.tel as driverTel',
@@ -65,10 +65,10 @@ class OrdersController extends Controller
     }
     public function getOrdersByUserId($user_id)
     {
-        $orders = Orders::leftJoin('users', 'Orders.user_id', 'users.id')
-            ->leftJoin('drivers', 'Orders.driver_id', 'drivers.id')
+        $orders = Orders::leftJoin('users', 'orders.user_id', 'users.id')
+            ->leftJoin('drivers', 'orders.driver_id', 'drivers.id')
             ->select(
-                'Orders.*',
+                'orders.*',
                 'drivers.id as driver_id',
                 'drivers.name as driverName',
                 'drivers.tel as driverTel',
@@ -83,10 +83,10 @@ class OrdersController extends Controller
 
     public function getOrdersByDriverId($driver_id)
     {
-        $orders = Orders::leftJoin('users', 'Orders.user_id', 'users.id')
-            ->leftJoin('drivers', 'Orders.driver_id', 'drivers.id')
+        $orders = Orders::leftJoin('users', 'orders.user_id', 'users.id')
+            ->leftJoin('drivers', 'orders.driver_id', 'drivers.id')
             ->select(
-                'Orders.*',
+                'orders.*',
                 'drivers.id as driver_id',
                 'drivers.name as driverName',
                 'drivers.tel as driverTel',
