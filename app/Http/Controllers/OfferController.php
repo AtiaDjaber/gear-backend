@@ -27,16 +27,23 @@ class OfferController extends Controller
 
     public function store(Request $request)
     {
-        $validator = $this->checkFields();
-        if ($validator->fails()) {
-            return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+        $offer = Offer::where('driver_id', '=', $request->driver_id)
+            ->where('orders_id', '=', $request->orders_id)->first();
+
+        if ($offer == null) {
+            $validator = $this->checkFields();
+            if ($validator->fails()) {
+                return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+            }
+            $offer = Offer::create($validator->validate());
+            if ($offer) {
+                $this->getUserByOrdersId($request->orders_id, $request->price); //
+                return response()->json(['message' => 'Created', 'data' => $offer], 201);
+            }
+            return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+        } else {
+            return response()->json(['message' => 'not Created', 'data' => "لقد اضفت عرض مسبقا"], 302);
         }
-        $offer = Offer::create($validator->validate());
-        if ($offer) {
-            $this->getUserByOrdersId($request->orders_id, $request->price); //
-            return response()->json(['message' => 'Created', 'data' => $offer], 200);
-        }
-        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
     public function getUserByOrdersId($order_id, $price)
@@ -50,7 +57,7 @@ class OfferController extends Controller
                 'users.token',
                 'users.name as userName',
                 'drivers.name as driverName'
-            )->where("Orders.id", "=", $order_id)->get();
+            )->where("orders.id", "=", $order_id)->get();
         foreach ($orders as $order) {
             DriverController::sendNotification($order["token"], "لديك عرض توصيل جديد", $order["driverName"] . " | " . $price . " DA ");
         }

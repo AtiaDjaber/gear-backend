@@ -15,8 +15,10 @@ class DriverController extends Controller
 {
     public function index()
     {
-
         $drivers = Driver::all();
+        // foreach ($drivers as $driver) {
+        //     $this->sendNotification($driver["token"], "يوجد طلب جديد", " انقر هنا ");
+        // }
         return BaseController::successData($drivers, "تم جلب البيانات بنجاح");
     }
 

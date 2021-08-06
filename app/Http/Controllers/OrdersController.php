@@ -6,6 +6,7 @@ use App\Driver;
 use App\model\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\DriverController as DriverController;
 
 class OrdersController extends Controller
 {
@@ -109,6 +110,11 @@ class OrdersController extends Controller
         ]);
 
         if ($orders) {
+            $driver = Driver::findOrFail($request->driver_id);
+            $body =  " الطلب رقم " . $request->id;
+            $title = "تمت الموافقة على عرضك";
+            DriverController::sendNotification($driver["token"], $title, $body);
+
             return response()->json(['message' => 'updated', 'data' => $orders], 200);
         }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
