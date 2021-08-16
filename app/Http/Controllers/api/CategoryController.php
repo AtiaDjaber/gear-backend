@@ -10,7 +10,7 @@ class CategoryController extends Controller
 {
     public  function index()
     {
-        $cateroies = Category::get();
+        $cateroies = Category::all();
         return response()->json($cateroies);;
     }
     public  function delete($id)

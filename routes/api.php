@@ -28,14 +28,15 @@ Route::post('/login',  'AuthController@login');
 
 Route::group(["middleware" => 'api', "namespace" => "api"], function () {
     Route::post('categories', "CategoryController@index");
-
     Route::delete('category/{id}', "CategoryController@delete");
-
     Route::post('addCategory', "CategoryController@add");
 });
 
+Route::get('user/get/{id}', 'AuthController@getById');
+
 Route::post('user/add', 'AuthController@store');
 Route::put('user/put', 'AuthController@update');
+Route::put('user/avatar', 'AuthController@avatar');
 
 Route::post('article', 'ArticleController@store');
 Route::get('article/{article}', 'ArticleController@show');
@@ -58,8 +59,13 @@ Route::get('ordersByDriverId/{driver_id}', 'OrdersController@getOrdersByDriverId
 
 Route::post('offer/add', 'OfferController@store');
 
+
 Route::get('offers/{orders_id}', 'OfferController@index');
+Route::get('offer/{orders_id}/{driver_id}', 'OfferController@getDriverOffer');
+
+Route::put('driver/avatar', 'DriverController@avatar');
 Route::get('drivers', 'DriverController@index');
+Route::post('driver/add', 'DriverController@store');
 Route::put('rate', 'DriverController@rateDriver');
 
 Route::get('users', 'AuthController@index');

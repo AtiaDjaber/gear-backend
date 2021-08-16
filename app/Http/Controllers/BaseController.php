@@ -13,16 +13,16 @@ class BaseController extends Controller
             "data" => $result,
             "message" => $message
         ];
-        return response()->json( $response,200);
+        return response()->json($response, 200);
     }
 
-    public function errorData($error, $message)
+    public static function errorData($message)
     {
         $response = [
             "status" => false,
-            "data" => $error,
+            "data" => null,
             "message" => $message
         ];
-        return response()->json( $response,404);
+        return response()->json($response, 204);
     }
 }

@@ -46,6 +46,16 @@ class OfferController extends Controller
         }
     }
 
+    public function  getDriverOffer(Request $request)
+    {
+        $offer = Offer::where('driver_id', '=', $request->driver_id)
+            ->where('orders_id', '=', $request->orders_id)->first();
+        if ($offer) {
+            return BaseController::successData($offer, "تم جلب البيانات بنجاح");
+        }
+        return response()->json(['message' => 'no data', 'data' => null], 204);
+    }
+
     public function getUserByOrdersId($order_id, $price)
     {
         $orders = Orders::leftJoin('users', 'orders.user_id', 'users.id')

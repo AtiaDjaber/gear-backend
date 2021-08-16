@@ -10,9 +10,31 @@ use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 use FCM;
+use League\CommonMark\Block\Element\Document;
 
 class DriverController extends Controller
 {
+
+
+    public function uploadTest(Request $request)
+    {
+    }
+    public function store(Request $request)
+    {
+        if (!$request->hasFile('gris'))
+            return response()->json(['upload_file_not_found'], 400);
+
+        $file = $request->file('gris');
+
+        if (!$file->isValid())
+            return response()->json(['invalid_file_upload'], 400);
+
+        $path = public_path() . '/uploads/images/';
+        $file->move($path, $file->getClientOriginalName());
+        return response()->json(compact('path'));
+    }
+
+
     public function index()
     {
         $drivers = Driver::all();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,8 +18,14 @@ class AuthController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
+        // $userFound = DB::table('users')->where('tel', "=", $request->get("tel"))->first();
+        $userFound = User::where("tel", "=", $request->get("tel"))->get();
+
+        if ($userFound) {
+            return response()->json(['message' => 'Created', 'data' => $userFound], 200);
+        }
         $validator = $this->validater();
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
@@ -40,6 +47,26 @@ class AuthController extends Controller
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
+    public function avatar(Request $request)
+    {
+        if (!$request->hasFile('photo'))
+            return response()->json(['upload_file_not_found'], 400);
+
+        $file = $request->file('photo');
+
+        if (!$file->isValid())
+            return response()->json(['invalid_file_upload'], 400);
+
+        $now = date('Y-m-d H:i:s');
+        $path = public_path() . '/uploads/profile/';
+        $file->move($path, $now . $file->getClientOriginalName());
+
+        $user = User::where("id", $request->id)->update(["photo" => $now . $file->getClientOriginalName()]);
+        if ($user) {
+            return response()->json(['message' => 'updated', 'photo' => $now . $file->getClientOriginalName()], 200);
+        }
+        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+    }
 
     public function me(Request $request)
     {
@@ -69,6 +96,16 @@ class AuthController extends Controller
     {
         $users = User::all();
         return BaseController::successData($users, "تم جلب البيانات بنجاح");
+    }
+
+    public function getById(Request $request)
+    {
+
+        $user = User::findOrFail($request->id);
+        if ($user) {
+            return BaseController::successData($user, "تم جلب البيانات بنجاح");
+        }
+        return BaseController::errorData($user, "السجل غير موجود");
     }
     public function register(Request $request)
     {
