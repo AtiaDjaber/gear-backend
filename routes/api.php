@@ -33,10 +33,11 @@ Route::group(["middleware" => 'api', "namespace" => "api"], function () {
 });
 
 Route::get('user/get/{id}', 'AuthController@getById');
-
+Route::get('users', 'AuthController@index');
 Route::post('user/add', 'AuthController@store');
-Route::put('user/put', 'AuthController@update');
-Route::put('user/avatar', 'AuthController@avatar');
+Route::put('user/put', 'AuthController@updateToken');
+Route::post('user/avatar', 'AuthController@avatar');
+Route::put('user/name', 'AuthController@updateName');
 
 Route::post('article', 'ArticleController@store');
 Route::get('article/{article}', 'ArticleController@show');
@@ -65,8 +66,11 @@ Route::get('offer/{orders_id}/{driver_id}', 'OfferController@getDriverOffer');
 
 Route::put('driver/avatar', 'DriverController@avatar');
 Route::get('drivers', 'DriverController@index');
+Route::get('driver/get/{id}', 'DriverController@getById');
+Route::put('driver/put', 'DriverController@updateToken');
 Route::post('driver/add', 'DriverController@store');
 Route::put('rate', 'DriverController@rateDriver');
+Route::post('driver/avatar', 'DriverController@avatar');
+Route::put('driver/name', 'DriverController@updateName');
 
-Route::get('users', 'AuthController@index');
 Route::get('car/all', 'CarController@index');

@@ -10,28 +10,43 @@ use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 use FCM;
+use Illuminate\Support\Facades\Validator;
+use LaravelFCM\Facades\FCM as FacadesFCM;
 use League\CommonMark\Block\Element\Document;
 
 class DriverController extends Controller
 {
-
-
-    public function uploadTest(Request $request)
+    public function validater()
     {
+        return Validator::make(request()->all(), [
+            'tel' => 'required|string|min:10|max:16',
+        ]);
     }
+
+    public function validaterName()
+    {
+        return Validator::make(request()->all(), [
+            'name' => 'required|string|min:4|max:25',
+            'id' => 'required'
+        ]);
+    }
+
     public function store(Request $request)
     {
-        if (!$request->hasFile('gris'))
-            return response()->json(['upload_file_not_found'], 400);
+        $driverFound = Driver::where("tel", "=", $request->get("tel"))->first();
 
-        $file = $request->file('gris');
-
-        if (!$file->isValid())
-            return response()->json(['invalid_file_upload'], 400);
-
-        $path = public_path() . '/uploads/images/';
-        $file->move($path, $file->getClientOriginalName());
-        return response()->json(compact('path'));
+        if ($driverFound) {
+            return response()->json(['message' => 'Found', 'data' => $driverFound], 200);
+        }
+        $validator = $this->validater();
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+        }
+        $driver = Driver::create($validator->validate());
+        if ($driver) {
+            return response()->json(['message' => 'Created', 'data' => $driver], 200);
+        }
+        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
 
@@ -73,6 +88,61 @@ class DriverController extends Controller
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
+    public function getById(Request $request)
+    {
+
+        $driver = Driver::find($request->id);
+        if ($driver) {
+            return BaseController::successData($driver, "تم جلب البيانات بنجاح");
+        }
+        return BaseController::errorData($driver, "السجل غير موجود");
+    }
+
+
+    public function updateToken(Request $request)
+    {
+        $driver = Driver::where("id", $request->id)->update(["token" => $request->token]);
+        if ($driver) {
+            return response()->json(['message' => 'updated', 'data' => $driver], 200);
+        }
+        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+    }
+
+    public function avatar(Request $request)
+    {
+        if (!$request->hasFile('photo'))
+            return response()->json(['upload_file_not_found'], 400);
+
+        $file = $request->file('photo');
+
+        if (!$file->isValid())
+            return response()->json(['invalid_file_upload'], 400);
+
+        $image = date('Y-m-d H:i:s') . $file->getClientOriginalName();
+        $path = public_path() . '/uploads/profile/';
+        $file->move($path, $image);
+
+        $driver = Driver::where("id", $request->id)->update(["photo" => $image]);
+        if ($driver) {
+            return response()->json(['message' => 'updated', 'data' => $image], 200);
+        }
+        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+    }
+
+    public function updateName(Request $request)
+    {
+        $validator = $this->validaterName();
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+        }
+        $driver = Driver::where("id", $request->id)->update(["name" => $request->name]);
+        if ($driver) {
+            return response()->json(['message' => 'updated', 'data' =>  $driver], 200);
+        }
+        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+    }
+
+
     public static function sendNotification($token, $title, $body)
     {
         $optionBuilder = new OptionsBuilder();
@@ -90,45 +160,8 @@ class DriverController extends Controller
         $data = $dataBuilder->build();
 
 
-        $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+        $downstreamResponse = FacadesFCM::sendTo($token, $option, $notification, $data);
 
         $downstreamResponse->numberSuccess();
-
-
-        // $SERVER_API_KEY =
-        //     "AAAA7giRrx0:APA91bFOZ2ZzFBF1TF2E0Y4veEQyuQyXgPd8EJVX_L_ixi0k6D49CiwHZ0lYcFBiwoM8PvmPisNG5QtVhT79-PWAAq--iuXYQFYc1bKnt6Vy44OBxRrXgqptHbguWcTSVZcoVnUBJF9g";
-
-        // $data = [
-
-        //     "registration_ids" => [
-        //         $token
-        //     ],
-
-        //     "notification" => [
-        //         "title" => $title,
-        //         "body" => $body,
-        //         "sound" => "default" // required for sound on ios
-
-        //     ],
-
-        // ];
-
-        // $dataString = json_encode($data);
-
-        // $headers = [
-        //     'Authorization: key=' . $SERVER_API_KEY,
-        //     'Content-Type: application/json',
-        // ];
-
-        // $ch = curl_init();
-
-        // curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-        // curl_setopt($ch, CURLOPT_POST, true);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-
-        // $response = curl_exec($ch);
     }
 }

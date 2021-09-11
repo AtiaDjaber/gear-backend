@@ -18,13 +18,21 @@ class AuthController extends Controller
         ]);
     }
 
+    public function validaterName()
+    {
+        return Validator::make(request()->all(), [
+            'name' => 'required|string|min:4|max:25',
+            'id' => 'required'
+        ]);
+    }
+
     public function store(Request $request)
     {
         // $userFound = DB::table('users')->where('tel', "=", $request->get("tel"))->first();
-        $userFound = User::where("tel", "=", $request->get("tel"))->get();
+        $userFound = User::where("tel", "=", $request->get("tel"))->first();
 
         if ($userFound) {
-            return response()->json(['message' => 'Created', 'data' => $userFound], 200);
+            return response()->json(['message' => 'Found', 'data' => $userFound], 200);
         }
         $validator = $this->validater();
         if ($validator->fails()) {
@@ -38,7 +46,7 @@ class AuthController extends Controller
     }
 
 
-    public function update(Request $request)
+    public function updateToken(Request $request)
     {
         $user = User::where("id", $request->id)->update(["token" => $request->token]);
         if ($user) {
@@ -57,13 +65,26 @@ class AuthController extends Controller
         if (!$file->isValid())
             return response()->json(['invalid_file_upload'], 400);
 
-        $now = date('Y-m-d H:i:s');
+        $image = date('Y-m-d H:i:s') . $file->getClientOriginalName();
         $path = public_path() . '/uploads/profile/';
-        $file->move($path, $now . $file->getClientOriginalName());
+        $file->move($path, $image);
 
-        $user = User::where("id", $request->id)->update(["photo" => $now . $file->getClientOriginalName()]);
+        $user = User::where("id", $request->id)->update(["photo" => $image]);
         if ($user) {
-            return response()->json(['message' => 'updated', 'photo' => $now . $file->getClientOriginalName()], 200);
+            return response()->json(['message' => 'updated', 'data' => $image], 200);
+        }
+        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+    }
+
+    public function updateName(Request $request)
+    {
+        $validator = $this->validaterName();
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+        }
+        $user = User::where("id", $request->id)->update(["name" => $request->name]);
+        if ($user) {
+            return response()->json(['message' => 'updated', 'data' =>  $user], 200);
         }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
@@ -101,7 +122,7 @@ class AuthController extends Controller
     public function getById(Request $request)
     {
 
-        $user = User::findOrFail($request->id);
+        $user = User::find($request->id);
         if ($user) {
             return BaseController::successData($user, "تم جلب البيانات بنجاح");
         }

@@ -11,20 +11,20 @@ class CreateDriversTable extends Migration
     {
         Schema::create('drivers', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->string("email");
-            $table->string("address");
+            $table->string("name")->nullable();
+            $table->string("email")->nullable();
+            $table->string("address")->nullable();
             $table->string("tel");
-            $table->string("status");
-            $table->string("photo");
-            $table->string("latitude");
-            $table->string("longitude");
-            $table->string("wilaya");
-            $table->string("commune");
-            $table->string("gris");
+            $table->string("status")->nullable();
+            $table->string("photo")->nullable();
+            $table->string("latitude")->nullable();
+            $table->string("longitude")->nullable();
+            $table->string("wilaya")->nullable();
+            $table->string("commune")->nullable();
+            $table->string("gris")->nullable();
             $table->boolean("online");
-            $table->string("identity");
-            $table->string("registerNumber");
+            $table->string("identity")->nullable();
+            $table->string("registerNumber")->nullable();
             $table->double("rate")->default('0');
             $table->double("number_rates")->default('0');
             $table->double("sum_rates")->default('0');

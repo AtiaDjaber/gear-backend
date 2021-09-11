@@ -19,13 +19,13 @@ class OrdersController extends Controller
             'toLongutide' => 'required',
             'user_id' => 'required|exists:users,id',
             'status' => 'required',
-            'photo' => 'nullable',
+            'photo' => 'required',
             'addressFrom' => 'nullable',
             'addressTo' => 'nullable',
-            "typeTransport" => 'nullable',
-            'description' => 'required',
-            'distance' => 'nullable',
-            'duration' => 'nullable',
+            "typeTransport" => 'required',
+            'description' => 'nullable',
+            'distance' => 'required',
+            'duration' => 'required',
         ]);
     }
 
@@ -42,8 +42,8 @@ class OrdersController extends Controller
                 'users.tel as telClient',
                 'users.email',
                 'users.name as userName'
-            )
-            ->paginate(30);
+
+            )->orderBy('orders.id', 'desc')->paginate(30);
         return BaseController::successData($orders, "تم جلب البيانات بنجاح");
     }
 
