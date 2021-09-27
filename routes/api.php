@@ -39,12 +39,12 @@ Route::put('user/put', 'AuthController@updateToken');
 Route::post('user/avatar', 'AuthController@avatar');
 Route::put('user/name', 'AuthController@updateName');
 
-Route::post('article', 'ArticleController@store');
-Route::get('article/{article}', 'ArticleController@show');
-Route::get('article/{article}/comments', 'ArticleController@show_comments');
-Route::get('article/{article}/best-comment', 'ArticleController@show_best_comment');
-Route::get('articles', 'ArticleController@index');
-Route::delete('article/{article}', 'ArticleController@destroy');
+
+Route::get('student/getById', 'StudentController@getById');
+Route::get('student', 'StudentController@index');
+Route::post('student/add', 'StudentController@store');
+Route::put('student/put', 'StudentController@put');
+Route::delete('student/{id}', 'StudentController@deleteStudent');
 
 Route::post('article/{article}/comment', 'CommentController@store');
 Route::post('comment/{comment}/best-comment', 'CommentController@best_comment');

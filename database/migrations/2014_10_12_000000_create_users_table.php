@@ -20,10 +20,9 @@ class CreateUsersTable extends Migration
             $table->string("type")->nullable();
             $table->string("status")->nullable();
             $table->string("photo")->nullable();
-            $table->string("latitude")->nullable();
-            $table->string("longitude")->nullable();
-            $table->boolean("online")->nullable();
+
             $table->string("token")->nullable();
+            $table->string("grade")->nullable();
             $table->string('email')->unique()->nullable();
             // $table->string('password');
             // $table->rememberToken();

@@ -15,6 +15,7 @@ class CategoryController extends Controller
     }
     public  function delete($id)
     {
+
         $category = Category::findOrFail($id);
         if ($category) {
             $category->delete();

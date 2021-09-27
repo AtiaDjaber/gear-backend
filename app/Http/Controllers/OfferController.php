@@ -58,7 +58,7 @@ class OfferController extends Controller
 
     public function getUserByOrdersId($order_id, $price)
     {
-        $orders = Orders::leftJoin('users', 'orders.user_id', 'users.id')
+        $order = Orders::leftJoin('users', 'orders.user_id', 'users.id')
             ->leftJoin('drivers', 'orders.driver_id', 'drivers.id')
             ->select(
                 'orders.*',
@@ -67,10 +67,14 @@ class OfferController extends Controller
                 'users.token',
                 'users.name as userName',
                 'drivers.name as driverName'
-            )->where("orders.id", "=", $order_id)->get();
-        foreach ($orders as $order) {
-            DriverController::sendNotification($order["token"], "لديك عرض توصيل جديد", $order["driverName"] . " | " . $price . " DA ");
+            )->where("orders.id", "=", $order_id)->first();
+        // foreach ($orders as $order) {
+        if ($order['token']) {
+            # code...
+
+            DriverController::sendNotification($order['token'], "لديك عرض توصيل جديد", $order['driverName'] . " | " . $price . " DA ");
         }
+        // }
         // $orders->driverName . "المبلغ DA " . $price
     }
 

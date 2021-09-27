@@ -53,15 +53,7 @@ class OrdersController extends Controller
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        $order = Orders::create($validator->validate());
-        if ($order) {
-            $drivers = Driver::all();
-            foreach ($drivers as $driver) {
-                DriverController::sendNotification($driver["token"], "يوجد طلب جديد", " انقر هنا ");
-            }
 
-            return response()->json(['message' => 'Created', 'data' => $order], 200);
-        }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
     public function getOrdersByUserId($user_id)
@@ -109,14 +101,7 @@ class OrdersController extends Controller
             "status" => $request->status
         ]);
 
-        if ($orders) {
-            $driver = Driver::findOrFail($request->driver_id);
-            $body =  " الطلب رقم " . $request->id;
-            $title = "تمت الموافقة على عرضك";
-            DriverController::sendNotification($driver["token"], $title, $body);
 
-            return response()->json(['message' => 'updated', 'data' => $orders], 200);
-        }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
     //  'cQiV4r5wTxax2wZ2XU59U4:APA91bHlK1BlhQo3ar8A0wHp5i5J7_u2q3X8oAlHOncD8mYhKG1xUiULqS5Vq60RL4yCtxhoDnx6Hgu3IXePAzaOULICOgHISGO-faLe3NfR1tPdWWlTX66CGIGVW-gAlimu4agRmqqD';
