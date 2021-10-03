@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string("type")->nullable();
             $table->string("status")->nullable();
             $table->string("photo")->nullable();
-
             $table->string("token")->nullable();
             $table->string("grade")->nullable();
             $table->string('email')->unique()->nullable();

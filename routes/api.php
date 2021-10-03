@@ -41,10 +41,22 @@ Route::put('user/name', 'AuthController@updateName');
 
 
 Route::get('student/getById', 'StudentController@getById');
-Route::get('student', 'StudentController@index');
+Route::get('students', 'StudentController@index');
 Route::post('student/add', 'StudentController@store');
 Route::put('student/put', 'StudentController@put');
 Route::delete('student/{id}', 'StudentController@deleteStudent');
+
+Route::get('teacher/getById', 'TeacherController@getById');
+Route::get('teachers', 'TeacherController@index');
+Route::post('teacher/add', 'TeacherController@store');
+Route::put('teacher/put', 'TeacherController@put');
+Route::delete('teacher/{id}', 'TeacherController@deleteTeacher');
+
+Route::get('subject/getById', 'SubjectController@getById');
+Route::get('subjects', 'SubjectController@index');
+Route::post('subject/add', 'SubjectController@store');
+Route::put('subject/put', 'SubjectController@put');
+Route::delete('subject/{id}', 'SubjectController@deleteSubject');
 
 Route::post('article/{article}/comment', 'CommentController@store');
 Route::post('comment/{comment}/best-comment', 'CommentController@best_comment');
