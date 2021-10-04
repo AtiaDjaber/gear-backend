@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Subjects extends Migration
+class LevelyearsSubjs extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class Subjects extends Migration
      */
     public function up()
     {
-        Schema::create('Teachers', function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
+        //
 
-            $table->string("address")->unique()->nullable();
-            $table->string("photo")->nullable();
-            $table->timestamps();
+        Schema::create('levelyear_subj', function (Blueprint $table) {
+
+            $table->foreignId("levelyear_id")->constrained();
+            $table->foreignId("subj_id")->constrained();
+            $table->unique(['subj_id', 'levelyear_id']);
         });
     }
 

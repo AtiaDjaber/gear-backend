@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Teacher extends Migration
+class Subjs extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,14 @@ class Teacher extends Migration
      */
     public function up()
     {
-        Schema::create('Teachers', function (Blueprint $table) {
+        Schema::create('subjs', function (Blueprint $table) {
             $table->id();
-            $table->string("firstname");
-            $table->string("lastname");
-            $table->date("birthday")->nullable();
-            $table->string("mobile")->nullable();
-            $table->string("email")->unique()->nullable();
-            $table->string("address")->unique()->nullable();
+            $table->string("name");
             $table->string("photo")->nullable();
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      *

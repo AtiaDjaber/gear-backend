@@ -58,6 +58,16 @@ Route::post('subject/add', 'SubjectController@store');
 Route::put('subject/put', 'SubjectController@put');
 Route::delete('subject/{id}', 'SubjectController@deleteSubject');
 
+
+Route::get('levelYear/getById', 'LevelYearController@getById');
+Route::get('levelYears', 'LevelYearController@index');
+Route::post('levelYear/add', 'LevelYearController@store');
+Route::put('levelYear/put', 'LevelYearController@put');
+Route::delete('levelYear/{id}', 'LevelYearController@deleteSubject');
+
+
+Route::post('subjLevelYear/add', 'LevelYearSubjController@store');
+
 Route::post('article/{article}/comment', 'CommentController@store');
 Route::post('comment/{comment}/best-comment', 'CommentController@best_comment');
 Route::get('comments', 'CommentController@index');
