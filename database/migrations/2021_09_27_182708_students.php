@@ -18,7 +18,7 @@ class Students extends Migration
             $table->string("firstname");
             $table->string("lastname");
             $table->date("birthday")->nullable();
-            $table->date("barcode")->nullable();
+            $table->string("barcode")->nullable();
             $table->string("mobile")->nullable();
             $table->string("email")->unique()->nullable();
             $table->string("address")->unique()->nullable();

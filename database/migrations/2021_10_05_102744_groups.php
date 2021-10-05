@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class LevelyearsSubjs extends Migration
+class Groups extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,10 @@ class LevelyearsSubjs extends Migration
      */
     public function up()
     {
-        //
-
-        Schema::create('levelyear_subj', function (Blueprint $table) {
-
+        Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("levelyear_id")->constrained();
-            $table->foreignId("subj_id")->constrained();
-            $table->unique(['subj_id', 'levelyear_id']);
+            $table->string("name");
+            $table->timestamps();
         });
     }
 

@@ -2,33 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\model\Teacher;
+use App\model\Group;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class TeacherController extends Model
+class GroupController extends Model
 {
 
     public function validater()
     {
         return Validator::make(request()->all(), [
-            'mobile' => 'required|string|min:9|max:16',
-            'firstname' => 'required|string|min:3|max:10',
-            'lastname' => 'required|string|min:3|max:10',
+            'name' => 'required|string',
         ]);
     }
 
     public function index()
     {
-        $Teachers = Teacher::paginate(20);
-        return BaseController::successData($Teachers, "تم جلب البيانات بنجاح");
+        $Groups = Group::paginate(20);
+        return BaseController::successData($Groups, "تم جلب البيانات بنجاح");
     }
 
 
     public function getById(Request $request)
     {
-        $user = Teacher::find($request->id);
+        $user = Group::find($request->id);
         if ($user) {
             return BaseController::successData($user, "تم جلب البيانات بنجاح");
         }
@@ -42,7 +40,7 @@ class TeacherController extends Model
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        $user = Teacher::create($validator->validate());
+        $user = Group::create($validator->validate());
         if ($user) {
             return response()->json(['message' => 'Created', 'data' => $user], 200);
         }
@@ -55,19 +53,19 @@ class TeacherController extends Model
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        $Teacher = Teacher::findOrFail($request->id);
-        $Teacher->update($request->all());
-        if ($Teacher) {
-            return response()->json(['message' => 'updated', 'data' =>  $Teacher], 200);
+        $Group = Group::findOrFail($request->id);
+        $Group->update($request->all());
+        if ($Group) {
+            return response()->json(['message' => 'updated', 'data' =>  $Group], 200);
         }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
-    public  function deleteTeacher(Request $request)
+    public  function remove(Request $request)
     {
 
-        $Teacher = Teacher::destroy($request->id);
-        return BaseController::successData($Teacher, "تمت العملية بنجاح");
+        $Group = Group::destroy($request->id);
+        return BaseController::successData($Group, "تمت العملية بنجاح");
     }
 
 

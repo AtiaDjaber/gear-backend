@@ -68,6 +68,16 @@ Route::delete('levelYear/{id}', 'LevelYearController@deleteSubject');
 
 Route::post('subjLevelYear/add', 'LevelYearSubjController@store');
 
+
+Route::get('group/getById', 'GroupController@getById');
+Route::get('groups', 'GroupController@index');
+Route::post('group/add', 'GroupController@store');
+Route::put('group/put', 'GroupController@put');
+Route::delete('group/{id}', 'GroupController@remove');
+
+Route::get('ssgs', 'StdGrouSubjController@index');
+Route::post('ssg/add', 'StdGrouSubjController@store');
+
 Route::post('article/{article}/comment', 'CommentController@store');
 Route::post('comment/{comment}/best-comment', 'CommentController@best_comment');
 Route::get('comments', 'CommentController@index');
