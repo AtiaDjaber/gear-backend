@@ -15,9 +15,9 @@ class Attendance extends Migration
     {
         Schema::create('attendance', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("std_sub_groups_id")->constrained();
+            $table->foreignId("std_group_teacher_id")->constrained('std_group_teacher');
             $table->date("date")->constrained();
-            $table->dateTime("strart")->constrained();
+            $table->dateTime("start")->constrained();
             $table->dateTime("end")->constrained();
             $table->boolean("idPresent");
             $table->boolean("isJustified");

@@ -75,8 +75,11 @@ Route::post('group/add', 'GroupController@store');
 Route::put('group/put', 'GroupController@put');
 Route::delete('group/{id}', 'GroupController@remove');
 
-Route::get('ssgs', 'StdGrouSubjController@index');
-Route::post('ssg/add', 'StdGrouSubjController@store');
+Route::post('groupTeacher/add', 'GroupTeacherController@store');
+
+
+Route::get('ssgs', 'StdGroup_teacherController@index');
+Route::post('ssg/add', 'StdGroup_teacherController@store');
 
 Route::post('article/{article}/comment', 'CommentController@store');
 Route::post('comment/{comment}/best-comment', 'CommentController@best_comment');

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class StdGrouSubjController extends Model
+class StdGroup_teacherController extends Model
 {
 
     public function validater()
@@ -49,11 +49,6 @@ class StdGrouSubjController extends Model
 
     public function store()
     {
-
-        // $validator = $this->validater();
-        // if ($validator->fails()) {
-        //     return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
-        // }
         $user = StdSubGroup::create(request()->all());
         if ($user) {
             return response()->json(['message' => 'Created', 'data' => $user], 200);

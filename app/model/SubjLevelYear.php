@@ -4,8 +4,9 @@ namespace App\model;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class SubjLevelYear extends Model
+class SubjLevelYear extends Pivot
 {
     protected $table = "levelyear_subj";
     protected $hidden = ['id'];
