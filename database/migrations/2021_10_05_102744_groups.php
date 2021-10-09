@@ -15,7 +15,7 @@ class Groups extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("levelyear_subj_id")->constrained('levelyear_subj')->nullable();
+            $table->foreignId("subj_id")->constrained('subjs')->nullable();
             $table->string("name");
             $table->timestamps();
         });

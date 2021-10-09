@@ -16,7 +16,11 @@ class Subjs extends Migration
         Schema::create('subjs', function (Blueprint $table) {
             $table->id();
             $table->string("name");
+            $table->string("level");
+            $table->string("grade");
             $table->string("photo")->nullable();
+            $table->unique(['name', 'level', 'grade']);
+
             $table->timestamps();
         });
     }

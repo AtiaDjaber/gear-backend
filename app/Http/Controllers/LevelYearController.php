@@ -70,11 +70,8 @@ class LevelYearController extends Model
 
     public  function deleteLevelyear(Request $request)
     {
-
         $Levelyear = Levelyear::destroy($request->id);
         return BaseController::successData($Levelyear, "تمت العملية بنجاح");
     }
-
-
     //
 }

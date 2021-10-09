@@ -23,6 +23,22 @@ class GroupController extends Model
         return BaseController::successData($Groups, "تم جلب البيانات بنجاح");
     }
 
+    // public function index()
+    // {
+    //     $Groups = Group::leftJoin('levelyear_subj', 'groups.levelyear_subj_id', 'levelyear_subj.id')
+    //         ->leftJoin('subjs', 'levelyear_subj.subj_id', 'subjs.id')
+    //         ->leftJoin('levelyears', 'levelyear_subj.levelyear_id', 'levelyears.id')
+    //         ->select(
+    //             'groups.*',
+    //             'levelyear_subj.*',
+    //             'subjs.name as SubName',
+    //             'levelyears.name as levelYearName '
+    //         )->paginate(20);
+    //     // with('subjs')->paginate(20);
+    //     return BaseController::successData($Groups, "تم جلب البيانات بنجاح");
+    // }
+
+
 
     public function getById(Request $request)
     {

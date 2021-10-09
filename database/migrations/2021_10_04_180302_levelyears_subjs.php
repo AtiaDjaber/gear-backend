@@ -13,15 +13,12 @@ class LevelyearsSubjs extends Migration
      */
     public function up()
     {
-        //
-
-        Schema::create('levelyear_subj', function (Blueprint $table) {
-
-            $table->id();
-            $table->foreignId("levelyear_id")->constrained();
-            $table->foreignId("subj_id")->constrained();
-            $table->unique(['subj_id', 'levelyear_id']);
-        });
+        // Schema::create('levelyear_subj', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId("levelyear_id")->constrained();
+        //     $table->foreignId("subj_id")->constrained();
+        //     $table->unique(['subj_id', 'levelyear_id']);
+        // });
     }
 
     /**

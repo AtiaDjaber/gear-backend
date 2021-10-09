@@ -7,16 +7,15 @@ use LevelyearsSubjs;
 
 class Group extends Model
 {
+    protected $guarded = ['id', 'created_at', 'updated_at'];
+
     public function teachers()
     {
         return $this->BelongsToMany(Teacher::class);
     }
-    public function levelyearsSubjs()
-    {
-        return $this->belongsTo(SubjLevelYear::class);
-    }
     public function subjs()
     {
-        return $this->hasOne(Subj::class)->using(SubjLevelYear::class);
+        return $this->belongsTo(Subj::class);
     }
+    //
 }

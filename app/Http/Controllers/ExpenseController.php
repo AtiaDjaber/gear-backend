@@ -2,33 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\model\Subj;
+use App\model\Expense;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class SubjectController extends Model
+class ExpenseController extends Model
 {
 
     public function validater()
     {
         return Validator::make(request()->all(), [
-            'name' => 'required|string|min:3|max:20',
-            'level' => 'required|string|min:3|max:20',
-            'grade' => 'required|string|min:3|max:20',
+            'name' => 'required|string|min:1|max:100',
+            'price' => 'required|double|min:0',
+            'remarque' => 'nullable|string',
+            'date' => 'required|date',
         ]);
     }
 
     public function index()
     {
-        $Subjs = Subj::with('groups')->paginate(20);
-        return BaseController::successData($Subjs, "تم جلب البيانات بنجاح");
+        $Expenses = Expense::paginate(20);
+        return BaseController::successData($Expenses, "تم جلب البيانات بنجاح");
     }
 
 
     public function getById(Request $request)
     {
-        $user = Subj::find($request->id);
+        $user = Expense::find($request->id);
         if ($user) {
             return BaseController::successData($user, "تم جلب البيانات بنجاح");
         }
@@ -40,8 +41,8 @@ class SubjectController extends Model
         $validator = $this->validater();
         if ($validator->fails())
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
-        //
-        $user = Subj::create($validator->validate());
+        // //
+        $user = Expense::create($validator->validate());
         if ($user)
             return response()->json(['message' => 'Created', 'data' => $user], 200);
 
@@ -54,18 +55,18 @@ class SubjectController extends Model
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        $Subj = Subj::findOrFail($request->id);
-        $Subj->update($request->all());
-        if ($Subj) {
-            return response()->json(['message' => 'updated', 'data' =>  $Subj], 200);
+        $Expense = Expense::findOrFail($request->id);
+        $Expense->update($request->all());
+        if ($Expense) {
+            return response()->json(['message' => 'updated', 'data' =>  $Expense], 200);
         }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
-    public  function deleteSubj(Request $request)
+    public  function deleteExpense(Request $request)
     {
-        $Subj = Subj::destroy($request->id);
-        return BaseController::successData($Subj, "تمت العملية بنجاح");
+        $Expense = Expense::destroy($request->id);
+        return BaseController::successData($Expense, "تمت العملية بنجاح");
     }
 
 
