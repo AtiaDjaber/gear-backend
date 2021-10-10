@@ -78,7 +78,7 @@ Route::delete('group/{id}', 'GroupController@remove');
 Route::post('groupTeacher/add', 'GroupTeacherController@store');
 
 
-Route::get('ssgs', 'StdGroup_teacherController@index');
+Route::post('ssgs', 'StdGroup_teacherController@index');
 Route::post('ssg/add', 'StdGroup_teacherController@store');
 
 

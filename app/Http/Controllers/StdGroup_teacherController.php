@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\model\StdSubGroup;
+use App\model\StdGroupTeacher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,30 +17,22 @@ class StdGroup_teacherController extends Model
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $StdSubGroups = StdSubGroup::leftJoin('groups', 'std_sub_groups.group_id', 'groups.id')
-            ->leftJoin('levelyear_subj', 'std_sub_groups.levelyear_subj_id', 'levelyear_subj.id')
-            ->leftJoin('students', 'std_sub_groups.student_id', 'students.id')
-            ->select(
-                'std_sub_groups.created_at',
-                'levelyear_subj.id as levelyear_subjId',
-                'groups.id as groupId',
-                'groups.name as groupName',
-                'students.id as studentId',
-                'students.firstname',
-                'students.lastname',
-                'students.barcode',
-                'students.mobile',
-                'students.firstname'
-            )->paginate(20);
-        return BaseController::successData($StdSubGroups, "تم جلب البيانات بنجاح");
+        $StdGroupTeachers = StdGroupTeacher::alldata();
+        if (request()->studentFirstname != null)
+            $StdGroupTeachers =  $StdGroupTeachers->where('students.firstname', 'LIKE', '%' . request()->studentFirstname . '%');
+        if (request()->studentLastname != null)
+            $StdGroupTeachers =  $StdGroupTeachers->where('students.lastname', 'LIKE', '%' . request()->studentLastname . '%');
+
+        $StdGroupTeachers = $StdGroupTeachers->paginate(20);
+        return BaseController::successData($StdGroupTeachers, "تم جلب البيانات بنجاح");
     }
 
 
     public function getById(Request $request)
     {
-        $user = StdSubGroup::find($request->id);
+        $user = StdGroupTeacher::find($request->id);
         if ($user) {
             return BaseController::successData($user, "تم جلب البيانات بنجاح");
         }
@@ -49,7 +41,7 @@ class StdGroup_teacherController extends Model
 
     public function store()
     {
-        $user = StdSubGroup::create(request()->all());
+        $user = StdGroupTeacher::create(request()->all());
         if ($user) {
             return response()->json(['message' => 'Created', 'data' => $user], 200);
         }
@@ -62,10 +54,10 @@ class StdGroup_teacherController extends Model
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        $StdSubGroup = StdSubGroup::findOrFail($request->id);
-        $StdSubGroup->update($request->all());
-        if ($StdSubGroup) {
-            return response()->json(['message' => 'updated', 'data' =>  $StdSubGroup], 200);
+        $StdGroupTeacher = StdGroupTeacher::findOrFail($request->id);
+        $StdGroupTeacher->update($request->all());
+        if ($StdGroupTeacher) {
+            return response()->json(['message' => 'updated', 'data' =>  $StdGroupTeacher], 200);
         }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
@@ -73,8 +65,8 @@ class StdGroup_teacherController extends Model
     public  function remove(Request $request)
     {
 
-        $StdSubGroup = StdSubGroup::destroy($request->id);
-        return BaseController::successData($StdSubGroup, "تمت العملية بنجاح");
+        $StdGroupTeacher = StdGroupTeacher::destroy($request->id);
+        return BaseController::successData($StdGroupTeacher, "تمت العملية بنجاح");
     }
 
 

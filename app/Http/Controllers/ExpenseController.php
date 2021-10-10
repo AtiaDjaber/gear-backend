@@ -63,7 +63,7 @@ class ExpenseController extends Model
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
-    public  function deleteExpense(Request $request)
+    public  function remove(Request $request)
     {
         $Expense = Expense::destroy($request->id);
         return BaseController::successData($Expense, "تمت العملية بنجاح");
