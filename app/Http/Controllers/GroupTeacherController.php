@@ -20,16 +20,21 @@ class GroupTeacherController extends Model
         ]);
     }
 
-    public function index()
+    public function getGroupSubjsByTeacher(Request $request)
     {
-        $Teachers = Teacher::paginate(20);
-        return BaseController::successData($Teachers, "تم جلب البيانات بنجاح");
+        $Teachers = GroupTeacher::getGroupSubjsByTeacher($request->teacher_id)->paginate(15);
+        return response()->json($Teachers, 200);
     }
 
+    public function getStudentsByTeacher(Request $request)
+    {
+        $Teachers = GroupTeacher::getStudentsByTeacher($request->teacher_id)->paginate(15);
+        return response()->json($Teachers, 200);
+    }
 
     public function getById(Request $request)
     {
-        $user = Teacher::find($request->id);
+        $user = GroupTeacher::find($request->id);
         if ($user) {
             return BaseController::successData($user, "تم جلب البيانات بنجاح");
         }

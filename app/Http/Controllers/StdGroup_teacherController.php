@@ -20,16 +20,26 @@ class StdGroup_teacherController extends Model
     public function index(Request $request)
     {
         $StdGroupTeachers = StdGroupTeacher::alldata();
-        if (request()->studentFirstname != null)
+        if ($request->studentFirstname)
             $StdGroupTeachers =  $StdGroupTeachers->where('students.firstname', 'LIKE', '%' . request()->studentFirstname . '%');
-        if (request()->studentLastname != null)
+        if ($request->studentLastname != null)
             $StdGroupTeachers =  $StdGroupTeachers->where('students.lastname', 'LIKE', '%' . request()->studentLastname . '%');
 
-        $StdGroupTeachers = $StdGroupTeachers->paginate(20);
+        $StdGroupTeachers = $StdGroupTeachers->paginate(15);
         return BaseController::successData($StdGroupTeachers, "تم جلب البيانات بنجاح");
     }
 
+    public function getGroupSubjsByStudent(Request $request)
+    {
+        $StdGroupTeachers = StdGroupTeacher::getGroupSubjsByStudent($request->student_id);
+//        if ($request->studentFirstname)
+//            $StdGroupTeachers =  $StdGroupTeachers->where('students.firstname', 'LIKE', '%' . request()->studentFirstname . '%');
+//        if ($request->studentLastname != null)
+//            $StdGroupTeachers =  $StdGroupTeachers->where('students.lastname', 'LIKE', '%' . request()->studentLastname . '%');
 
+        $StdGroupTeachers = $StdGroupTeachers->paginate(15);
+        return response()->json($StdGroupTeachers, 200);
+    }
     public function getById(Request $request)
     {
         $user = StdGroupTeacher::find($request->id);

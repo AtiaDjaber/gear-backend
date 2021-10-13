@@ -15,7 +15,7 @@ class Group extends Model
     }
     public function subjs()
     {
-        return $this->belongsTo(Subj::class);
+        return $this->belongsTo(Subj::class,"subj_id");
     }
-    //
+
 }

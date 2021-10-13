@@ -15,15 +15,15 @@ class StudentController extends Model
     {
         return Validator::make(request()->all(), [
             'mobile' => 'required|string|min:9|max:16',
-            'firstname' => 'required|string|min:3|max:10',
-            'lastname' => 'required|string|min:3|max:10',
+            'firstname' => 'required|string|min:2|max:20',
+            'lastname' => 'required|string|min:2|max:20',
             'parent' => 'required|string|min:3|max:20',
         ]);
     }
 
     public function index()
     {
-        $students = student::paginate(20);
+        $students = student::paginate(15);
         return BaseController::successData($students, "تم جلب البيانات بنجاح");
     }
 

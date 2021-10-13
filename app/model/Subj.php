@@ -15,4 +15,5 @@ class Subj extends Model
     {
         return $this->hasMany(Group::class);
     }
+
 }

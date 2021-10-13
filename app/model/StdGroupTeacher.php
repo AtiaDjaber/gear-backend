@@ -19,9 +19,9 @@ class StdGroupTeacher extends Model
     static public function alldata()
     {
         return
-            StdGroupTeacher::Join('group_teacher', 'std_group_teacher.group_teacher_id', 'group_teacher.id')
-            ->Join('groups', 'group_teacher.group_id', 'groups.id')
-            ->Join('teachers', 'group_teacher.teacher_id', 'teachers.id')
+            StdGroupTeacher::Join('group_teachers', 'std_group_teacher.group_teacher_id', 'group_teachers.id')
+            ->Join('groups', 'group_teachers.group_id', 'groups.id')
+            ->Join('teachers', 'group_teachers.teacher_id', 'teachers.id')
             ->Join('students', 'std_group_teacher.student_id', 'students.id')
             ->Join('subjs', 'groups.subj_id', 'subjs.id')
             ->select(
@@ -46,4 +46,24 @@ class StdGroupTeacher extends Model
                 'students.mobile'
             );
     }
+
+    static public function getGroupSubjsByStudent($id)
+    {
+        return
+            StdGroupTeacher::where('student_id', $id)->LeftJoin('group_teachers', 'std_group_teacher.group_teacher_id', 'group_teachers.id')
+                ->Join('teachers', 'group_teachers.teacher_id', 'teachers.id')
+                ->Join('groups', 'group_teachers.group_id', 'groups.id')
+                ->Join('subjs', 'groups.subj_id', 'subjs.id')
+                ->select(
+                    'teachers.*',
+                    'groups.id as groupId',
+                    'groups.name as groupName',
+                    'subjs.id as subjId',
+                    'subjs.name as subjName',
+                    'subjs.grade as subjGrade',
+                    'subjs.level as subjLevel'
+
+                );
+    }
+
 }

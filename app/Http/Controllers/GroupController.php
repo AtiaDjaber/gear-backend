@@ -19,7 +19,7 @@ class GroupController extends Model
 
     public function index()
     {
-        $Groups = Group::with('subjs')->paginate(20);
+        $Groups = Group::with('subjs')->paginate(15);
         return BaseController::successData($Groups, "تم جلب البيانات بنجاح");
     }
 

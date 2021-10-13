@@ -76,9 +76,12 @@ Route::put('group/put', 'GroupController@put');
 Route::delete('group/{id}', 'GroupController@remove');
 
 Route::post('groupTeacher/add', 'GroupTeacherController@store');
+Route::get('groupTeachers/getGroupSubjsByTeacher', 'GroupTeacherController@getGroupSubjsByTeacher');
+Route::get('groupTeachers/getStudentsByTeacher', 'GroupTeacherController@getStudentsByTeacher');
 
 
-Route::post('ssgs', 'StdGroup_teacherController@index');
+Route::get('ssgs', 'StdGroup_teacherController@index');
+Route::get('ssgs/getGroupSubj', 'StdGroup_teacherController@getGroupSubjsByStudent');
 Route::post('ssg/add', 'StdGroup_teacherController@store');
 
 
