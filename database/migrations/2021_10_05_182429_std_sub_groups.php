@@ -17,7 +17,7 @@ class StdSubGroups extends Migration
 
             $table->id();
             $table->foreignId("student_id")->constrained()->nullable();
-            $table->foreignId("group_teacher_id")->constrained('group_teachers')->nullable();
+            $table->foreignId("group_teacher_id")->constrained('group_teacher')->nullable();
             $table->unique(['group_teacher_id', 'student_id']);
             $table->timestamps();
         });

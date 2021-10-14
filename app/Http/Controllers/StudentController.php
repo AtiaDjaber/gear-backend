@@ -26,7 +26,14 @@ class StudentController extends Model
         $students = student::paginate(15);
         return BaseController::successData($students, "تم جلب البيانات بنجاح");
     }
-
+    public function getGroupById(Request $request)
+    {
+        $user = Student::find($request->id);
+        if ($user) {
+            return BaseController::successData($user->groups, "تم جلب البيانات بنجاح");
+        }
+        return BaseController::errorData($user, "السجل غير موجود");
+    }
 
     public function getById(Request $request)
     {
@@ -36,6 +43,7 @@ class StudentController extends Model
         }
         return BaseController::errorData($user, "السجل غير موجود");
     }
+
 
     public function store()
     {

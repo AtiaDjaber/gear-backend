@@ -32,10 +32,10 @@ class StdGroup_teacherController extends Model
     public function getGroupSubjsByStudent(Request $request)
     {
         $StdGroupTeachers = StdGroupTeacher::getGroupSubjsByStudent($request->student_id);
-//        if ($request->studentFirstname)
-//            $StdGroupTeachers =  $StdGroupTeachers->where('students.firstname', 'LIKE', '%' . request()->studentFirstname . '%');
-//        if ($request->studentLastname != null)
-//            $StdGroupTeachers =  $StdGroupTeachers->where('students.lastname', 'LIKE', '%' . request()->studentLastname . '%');
+        //        if ($request->studentFirstname)
+        //            $StdGroupTeachers =  $StdGroupTeachers->where('students.firstname', 'LIKE', '%' . request()->studentFirstname . '%');
+        //        if ($request->studentLastname != null)
+        //            $StdGroupTeachers =  $StdGroupTeachers->where('students.lastname', 'LIKE', '%' . request()->studentLastname . '%');
 
         $StdGroupTeachers = $StdGroupTeachers->paginate(15);
         return response()->json($StdGroupTeachers, 200);

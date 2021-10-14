@@ -21,18 +21,18 @@ class TeacherController extends Model
 
     public function index()
     {
-        $Teachers = Teacher::paginate(20);
+        $Teachers = Teacher::paginate(15);
         return BaseController::successData($Teachers, "تم جلب البيانات بنجاح");
     }
 
 
     public function getById(Request $request)
     {
-        $user = Teacher::find($request->id);
-        if ($user) {
-            return BaseController::successData($user, "تم جلب البيانات بنجاح");
+        $teacher = Teacher::find($request->id);
+        if ($teacher) {
+            return BaseController::successData($teacher->groups, "تم جلب البيانات بنجاح");
         }
-        return BaseController::errorData($user, "السجل غير موجود");
+        return BaseController::errorData($teacher->groups(), "السجل غير موجود");
     }
 
     public function store()

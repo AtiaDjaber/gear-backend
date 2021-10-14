@@ -41,6 +41,7 @@ Route::put('user/name', 'AuthController@updateName');
 
 
 Route::get('student/getById', 'StudentController@getById');
+Route::get('student/getGroupById', 'StudentController@getGroupById');
 Route::get('students', 'StudentController@index');
 Route::post('student/add', 'StudentController@store');
 Route::put('student/put', 'StudentController@put');

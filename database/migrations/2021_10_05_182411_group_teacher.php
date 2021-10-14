@@ -13,7 +13,7 @@ class GroupTeacher extends Migration
      */
     public function up()
     {
-        Schema::create('group_teachers', function (Blueprint $table) {
+        Schema::create('group_teacher', function (Blueprint $table) {
             $table->id();
             $table->foreignId("group_id")->constrained();
             $table->foreignId("teacher_id")->constrained();
