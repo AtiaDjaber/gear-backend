@@ -17,7 +17,7 @@ class Expenses extends Migration
             $table->id();
             $table->string("name");
             $table->decimal("price", 10, 2);
-            $table->foreignId("user_id")->constrained()->nullable();
+            $table->foreignId("user_id")->nullable()->constrained();
             $table->string("remarque")->nullable();
             $table->date("date");
             $table->timestamps();

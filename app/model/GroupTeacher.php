@@ -5,13 +5,29 @@ namespace App\model;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use LevelyearsSubjs;
+use \Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 
 class GroupTeacher extends Pivot
 {
+    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+
     protected $table = 'group_teacher';
     // protected $fillable = ['group_id', 'teacher_id'];
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    public function teachers()
+    {
+        return $this->BelongsTo(Teacher::class, 'teacher_id');
+    }
+    public function subjs()
+    {
+        return $this->hasManyDeep(
+            Subj::class,
+            [Group::class],
+            ['id', 'id'],
+            ['group_id', 'subj_id']
+        )->withIntermediate(Group::class);
+    }
     public function students()
     {
         return $this->BelongsToMany(Student::class);

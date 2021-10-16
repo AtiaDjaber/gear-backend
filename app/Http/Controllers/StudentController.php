@@ -18,22 +18,47 @@ class StudentController extends Model
             'firstname' => 'required|string|min:2|max:20',
             'lastname' => 'required|string|min:2|max:20',
             'parent' => 'required|string|min:3|max:20',
+            'parentMobile' => 'required|string|min:3|max:20',
+            'birthday' => 'required|date|min:3|max:20',
+            'barcode' => 'required|string|min:3|max:20',
         ]);
     }
 
     public function index()
     {
-        $students = student::paginate(15);
+        $students = student::orderBy('id', 'desc')->paginate(10);
         return BaseController::successData($students, "تم جلب البيانات بنجاح");
     }
     public function getGroupById(Request $request)
     {
         $user = Student::find($request->id);
         if ($user) {
-            return BaseController::successData($user->groups, "تم جلب البيانات بنجاح");
+            return response()->json($user->subjs, 200);
         }
         return BaseController::errorData($user, "السجل غير موجود");
     }
+
+
+    public function generate()
+    {
+        return response()->json($this->generateBarcodeNumber(), 200);
+    }
+    function generateBarcodeNumber()
+    {
+        $number = mt_rand(1000000000000, 9999999999999);
+        if ($this->barcodeNumberExists($number)) {
+            return $this->generateBarcodeNumber();
+        }
+
+        return $number;
+    }
+
+    function barcodeNumberExists($number)
+    {
+        return Student::where('barcode', $number)->exists();
+    }
+
+
 
     public function getById(Request $request)
     {

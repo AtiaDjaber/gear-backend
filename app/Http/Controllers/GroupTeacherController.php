@@ -20,18 +20,22 @@ class GroupTeacherController extends Model
         ]);
     }
 
-    public function getGroupSubjsByTeacher(Request $request)
+    public function getGroupSubByTeacher(Request $request)
     {
-        $Teachers = GroupTeacher::getGroupSubjsByTeacher($request->teacher_id)->paginate(15);
+        $Teachers = GroupTeacher::orderBy('id', 'desc')->getGroupSubjsByTeacher($request->teacher_id)->paginate(10);
         return response()->json($Teachers, 200);
     }
 
     public function getStudentsByTeacher(Request $request)
     {
-        $Teachers = GroupTeacher::getStudentsByTeacher($request->teacher_id)->paginate(15);
+        $Teachers = GroupTeacher::getStudentsByTeacher($request->teacher_id)->paginate(10);
         return response()->json($Teachers, 200);
     }
-
+    public function getAllData()
+    {
+        $data = GroupTeacher::with(['teachers', 'subjs'])->paginate(10);
+        return response()->json($data, 200);
+    }
     public function getById(Request $request)
     {
         $user = GroupTeacher::find($request->id);

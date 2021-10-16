@@ -21,7 +21,7 @@ class SubjectController extends Model
 
     public function index()
     {
-        $Subjs = Subj::with('groups')->paginate(20);
+        $Subjs = Subj::orderBy('id', 'desc')->with('groups')->paginate(15);
         return BaseController::successData($Subjs, "تم جلب البيانات بنجاح");
     }
 

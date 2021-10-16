@@ -29,7 +29,7 @@ class ExpenseController extends Model
 
     public function getById(Request $request)
     {
-        $user = Expense::find($request->id);
+        $user = Expense::orderBy('id', 'desc')->find($request->id);
         if ($user) {
             return BaseController::successData($user, "تم جلب البيانات بنجاح");
         }

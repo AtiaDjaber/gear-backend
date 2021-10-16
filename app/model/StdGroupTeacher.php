@@ -2,11 +2,16 @@
 
 namespace App\model;
 
+use \Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class StdGroupTeacher extends Pivot
+class StdGroupTeacher extends Model
 {
+
+    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+
     protected $guarded = ['id', 'created_at', 'updated_at'];
     protected $table = 'std_group_teacher';
     // public $timestamps = false;
@@ -52,11 +57,11 @@ class StdGroupTeacher extends Pivot
     {
         return
             StdGroupTeacher::where('student_id', $id)->LeftJoin('group_teacher', 'std_group_teacher.group_teacher_id', 'group_teacher.id')
-            ->Join('teachers', 'group_teacher.teacher_id', 'teachers.id')
+            // ->Join('teachers', 'group_teacher.teacher_id', 'teachers.id')
             ->Join('groups', 'group_teacher.group_id', 'groups.id')
             ->Join('subjs', 'groups.subj_id', 'subjs.id')
             ->select(
-                'teachers.*',
+                // 'teachers.*',
                 'groups.id as groupId',
                 'groups.name as groupName',
                 'subjs.id as subjId',
@@ -66,4 +71,15 @@ class StdGroupTeacher extends Pivot
 
             );
     }
+
+
+    // public function subjs()
+    // {
+    //     return $this->hasManyDeep(
+    //         Subj::class,
+    //         [GroupTeacher::class, Group::class],
+    //         ['group_id', 'subj_id', 'id'],
+    //         ['id',  'id', 'subj_id']
+    //     )->withIntermediate(Group::class);
+    // }
 }

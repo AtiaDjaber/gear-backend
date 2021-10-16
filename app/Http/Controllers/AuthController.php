@@ -115,10 +115,9 @@ class AuthController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        $users = User::orderBy('id', 'desc')->all();
         return BaseController::successData($users, "تم جلب البيانات بنجاح");
     }
-
     public function getById(Request $request)
     {
 

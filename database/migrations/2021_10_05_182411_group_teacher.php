@@ -18,6 +18,7 @@ class GroupTeacher extends Migration
             $table->foreignId("group_id")->constrained();
             $table->foreignId("teacher_id")->constrained();
             $table->unique(['teacher_id', 'group_id']);
+            $table->double('quotas');
             $table->timestamps();
         });
         //

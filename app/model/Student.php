@@ -17,13 +17,13 @@ class Student extends Model
     {
         return $this->BelongsToMany(GroupTeacher::class);
     }
-    public function groups(): HasManyDeep
+    public function subjs()
     {
         return $this->hasManyDeep(
-            Group::class,
-            [StdGroupTeacher::class, GroupTeacher::class],
-            ['student_id', 'group_id', 'id'],
-            ['id', 'group_teacher_id', 'id']
-        );
+            Subj::class,
+            [StdGroupTeacher::class, GroupTeacher::class, Group::class],
+            ['student_id', 'id', 'id', 'id'],
+            ['id', 'group_teacher_id', 'group_id', 'subj_id']
+        )->withIntermediate(Group::class);
     }
 }

@@ -40,8 +40,8 @@ Route::post('user/avatar', 'AuthController@avatar');
 Route::put('user/name', 'AuthController@updateName');
 
 
+Route::get('student/generate', 'StudentController@generate');
 Route::get('student/getById', 'StudentController@getById');
-Route::get('student/getGroupById', 'StudentController@getGroupById');
 Route::get('students', 'StudentController@index');
 Route::post('student/add', 'StudentController@store');
 Route::put('student/put', 'StudentController@put');
@@ -77,8 +77,15 @@ Route::put('group/put', 'GroupController@put');
 Route::delete('group/{id}', 'GroupController@remove');
 
 Route::post('groupTeacher/add', 'GroupTeacherController@store');
-Route::get('groupTeachers/getGroupSubjsByTeacher', 'GroupTeacherController@getGroupSubjsByTeacher');
+Route::get('groupTeachers', 'GroupTeacherController@getAllData');
+Route::get('groupTeachers/getGroupSubjsByTeacher', 'GroupTeacherController@getGroupSubByTeacher');
 Route::get('groupTeachers/getStudentsByTeacher', 'GroupTeacherController@getStudentsByTeacher');
+
+
+Route::get('teacher/getGroupSubjById', 'TeacherController@getGroupSubjById');
+Route::get('teacher/getStudentsById', 'TeacherController@getStudentsById');
+
+Route::get('student/getGroupSubjById', 'StudentController@getGroupById');
 
 
 Route::get('ssgs', 'StdGroup_teacherController@index');
