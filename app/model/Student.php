@@ -26,4 +26,9 @@ class Student extends Model
             ['id', 'group_teacher_id', 'group_id', 'subj_id']
         )->withIntermediate(Group::class);
     }
+
+    public function groups()
+    {
+        return $this->hasManyThrough(Group::class, StudentGroup::class);
+    }
 }

@@ -14,7 +14,7 @@ class ExpenseController extends Model
     {
         return Validator::make(request()->all(), [
             'name' => 'required|string|min:1|max:100',
-            'price' => 'required|double|min:0',
+            'price' => 'required|min:0',
             'remarque' => 'nullable|string',
             'date' => 'required|date',
         ]);
@@ -22,7 +22,7 @@ class ExpenseController extends Model
 
     public function index()
     {
-        $Expenses = Expense::paginate(20);
+        $Expenses = Expense::orderBy('id', 'desc')->paginate(10);
         return BaseController::successData($Expenses, "تم جلب البيانات بنجاح");
     }
 

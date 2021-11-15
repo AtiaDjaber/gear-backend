@@ -14,35 +14,22 @@ class GroupController extends Model
     {
         return Validator::make(request()->all(), [
             'name' => 'required|string',
+            'subj_id' => 'required|exists:subjs,id',
+            'teacher_id' => 'required|exists:teachers,id',
         ]);
     }
 
     public function index()
     {
-        $Groups = Group::orderBy('id', 'desc')->with('subjs')->paginate(15);
-        return BaseController::successData($Groups, "تم جلب البيانات بنجاح");
+        $Groups = Group::orderBy('id', 'desc')->with(['subj', 'teacher'])
+            ->paginate(10);
+        return response()->json($Groups, 200);
     }
-
-    // public function index()
-    // {
-    //     $Groups = Group::leftJoin('levelyear_subj', 'groups.levelyear_subj_id', 'levelyear_subj.id')
-    //         ->leftJoin('subjs', 'levelyear_subj.subj_id', 'subjs.id')
-    //         ->leftJoin('levelyears', 'levelyear_subj.levelyear_id', 'levelyears.id')
-    //         ->select(
-    //             'groups.*',
-    //             'levelyear_subj.*',
-    //             'subjs.name as SubName',
-    //             'levelyears.name as levelYearName '
-    //         )->paginate(20);
-    //     // with('subjs')->paginate(20);
-    //     return BaseController::successData($Groups, "تم جلب البيانات بنجاح");
-    // }
-
-
 
     public function getById(Request $request)
     {
-        $user = Group::find(1)->with('levelyearsSubjs')->get();
+        $user = Group::find($request->id)->with(['subj', 'teacher'])
+            ->first();
         if ($user) {
             return BaseController::successData($user, "تم جلب البيانات بنجاح");
         }
@@ -69,7 +56,7 @@ class GroupController extends Model
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        $Group = Group::findOrFail($request->id);
+        $Group = Group::find($request->id);
         $Group->update($request->all());
         if ($Group) {
             return response()->json(['message' => 'updated', 'data' =>  $Group], 200);

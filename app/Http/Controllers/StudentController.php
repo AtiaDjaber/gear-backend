@@ -29,6 +29,13 @@ class StudentController extends Model
         $students = student::orderBy('id', 'desc')->paginate(10);
         return BaseController::successData($students, "تم جلب البيانات بنجاح");
     }
+
+
+    public function getGroup()
+    {
+        $groups = student::orderBy('id', 'desc')->with('groups')->paginate(10);
+        return BaseController::successData($groups, "تم جلب البيانات بنجاح");
+    }
     public function getGroupById(Request $request)
     {
         $user = Student::find($request->id);

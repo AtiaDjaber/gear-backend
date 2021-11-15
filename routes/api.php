@@ -35,9 +35,12 @@ Route::group(["middleware" => 'api', "namespace" => "api"], function () {
 Route::get('user/get/{id}', 'AuthController@getById');
 Route::get('users', 'AuthController@index');
 Route::post('user/add', 'AuthController@store');
-Route::put('user/put', 'AuthController@updateToken');
+
+Route::put('user/put', 'AuthController@put');
+Route::put('user/updateToken', 'AuthController@updateToken');
 Route::post('user/avatar', 'AuthController@avatar');
 Route::put('user/name', 'AuthController@updateName');
+Route::delete('user/delete/{id}', 'AuthController@remove');
 
 
 Route::get('student/generate', 'StudentController@generate');
@@ -70,16 +73,16 @@ Route::delete('levelYear/{id}', 'LevelYearController@deleteSubject');
 Route::post('subjLevelYear/add', 'LevelYearSubjController@store');
 
 
-Route::get('group/getById', 'GroupController@getById');
 Route::get('groups', 'GroupController@index');
+Route::get('group/getById', 'GroupController@getById');
 Route::post('group/add', 'GroupController@store');
 Route::put('group/put', 'GroupController@put');
 Route::delete('group/{id}', 'GroupController@remove');
 
-Route::post('groupTeacher/add', 'GroupTeacherController@store');
-Route::get('groupTeachers', 'GroupTeacherController@getAllData');
-Route::get('groupTeachers/getGroupSubjsByTeacher', 'GroupTeacherController@getGroupSubByTeacher');
-Route::get('groupTeachers/getStudentsByTeacher', 'GroupTeacherController@getStudentsByTeacher');
+// Route::post('groupTeacher/add', 'GroupTeacherController@store');
+// Route::get('groupTeachers', 'GroupTeacherController@getAllData');
+// Route::get('groupTeachers/getGroupSubjsByTeacher', 'GroupTeacherController@getGroupSubByTeacher');
+// Route::get('groupTeachers/getStudentsByTeacher', 'GroupTeacherController@getStudentsByTeacher');
 
 
 Route::get('teacher/getGroupSubjById', 'TeacherController@getGroupSubjById');
@@ -88,9 +91,12 @@ Route::get('teacher/getStudentsById', 'TeacherController@getStudentsById');
 Route::get('student/getGroupSubjById', 'StudentController@getGroupById');
 
 
-Route::get('ssgs', 'StdGroup_teacherController@index');
-Route::get('ssgs/getGroupSubj', 'StdGroup_teacherController@getGroupSubjsByStudent');
-Route::post('ssg/add', 'StdGroup_teacherController@store');
+Route::get('sg', 'StudentGroupController@index');
+Route::get('sg/getGroupSubj', 'StudentGroupController@getGroupSubjsByStudent');
+// Route::get('sg/getGroupSubjByBarcode', 'StudentGroupController@getGroupSubjsByStudentBarcode');
+Route::get('sg/getAllGroupSubj', 'StudentGroupController@getAllGroupSubjs');
+
+Route::post('sg/add', 'StudentGroupController@store');
 
 
 Route::get('expenses', 'ExpenseController@index');
@@ -98,32 +104,17 @@ Route::post('expense/add', 'ExpenseController@store');
 Route::put('expense/put', 'ExpenseController@put');
 Route::delete('expense/{id}', 'ExpenseController@remove');
 
-
-Route::post('article/{article}/comment', 'CommentController@store');
-Route::post('comment/{comment}/best-comment', 'CommentController@best_comment');
-Route::get('comments', 'CommentController@index');
-Route::get('comment/{comment}', 'CommentController@show');
-Route::delete('comment/{comment}', 'CommentController@destroy');
-
-Route::post('orders/add', 'OrdersController@store');
-Route::get('orders', 'OrdersController@index');
-Route::put('orders/put', 'OrdersController@update');
-Route::get('ordersByUserId/{user_id}', 'OrdersController@getOrdersByUserId');
-Route::get('ordersByDriverId/{driver_id}', 'OrdersController@getOrdersByDriverId');
-
-Route::post('offer/add', 'OfferController@store');
+Route::get('attendances', 'AttendanceController@index');
+Route::get('attendance/getBenifitsTeachers', 'AttendanceController@getTeachersBenifits');
+Route::get('attendance/getBenifitByTeacherId', 'AttendanceController@getTeacherBenifitById');
+Route::post('attendance/add', 'AttendanceController@store');
 
 
-Route::get('offers/{orders_id}', 'OfferController@index');
-Route::get('offer/{orders_id}/{driver_id}', 'OfferController@getDriverOffer');
 
-Route::put('driver/avatar', 'DriverController@avatar');
-Route::get('drivers', 'DriverController@index');
-Route::get('driver/get/{id}', 'DriverController@getById');
-Route::put('driver/put', 'DriverController@updateToken');
-Route::post('driver/add', 'DriverController@store');
-Route::put('rate', 'DriverController@rateDriver');
-Route::post('driver/avatar', 'DriverController@avatar');
-Route::put('driver/name', 'DriverController@updateName');
+Route::get('payments', 'PaymentController@index');
+Route::get('payments/getByTeacherId', 'PaymentController@getById');
+Route::get('payments/getPayementGrouped', 'PaymentController@getGrouped');
 
-Route::get('car/all', 'CarController@index');
+Route::post('payment/add', 'PaymentController@store');
+Route::put('payment/put', 'PaymentController@put');
+Route::delete('payment/{id}', 'PaymentController@remove');

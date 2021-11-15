@@ -22,9 +22,13 @@ class CreateUsersTable extends Migration
             $table->string("photo")->nullable();
             $table->string("token")->nullable();
             $table->string("grade")->nullable();
-            $table->string('email')->unique()->nullable();
-            // $table->string('password');
-            // $table->rememberToken();
+            $table->double('teacher')->default('1');
+            $table->double('student')->default('1');
+            $table->double('subjgroup')->default('1');
+            $table->double('chart')->default('0');
+            $table->double('user')->default('0');
+            $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
     }

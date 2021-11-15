@@ -34,11 +34,11 @@ class AuthController extends Controller
         if ($userFound) {
             return response()->json(['message' => 'Found', 'data' => $userFound], 200);
         }
-        $validator = $this->validater();
-        if ($validator->fails()) {
-            return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
-        }
-        $user = User::create($validator->validate());
+        // $validator = $this->validater();
+        // if ($validator->fails()) {
+        //     return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+        // }
+        $user = User::create(request()->all());
         if ($user) {
             return response()->json(['message' => 'Created', 'data' => $user], 200);
         }
@@ -89,6 +89,19 @@ class AuthController extends Controller
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
+    public function put(Request $request)
+    {
+        $validator = $this->validater();
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+        }
+        $user = User::findOrFail($request->id);
+        $user->update($request->all());
+        if ($user) {
+            return response()->json(['message' => 'updated', 'data' =>  $user], 200);
+        }
+        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+    }
     public function me(Request $request)
     {
         return $request->user();
@@ -115,12 +128,11 @@ class AuthController extends Controller
 
     public function index()
     {
-        $users = User::orderBy('id', 'desc')->all();
-        return BaseController::successData($users, "تم جلب البيانات بنجاح");
+        $users = User::orderBy('id', 'desc')->paginate(10);
+        return response()->json($users, 200);
     }
     public function getById(Request $request)
     {
-
         $user = User::find($request->id);
         if ($user) {
             return BaseController::successData($user, "تم جلب البيانات بنجاح");
@@ -147,5 +159,12 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'Bearer',
         ]);
+    }
+
+
+    public  function remove(Request $request)
+    {
+        $user = User::destroy($request->id);
+        return BaseController::successData($user, "تمت العملية بنجاح");
     }
 }

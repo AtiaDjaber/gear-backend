@@ -19,7 +19,7 @@ class Subjs extends Migration
             $table->string("level");
             $table->string("grade");
             $table->string("photo")->nullable();
-            $table->unique(['name', 'level', 'grade']);
+            // $table->unique(['name', 'level', 'grade']);
 
             $table->timestamps();
         });

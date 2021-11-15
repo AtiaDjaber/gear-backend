@@ -14,7 +14,7 @@ class TeacherSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        for ($i = 1; $i < 1000; $i++) {
+        for ($i = 1; $i < 100; $i++) {
             DB::table('teachers')->insert([
                 'firstname' => $faker->firstName, 'lastname' => $faker->lastName, 'birthday' => $faker->date($format = 'Y-m-d', $max = 'now'), 'address' => $faker->address, 'email' => $faker->unique()->email
             ]);
