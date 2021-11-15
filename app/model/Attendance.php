@@ -14,7 +14,8 @@ class Attendance extends Model
     }
 
     protected $casts = [
-        'created_at' => 'datetime:d/m/Y', // Change your format
-        'updated_at' => 'datetime:d/m/Y',
+        'created_at' => 'datetime:Y-d-m H:i:s', // Change your format
+        'updated_at' => 'datetime:Y-d-m H:i:s',
+        'date' => 'datetime:Y-d-m H:i:s',
     ];
 }

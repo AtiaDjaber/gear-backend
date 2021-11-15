@@ -118,3 +118,10 @@ Route::get('payments/getPayementGrouped', 'PaymentController@getGrouped');
 Route::post('payment/add', 'PaymentController@store');
 Route::put('payment/put', 'PaymentController@put');
 Route::delete('payment/{id}', 'PaymentController@remove');
+
+Route::post('subscription/add', 'SubscriptionController@store');
+Route::get('subscriptions', 'SubscriptionController@index');
+Route::get('subscriptions/getByStudentId', 'SubscriptionController@getById');
+Route::get('subscriptions/getStudentGrouped', 'SubscriptionController@getGrouped');
+Route::put('subscription/put', 'SubscriptionController@put');
+Route::delete('subscription/{id}', 'SubscriptionController@remove');
