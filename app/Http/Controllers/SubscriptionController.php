@@ -27,9 +27,21 @@ class SubscriptionController extends Model
 
     public function index()
     {
-        $subscriptions = Subscription::with(['group', 'student', 'teacher'])
+        $subscriptions = Subscription::with(['group.subj', 'student', 'teacher'])
             ->orderBy('id', 'desc')
             ->paginate(10);
+        return response()->json($subscriptions, 200);
+    }
+    public function getSubscriptionAmount(Request $request)
+    {
+        $subscriptions = Subscription::orderBy('id', 'desc');
+        if ($request->has('from') && $request->has('to')) {
+            $subscriptions = $subscriptions->whereBetween(
+                'date',
+                [$request->from, $request->to]
+            );
+        }
+        $subscriptions = $subscriptions->sum("price");
         return response()->json($subscriptions, 200);
     }
 

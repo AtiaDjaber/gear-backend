@@ -15,6 +15,11 @@ class GroupTeacher extends Pivot
     // protected $fillable = ['group_id', 'teacher_id'];
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    protected $casts = [
+        'created_at' => 'datetime:Y-d-m H:i:s', // Change your format
+        'updated_at' => 'datetime:Y-d-m H:i:s',
+        'date' => 'datetime:Y-d-m H:i:s',
+    ];
     public function teachers()
     {
         return $this->BelongsTo(Teacher::class, 'teacher_id');

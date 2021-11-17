@@ -35,7 +35,6 @@ Route::group(["middleware" => 'api', "namespace" => "api"], function () {
 Route::get('user/get/{id}', 'AuthController@getById');
 Route::get('users', 'AuthController@index');
 Route::post('user/add', 'AuthController@store');
-
 Route::put('user/put', 'AuthController@put');
 Route::put('user/updateToken', 'AuthController@updateToken');
 Route::post('user/avatar', 'AuthController@avatar');
@@ -72,6 +71,8 @@ Route::delete('levelYear/{id}', 'LevelYearController@deleteSubject');
 
 Route::post('subjLevelYear/add', 'LevelYearSubjController@store');
 
+Route::post('session/add', 'SessionController@store');
+Route::get('sessions', 'SessionController@index');
 
 Route::get('groups', 'GroupController@index');
 Route::get('group/getById', 'GroupController@getById');
@@ -121,6 +122,7 @@ Route::delete('payment/{id}', 'PaymentController@remove');
 
 Route::post('subscription/add', 'SubscriptionController@store');
 Route::get('subscriptions', 'SubscriptionController@index');
+Route::get('subscriptions/subscriptionAmount', 'SubscriptionController@getSubscriptionAmount');
 Route::get('subscriptions/getByStudentId', 'SubscriptionController@getById');
 Route::get('subscriptions/getStudentGrouped', 'SubscriptionController@getGrouped');
 Route::put('subscription/put', 'SubscriptionController@put');

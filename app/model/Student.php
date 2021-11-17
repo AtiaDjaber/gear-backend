@@ -13,6 +13,11 @@ class Student extends Model
     protected $table = "students";
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    protected $casts = [
+        'created_at' => 'datetime:Y-d-m H:i:s', // Change your format
+        'updated_at' => 'datetime:Y-d-m H:i:s',
+        'date' => 'datetime:Y-d-m H:i:s',
+    ];
     public function groupTeachers()
     {
         return $this->BelongsToMany(GroupTeacher::class);
