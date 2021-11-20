@@ -13,10 +13,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if (strtolower(date_default_timezone_get()) !== "africa/algiers") {
+            date_default_timezone_set("Africa/Algiers");
+        }
         if ($this->app->environment('local')) {
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
         }
+
         //
     }
 

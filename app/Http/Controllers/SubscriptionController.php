@@ -94,21 +94,25 @@ class SubscriptionController extends Model
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        $subscription = Subscription::create($validator->validate());
-        if ($subscription) {
+        DB::beginTransaction();
+
+        try {
+
+            $subscription = Subscription::create($validator->validate());
+            // if ($subscription) {
             $studentGroup = StudentGroup::where('student_id', $request->student_id)
                 ->where('group_id', $request->group_id)->first();
 
             $newQuotas =  $studentGroup->quotas + $request->quotas;
-            $updateQutas =  StudentGroup::where('student_id', $request->student_id)
+            StudentGroup::where('student_id', $request->student_id)
                 ->where('group_id', $request->group_id)->update(['quotas' => $newQuotas]);
-            if ($updateQutas) {
-                return response()->json(['message' => 'Created', 'data' => $subscription], 200);
-            } else {
-                return response()->json(['message' => 'Error Add To StdGrouo', 'data' => null], 400);
-            }
+            DB::commit();
+
+            return response()->json(['message' => 'Created', 'data' => $subscription], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Error ', 'data' => $e], 500);
         }
-        return response()->json(['message' => 'Error Add To Subscription', 'data' => null], 400);
     }
 
     public function put(Request $request)
@@ -127,11 +131,25 @@ class SubscriptionController extends Model
 
     public  function remove(Request $request)
     {
+        DB::beginTransaction();
 
-        $SubSubscription = Subscription::destroy($request->id);
-        return BaseController::successData($SubSubscription, "تمت العملية بنجاح");
+        try {
+            $subscription =  Subscription::findOrFail($request->id);
+            // $SubSubscription = Subscription::destroy($request->id);
+            $subscription->delete();
+
+            $studentGroup = StudentGroup::where('student_id', $subscription->student_id)
+                ->where('group_id', $subscription->group_id)->first();
+
+            $newQuotas =  $studentGroup->quotas - $subscription->quotas;
+            StudentGroup::where('student_id', $subscription->student_id)
+                ->where('group_id', $subscription->group_id)->update(['quotas' => $newQuotas]);
+
+            DB::commit();
+            return BaseController::successData($subscription, "تمت العملية بنجاح");
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Error ', 'data' => $e], 500);
+        }
     }
-
-
-    //
 }

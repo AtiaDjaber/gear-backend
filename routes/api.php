@@ -91,11 +91,10 @@ Route::get('teacher/getStudentsById', 'TeacherController@getStudentsById');
 
 Route::get('student/getGroupSubjById', 'StudentController@getGroupById');
 
-
-Route::get('sg', 'StudentGroupController@index');
-Route::get('sg/getGroupSubj', 'StudentGroupController@getGroupSubjsByStudent');
+Route::get('sg', 'StudentGroupController@getAllGroupSubjs');
+Route::get('sg/getGroupSubjByStudent', 'StudentGroupController@getGroupSubjsByStudent');
 // Route::get('sg/getGroupSubjByBarcode', 'StudentGroupController@getGroupSubjsByStudentBarcode');
-Route::get('sg/getAllGroupSubj', 'StudentGroupController@getAllGroupSubjs');
+// Route::get('sg/getAllGroupSubj', 'StudentGroupController@getAllGroupSubjs');
 
 Route::post('sg/add', 'StudentGroupController@store');
 

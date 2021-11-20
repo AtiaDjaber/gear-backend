@@ -18,6 +18,8 @@ class StudentSeeder extends Seeder
             DB::table('students')->insert([
                 'firstname' => $faker->firstName,
                 'lastname' => $faker->lastName,
+                'mobile' => $faker->e164PhoneNumber,
+
                 'barcode' => $faker->unique()->numberBetween($min = 1000000000000, $max = 9999999999999),
                 'birthday' => $faker->date(
                     $format = 'Y-m-d',

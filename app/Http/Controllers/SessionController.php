@@ -42,12 +42,12 @@ class SessionController extends Model
 
     public function getById(Request $request)
     {
-        $user = Group::find($request->id)->with(['subj', 'teacher'])
+        $session = Session::find($request->id)->with(['group.teacher', 'group.subj'])
             ->first();
-        if ($user) {
-            return BaseController::successData($user, "تم جلب البيانات بنجاح");
+        if ($session) {
+            return BaseController::successData($session, "تم جلب البيانات بنجاح");
         }
-        return BaseController::errorData($user, "السجل غير موجود");
+        return BaseController::errorData("error", "السجل غير موجود");
     }
 
     public function store(Request $request)
@@ -60,8 +60,20 @@ class SessionController extends Model
         // $selectedDay = 'first ' . $request->day . ' of this month';
 
         // $endDate = $date;
+        $allRecoredsAdded = [];
+
+        if ($request->numberMonth == 0) {
+            $sessionAddedd = Session::create($validator->validate());
+
+            if ($sessionAddedd) {
+                $session = Session::where('id', $sessionAddedd->id)->with(['group.teacher', 'group.subj'])->get();
+                return response()->json(['message' => 'Created', 'data' => $session], 200);
+            }
+            return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+        }
+        $endDate = $request->start;
         for ($i = 0; $i < $request->numberMonth; $i++) {
-            $endDate =  Carbon::parse($request->start, 'Africa/Tunis')->addMonth();
+            $endDate =   Carbon::parse($endDate, 'Africa/Tunis')->addMonth();
         }
         $mondays = new DatePeriod(
             Carbon::parse($request->start, 'Africa/Tunis'),
@@ -69,7 +81,6 @@ class SessionController extends Model
             Carbon::parse($endDate, 'Africa/Tunis')
         );
         $allDays = [];
-        $allRecoredsAdded = [];
 
         foreach ($mondays as $day) {
             $allDays[] = $day;
@@ -86,7 +97,9 @@ class SessionController extends Model
             $end = Carbon::parse($end->addHours($diff->h)->addMinutes($diff->i), 'Africa/Tunis');
             $requestData['end']  = $end;
 
-            $allRecoredsAdded[] = Session::create($requestData);
+            $sessionAddedd = Session::create($requestData);
+            $session = Session::where('id', $sessionAddedd->id)->with(['group.teacher', 'group.subj'])->first();
+            $allRecoredsAdded[] = $session;
         }
 
         if ($allRecoredsAdded) {
@@ -104,7 +117,7 @@ class SessionController extends Model
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        $Group = Group::find($request->id);
+        $Group = Session::find($request->id);
         $Group->update($request->all());
         if ($Group) {
             return response()->json(['message' => 'updated', 'data' =>  $Group], 200);

@@ -47,8 +47,8 @@ class StudentGroupController extends Model
             $student_id = $request->student_id;
         }
 
-        $StudentGrouprs = StudentGroup::where('student_id', $student_id)->with("group.teacher", "group.subj")
-            ->get();
+        $StudentGrouprs = StudentGroup::where('student_id', $student_id)
+            ->with("group.teacher", "group.subj")->get();
 
         return response()->json($StudentGrouprs, 200);
     }

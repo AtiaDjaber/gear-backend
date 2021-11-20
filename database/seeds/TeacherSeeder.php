@@ -16,7 +16,10 @@ class TeacherSeeder extends Seeder
         $faker = Faker::create();
         for ($i = 1; $i < 100; $i++) {
             DB::table('teachers')->insert([
-                'firstname' => $faker->firstName, 'lastname' => $faker->lastName, 'birthday' => $faker->date($format = 'Y-m-d', $max = 'now'), 'address' => $faker->address, 'email' => $faker->unique()->email
+                'firstname' => $faker->firstName, 'lastname' => $faker->lastName,
+                'birthday' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                'mobile' => $faker->e164PhoneNumber, 'address' => $faker->address,
+                'email' => $faker->unique()->email
             ]);
         }
     }
