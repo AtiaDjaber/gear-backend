@@ -48,6 +48,8 @@ Route::get('students', 'StudentController@index');
 Route::post('student/add', 'StudentController@store');
 Route::put('student/put', 'StudentController@put');
 Route::delete('student/{id}', 'StudentController@deleteStudent');
+Route::get('student/getGroupSubjById', 'StudentController@getGroup');
+Route::post('students/absences', 'StudentController@getAbsences');
 
 Route::get('teacher/getById', 'TeacherController@getById');
 Route::get('teachers', 'TeacherController@index');
@@ -67,36 +69,31 @@ Route::get('levelYears', 'LevelYearController@index');
 Route::post('levelYear/add', 'LevelYearController@store');
 Route::put('levelYear/put', 'LevelYearController@put');
 Route::delete('levelYear/{id}', 'LevelYearController@deleteSubject');
-
-
 Route::post('subjLevelYear/add', 'LevelYearSubjController@store');
+
+
 
 Route::post('session/add', 'SessionController@store');
 Route::get('sessions', 'SessionController@index');
+
 
 Route::get('groups', 'GroupController@index');
 Route::get('group/getById', 'GroupController@getById');
 Route::post('group/add', 'GroupController@store');
 Route::put('group/put', 'GroupController@put');
 Route::delete('group/{id}', 'GroupController@remove');
-
-// Route::post('groupTeacher/add', 'GroupTeacherController@store');
-// Route::get('groupTeachers', 'GroupTeacherController@getAllData');
-// Route::get('groupTeachers/getGroupSubjsByTeacher', 'GroupTeacherController@getGroupSubByTeacher');
-// Route::get('groupTeachers/getStudentsByTeacher', 'GroupTeacherController@getStudentsByTeacher');
+Route::get('groups/groupSubjByTeacherId', 'GroupController@getGroupSubjById');
 
 
 Route::get('teacher/getGroupSubjById', 'TeacherController@getGroupSubjById');
 Route::get('teacher/getStudentsById', 'TeacherController@getStudentsById');
 
-Route::get('student/getGroupSubjById', 'StudentController@getGroupById');
 
-Route::get('sg', 'StudentGroupController@getAllGroupSubjs');
+
+Route::get('sgs', 'StudentGroupController@getAllGroupSubjs');
 Route::get('sg/getGroupSubjByStudent', 'StudentGroupController@getGroupSubjsByStudent');
-// Route::get('sg/getGroupSubjByBarcode', 'StudentGroupController@getGroupSubjsByStudentBarcode');
-// Route::get('sg/getAllGroupSubj', 'StudentGroupController@getAllGroupSubjs');
-
 Route::post('sg/add', 'StudentGroupController@store');
+Route::post('sg/studentsByGroups', 'StudentGroupController@getStudentsByGroups');
 
 
 Route::get('expenses', 'ExpenseController@index');
@@ -108,7 +105,6 @@ Route::get('attendances', 'AttendanceController@index');
 Route::get('attendance/getBenifitsTeachers', 'AttendanceController@getTeachersBenifits');
 Route::get('attendance/getBenifitByTeacherId', 'AttendanceController@getTeacherBenifitById');
 Route::post('attendance/add', 'AttendanceController@store');
-
 
 
 Route::get('payments', 'PaymentController@index');

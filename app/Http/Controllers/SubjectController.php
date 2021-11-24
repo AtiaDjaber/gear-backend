@@ -19,10 +19,24 @@ class SubjectController extends Model
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $Subjs = Subj::orderBy('id', 'desc')->with('groups')->paginate(15);
-        return BaseController::successData($Subjs, "تم جلب البيانات بنجاح");
+        $subjs = Subj::orderBy('id', 'desc');
+        if ($request->has("name")) {
+            $subjs =
+                $subjs->where("name", 'LIKE', '%' . $request->name . '%');
+        }
+        if ($request->has("grade")) {
+            $subjs =
+                $subjs->where("grade", 'LIKE', '%' . $request->grade . '%');
+        }
+        if ($request->has("level")) {
+            $subjs =
+                $subjs->where("level", 'LIKE', '%' . $request->level . '%');
+        }
+        $subjs =
+            $subjs->with('groups')->paginate(10);
+        return BaseController::successData($subjs, "تم جلب البيانات بنجاح");
     }
 
 

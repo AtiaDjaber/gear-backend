@@ -20,24 +20,11 @@ class StudentGroupController extends Model
         ]);
     }
 
-    public function index(Request $request)
-    {
-        $StudentGrouprs = StudentGroup::alldata();
-        if ($request->studentFirstname)
-            $StudentGrouprs =  $StudentGrouprs->where('students.firstname', 'LIKE', '%' . request()->studentFirstname . '%');
-        if ($request->studentLastname != null)
-            $StudentGrouprs =  $StudentGrouprs->where('students.lastname', 'LIKE', '%' . request()->studentLastname . '%');
-
-        $StudentGrouprs = $StudentGrouprs->paginate(10);
-        return BaseController::successData($StudentGrouprs, "تم جلب البيانات بنجاح");
-    }
 
     public function getGroupSubjsByStudent(Request $request)
     {
-
         if ($request->has('barcode')) {
-            $student  = Student::where("barcode", '=', $request->barcode)
-                ->first();
+            $student  = Student::where("barcode", '=', $request->barcode)->first();
             if ($student) {
                 $student_id =  $student['id'];
             } else {
@@ -72,6 +59,15 @@ class StudentGroupController extends Model
         }
         return BaseController::errorData($user, "السجل غير موجود");
     }
+
+
+    public function getStudentsByGroups(Request $request)
+    {
+        $StudentGrouprs = StudentGroup::with(["stduent"])
+            ->whereIn('group_id', $request->idsGroups)->get();
+        return response()->json($StudentGrouprs, 200);
+    }
+
 
     public function store()
     {

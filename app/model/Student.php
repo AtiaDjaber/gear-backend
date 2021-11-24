@@ -10,18 +10,14 @@ class Student extends Model
     use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     //
-    protected $table = "students";
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
-        'created_at' => 'datetime:Y-d-m H:i:s', // Change your format
-        'updated_at' => 'datetime:Y-d-m H:i:s',
-        'date' => 'datetime:Y-d-m H:i:s',
+        'created_at' => 'datetime:Y-m-d H:i:s', // Change your format
+        'updated_at' => 'datetime:Y-m-d H:i:s',
+        'date' => 'datetime:Y-m-d H:i:s',
     ];
-    public function groupTeachers()
-    {
-        return $this->BelongsToMany(GroupTeacher::class);
-    }
+
     public function subjs()
     {
         return $this->hasManyDeep(
@@ -31,9 +27,18 @@ class Student extends Model
             ['id', 'group_teacher_id', 'group_id', 'subj_id']
         )->withIntermediate(Group::class);
     }
-
     public function groups()
     {
-        return $this->hasManyThrough(Group::class, StudentGroup::class);
+        return $this->belongsToMany(Group::class, "std_group");
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    // public function groups()
+    // {
+    //     return $this->hasManyThrough(Group::class, StudentGroup::class);
+    // }
 }

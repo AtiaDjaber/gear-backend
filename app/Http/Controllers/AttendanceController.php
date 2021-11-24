@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\model\Attendance;
+use App\model\Student;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ class AttendanceController extends Model
 
     public function index(Request $request)
     {
-        $Attendances = DB::table('attendances');
+        $Attendances = Attendance::orderBy('id', 'desc');
         if ($request->studentName)
             $Attendances = $Attendances->orWhere('studentName', 'LIKE', '%' . request()->studentName . '%');
         if ($request->studentBarcode)
@@ -36,6 +37,9 @@ class AttendanceController extends Model
         $Attendances = $Attendances->paginate(10);
         return BaseController::successData($Attendances, "تم جلب البيانات بنجاح");
     }
+
+
+
 
     public function getGroupSubjsByStudent(Request $request)
     {

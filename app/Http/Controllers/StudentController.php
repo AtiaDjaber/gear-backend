@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\model\Attendance;
 use App\model\Student;
-use App\model\Teacher;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -24,26 +25,58 @@ class StudentController extends Model
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $students = student::orderBy('id', 'desc')->paginate(10);
+        $students = Student::orderBy('id', 'desc');
+        if ($request->has("name")) {
+            $students = $students->where("firstname", 'LIKE', '%' . $request->name . '%')
+                ->orWhere("lastname", 'LIKE', '%' . $request->name . '%');
+        }
+        $students = $students->paginate(10);
         return BaseController::successData($students, "تم جلب البيانات بنجاح");
     }
 
 
+    // public function getAbsences(Request $request)
+    // {
+    //     $Attendances = Student::leftjoin('attendances', 'attendances.student_id', 'students.id');
+    //     $Attendances = $Attendances->select("students.*");
+    //     // ->whereIn('group_id', $request->idsGroups)
+    //     $Attendances = $Attendances->where('attendances.student_id', null)
+    //         // ->where(
+    //         //     'attendances.date',
+    //         //     $request->date
+    //         // )
+    //         ->whereHas(
+    //             'groups',
+    //             function ($q) use ($request) {
+    //                 $q->whereIn('groups.id',  $request->idsGroups);
+    //             }
+    //         )
+    //         // ->whereHas(
+    //         //     'attendances',
+    //         //     function ($q) use ($request) {
+    //         //         $q->where('attendances.created_at', $request->date);
+    //         //     }
+    //         // )
+    //         ->paginate(100);
+    //     return BaseController::successData($Attendances, "تم جلب البيانات بنجاح");
+    // }
+    public function getAbsences(Request $request)
+    {
+
+        $Attendances = Attendance::whereNotIn('student_id', [2, 59])->with('student')
+            ->whereIn('group_id', [2, 4])->where('date', $request->date)
+            ->paginate(100);
+        return BaseController::successData($Attendances, "تم جلب البيانات بنجاح");
+    }
+
     public function getGroup()
     {
-        $groups = student::orderBy('id', 'desc')->with('groups')->paginate(10);
+        $groups = Student::orderBy('id', 'desc')->with(['groups.subj', 'groups.teacher'])->paginate(10);
         return BaseController::successData($groups, "تم جلب البيانات بنجاح");
     }
-    public function getGroupById(Request $request)
-    {
-        $user = Student::find($request->id);
-        if ($user) {
-            return response()->json($user->subjs, 200);
-        }
-        return BaseController::errorData($user, "السجل غير موجود");
-    }
+
 
 
     public function generate()

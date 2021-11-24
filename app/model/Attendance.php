@@ -13,9 +13,14 @@ class Attendance extends Model
         return $this->belongsTo(Group::class);
     }
 
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
     protected $casts = [
-        'created_at' => 'datetime:Y-d-m H:i:s', // Change your format
-        'updated_at' => 'datetime:Y-d-m H:i:s',
-        'date' => 'datetime:Y-d-m H:i:s',
+        'created_at' => 'datetime:Y-m-d H:i:s', // Change your format
+        'updated_at' => 'datetime:Y-m-d H:i:s',
+        'date' => 'datetime:Y-m-d H:i:s',
     ];
 }

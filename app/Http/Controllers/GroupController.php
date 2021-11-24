@@ -36,6 +36,16 @@ class GroupController extends Model
         return BaseController::errorData($user, "السجل غير موجود");
     }
 
+    public function getGroupSubjById(Request $request)
+    {
+        $groups = Group::where('teacher_id', $request->teacher_id)->with(['subj'])
+            ->get();
+        if ($groups) {
+            return response()->json($groups, 200);
+        }
+        return BaseController::errorData("erro data", "السجل غير موجود");
+    }
+
     public function store()
     {
 

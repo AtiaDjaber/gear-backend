@@ -19,9 +19,16 @@ class TeacherController extends Model
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $Teachers = Teacher::orderBy('id', 'desc')->paginate(15);
+        $Teachers = Teacher::orderBy('id', 'desc');
+        if ($request->has("name")) {
+            $Teachers = $Teachers->where("firstname", 'LIKE', '%' . $request->name . '%')
+                ->orWhere("lastname", 'LIKE', '%' . $request->name . '%');
+        }
+
+
+        $Teachers = $Teachers->paginate(10);
         return BaseController::successData($Teachers, "تم جلب البيانات بنجاح");
     }
 

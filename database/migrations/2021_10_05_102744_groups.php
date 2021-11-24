@@ -19,7 +19,7 @@ class Groups extends Migration
             $table->foreignId("teacher_id")->nullable()->constrained('teachers');
             $table->string("name");
             $table->decimal('price', 10, 2)->default('0');
-
+            $table->integer('quotas')->default('4');
             $table->unique(['teacher_id', 'subj_id', 'name']);
             $table->timestamps();
         });
