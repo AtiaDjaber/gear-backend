@@ -22,6 +22,7 @@ class Teachers extends Migration
             $table->string("email")->unique()->nullable();
             $table->string("address")->unique()->nullable();
             $table->string("photo")->nullable();
+            $table->boolean("status")->default("1");
             $table->timestamps();
         });
     }

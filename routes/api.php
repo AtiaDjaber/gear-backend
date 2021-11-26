@@ -49,7 +49,8 @@ Route::post('student/add', 'StudentController@store');
 Route::put('student/put', 'StudentController@put');
 Route::delete('student/{id}', 'StudentController@deleteStudent');
 Route::get('student/getGroupSubjById', 'StudentController@getGroup');
-Route::post('students/absences', 'StudentController@getAbsences');
+Route::get('students/absences', 'StudentController@getAbsences');
+Route::post('student/groupSubjByStudentForAttendance', 'StudentGroupController@getGroupSubjsByStudentforAttendance');
 
 Route::get('teacher/getById', 'TeacherController@getById');
 Route::get('teachers', 'TeacherController@index');
@@ -74,7 +75,9 @@ Route::post('subjLevelYear/add', 'LevelYearSubjController@store');
 
 
 Route::post('session/add', 'SessionController@store');
-Route::get('sessions', 'SessionController@index');
+Route::get('sessions/{start}/{end}', 'SessionController@index');
+Route::delete('session/{id}', 'SessionController@remove');
+Route::delete('session/groupId/{id}/{start}', 'SessionController@removeSubj');
 
 
 Route::get('groups', 'GroupController@index');

@@ -64,11 +64,18 @@ class StudentController extends Model
     // }
     public function getAbsences(Request $request)
     {
+        $student =  Student::whereDoesntHave(
+            'attendances',
+            function ($q) use ($request) {
+                $q->where('group_id', $request->get('group_id'))
+                    ->where('date', $request->get('date'));
+            }
+        )->whereHas("groups", function ($q) use ($request) {
+            $q->where('groups.id', $request->group_id);
+        })
+            ->get();
 
-        $Attendances = Attendance::whereNotIn('student_id', [2, 59])->with('student')
-            ->whereIn('group_id', [2, 4])->where('date', $request->date)
-            ->paginate(100);
-        return BaseController::successData($Attendances, "تم جلب البيانات بنجاح");
+        return BaseController::successData($student, "تم جلب البيانات بنجاح");
     }
 
     public function getGroup()

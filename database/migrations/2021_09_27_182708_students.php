@@ -27,6 +27,8 @@ class Students extends Migration
             $table->string("grade")->nullable();
             $table->string("yearScholaire")->nullable();
             $table->string("photo")->nullable();
+            $table->boolean("status")->default("1");
+
             $table->timestamps();
         });
         //

@@ -97,23 +97,18 @@ class AttendanceController extends Model
 
     public function getTeacherBenifitById(Request $request)
     {
-        $user = Attendance::
-            // with('group.subj')
-            //     ->join('subjs', 'attendances.subj_id', 'subjs.id')
-            select(
+        $user = Attendance::with('group.subj')
+            // ->join('subjs', 'attendances.subj_id', 'subjs.id')
+            ->select(
                 'attendances.group_id',
                 'attendances.teacher_id',
-                'attendances.teacherName',
-
-                'attendances.groupName',
                 DB::raw("SUM(attendances.price) as 'total'")
-                // DB::raw("COUNT(attendances.student_id) as 'numberStudents'")
             )
             ->where('attendances.teacher_id', $request->teacher_id)
             ->whereBetween(
                 'date',
                 [$request->from, $request->to]
-            )->groupBy('group_id')->get();
+            )->groupBy(['group_id'])->get();
 
         if ($user) {
             return BaseController::successData($user, "تم جلب البيانات بنجاح");

@@ -42,6 +42,27 @@ class StudentGroupController extends Model
 
 
 
+    public function getGroupSubjsByStudentforAttendance(Request $request)
+    {
+        if ($request->has('barcode')) {
+            $student  = Student::where("barcode", '=', $request->barcode)->first();
+            if ($student) {
+                $student_id =  $student['id'];
+            } else {
+                return response()->json('no data', 204);
+            }
+        } else {
+            $student_id = $request->student_id;
+        }
+
+        $StudentGrouprs = StudentGroup::with("group.teacher", "group.subj")
+            ->whereIn('group_id', $request->idsGroups)
+            ->where('student_id', $student_id)->get();
+
+        return response()->json($StudentGrouprs, 200);
+    }
+
+
     public function getAllGroupSubjs(Request $request)
     {
 
@@ -67,7 +88,6 @@ class StudentGroupController extends Model
             ->whereIn('group_id', $request->idsGroups)->get();
         return response()->json($StudentGrouprs, 200);
     }
-
 
     public function store()
     {

@@ -34,9 +34,16 @@ class SessionController extends Model
         );
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $groups = Session::with(['group.teacher', 'group.subj'])->get();
+
+        $groups = Session::with(['group.teacher', 'group.subj'])
+            ->whereBetween(
+                "start",
+                [$request->start . " 00:00:00", $request->end . " 23:59:00"]
+            )
+
+            ->get();
         return response()->json($groups, 200);
     }
 
@@ -128,7 +135,16 @@ class SessionController extends Model
     public  function remove(Request $request)
     {
 
-        $Group = Group::destroy($request->id);
+        $Group = Session::destroy($request->id);
+        return BaseController::successData($Group, "تمت العملية بنجاح");
+    }
+
+
+    public  function removeSubj(Request $request)
+    {
+        $Group = Session::where('start', "LIKE", "%" . $request->start . "%")
+            ->where('group_id', $request->id)
+            ->delete();
         return BaseController::successData($Group, "تمت العملية بنجاح");
     }
 
