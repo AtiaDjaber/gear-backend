@@ -41,9 +41,7 @@ class SessionController extends Model
             ->whereBetween(
                 "start",
                 [$request->start . " 00:00:00", $request->end . " 23:59:00"]
-            )
-
-            ->get();
+            )->get();
         return response()->json($groups, 200);
     }
 

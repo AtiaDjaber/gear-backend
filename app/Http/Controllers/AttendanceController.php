@@ -33,9 +33,28 @@ class AttendanceController extends Model
             $Attendances = $Attendances->orWhere('teacherName', 'LIKE', '%' . request()->teacherName . '%');
         if ($request->subjName != null)
             $Attendances = $Attendances->orWhere('subjName', 'LIKE', '%' . request()->subjName . '%');
+        if ($request->from != null)
+            $Attendances = $Attendances->where('date', '>=', $request->from);
+        if ($request->to != null)
+            $Attendances = $Attendances->where('date', '<=', $request->to);
 
         $Attendances = $Attendances->paginate(10);
-        return BaseController::successData($Attendances, "تم جلب البيانات بنجاح");
+        return response()->json($Attendances, 200);
+    }
+
+
+
+
+    public function getAnalytics(Request $request)
+    {
+        $Attendances = Attendance::orderBy('id', 'desc');
+        if ($request->from != null)
+            $Attendances = $Attendances->where('date', '>=', $request->from);
+        if ($request->to != null)
+            $Attendances = $Attendances->where('date', '<=', $request->to);
+
+        $Attendances = $Attendances->paginate(10);
+        return response()->json($Attendances, 200);
     }
 
 
@@ -65,6 +84,7 @@ class AttendanceController extends Model
 
     public function getTeachersBenifits(Request $request)
     {
+        $dataset = [];
         $user = Attendance::
             // join('groups', 'attendances.group_id', 'groups.id')
             // join('subjs', 'attendances.subj_id', 'subjs.id')
@@ -73,13 +93,13 @@ class AttendanceController extends Model
                 // 'groups.id',
                 // 'groups.price',
                 // 'groups.name',
-                'attendances.*',
-                // 'attendances.teacherName',
+                // 'attendances.*',
+                'attendances.teacherName',
                 // 'subjs.name as subjName',
                 // 'subjs.grade',
                 // 'subjs.level',
                 // 'attendances.groupName',
-                DB::raw("SUM(attendances.price) as 'total'")
+                DB::raw("SUM(attendances.price) as total")
                 // DB::raw("COUNT(attendances.student_id) as 'numberStudents'")
             )
             // ->where('attendances.teacher_id', $request->teacher_id)
@@ -89,7 +109,9 @@ class AttendanceController extends Model
             )->groupBy('teacher_id')->get();
 
         if ($user) {
-            return BaseController::successData($user, "تم جلب البيانات بنجاح");
+            $dataset["data"] = $user->pluck("total");
+            $dataset["labels"] = $user->pluck("teacherName");
+            return response()->json($dataset, 200);
         }
         return BaseController::errorData($user, "السجل غير موجود");
     }
@@ -166,11 +188,9 @@ class AttendanceController extends Model
 
     public  function remove(Request $request)
     {
-
         $Attendance = Attendance::destroy($request->id);
         return BaseController::successData($Attendance, "تمت العملية بنجاح");
     }
-
 
     //
 }

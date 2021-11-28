@@ -73,7 +73,6 @@ Route::delete('levelYear/{id}', 'LevelYearController@deleteSubject');
 Route::post('subjLevelYear/add', 'LevelYearSubjController@store');
 
 
-
 Route::post('session/add', 'SessionController@store');
 Route::get('sessions/{start}/{end}', 'SessionController@index');
 Route::delete('session/{id}', 'SessionController@remove');
