@@ -36,6 +36,20 @@ class StudentController extends Model
         return BaseController::successData($students, "تم جلب البيانات بنجاح");
     }
 
+    public function getSessionsByStudentId(Request $request)
+    {
+        $sessions = Student::with(['sessions' => function ($q) use ($request) {
+            $q->with(['group.teacher', 'group.subj'])->whereBetween(
+                "start",
+                [$request->start . " 00:00:00", $request->end . " 23:59:00"]
+            );
+        }])->where("id", $request->id)->get();
+
+        if ($sessions) {
+            return response()->json($sessions, 200);
+        }
+        return BaseController::errorData("error", "السجل غير موجود");
+    }
 
     // public function getAbsences(Request $request)
     // {
@@ -72,8 +86,7 @@ class StudentController extends Model
             }
         )->whereHas("groups", function ($q) use ($request) {
             $q->where('groups.id', $request->group_id);
-        })
-            ->get();
+        })->get();
 
         return BaseController::successData($student, "تم جلب البيانات بنجاح");
     }

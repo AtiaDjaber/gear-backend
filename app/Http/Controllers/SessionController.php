@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\model\Group;
 use App\model\Session;
+use App\model\Student;
+use App\model\StudentGroup;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use DatePeriod;
@@ -45,12 +47,18 @@ class SessionController extends Model
         return response()->json($groups, 200);
     }
 
-    public function getById(Request $request)
+    public function getSessionsByStudentId(Request $request)
     {
-        $session = Session::find($request->id)->with(['group.teacher', 'group.subj'])
-            ->first();
-        if ($session) {
-            return BaseController::successData($session, "تم جلب البيانات بنجاح");
+        $groupIds = StudentGroup::where('student_id', $request->id)
+            ->get()->pluck("group_id");
+
+        $sessions = Session::with(['group.teacher', 'group.subj'])
+            ->whereBetween(
+                "start",
+                [$request->start . " 00:00:00", $request->end . " 23:59:00"]
+            )->whereIn("group_id", $groupIds)->get();
+        if ($sessions) {
+            return response()->json($sessions, 200);
         }
         return BaseController::errorData("error", "السجل غير موجود");
     }

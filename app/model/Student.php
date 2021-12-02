@@ -4,6 +4,7 @@ namespace App\model;
 
 use Illuminate\Database\Eloquent\Model;
 use \Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use StdGroup;
 
 class Student extends Model
 {
@@ -18,15 +19,17 @@ class Student extends Model
         'date' => 'datetime:Y-m-d H:i:s',
     ];
 
-    public function subjs()
+    public function sessions()
     {
         return $this->hasManyDeep(
-            Subj::class,
-            [StdGroupTeacher::class, GroupTeacher::class, Group::class],
-            ['student_id', 'id', 'id', 'id'],
-            ['id', 'group_teacher_id', 'group_id', 'subj_id']
+            Session::class,
+            [StudentGroup::class, Group::class],
+            ['student_id', 'group_id', 'id', 'group_id',],
+            ['id', 'id', 'group_id', "id"]
         )->withIntermediate(Group::class);
     }
+
+
     public function groups()
     {
         return $this->belongsToMany(Group::class, "std_group");

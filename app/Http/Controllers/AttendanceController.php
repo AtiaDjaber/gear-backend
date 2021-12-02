@@ -72,44 +72,21 @@ class AttendanceController extends Model
         return response()->json($Attendances, 200);
     }
 
-
-    public function getById(Request $request)
-    {
-        $user = Attendance::find($request->id);
-        if ($user) {
-            return BaseController::successData($user, "تم جلب البيانات بنجاح");
-        }
-        return BaseController::errorData($user, "السجل غير موجود");
-    }
-
-    public function getTeachersBenifits(Request $request)
+    public function getTeachersBenifitsChart(Request $request)
     {
         $dataset = [];
-        $user = Attendance::
-            // join('groups', 'attendances.group_id', 'groups.id')
-            // join('subjs', 'attendances.subj_id', 'subjs.id')
-            // ->
-            select(
-                // 'groups.id',
-                // 'groups.price',
-                // 'groups.name',
-                // 'attendances.*',
-                'attendances.teacherName',
-                // 'subjs.name as subjName',
-                // 'subjs.grade',
-                // 'subjs.level',
-                // 'attendances.groupName',
-                DB::raw("SUM(attendances.price) as total")
-                // DB::raw("COUNT(attendances.student_id) as 'numberStudents'")
-            )
-            // ->where('attendances.teacher_id', $request->teacher_id)
-            ->whereBetween(
-                'date',
-                [$request->from, $request->to]
-            )->groupBy('teacher_id')->get();
+        $user = Attendance::select(
+            'attendances.teacherName',
+            'attendances.teacher_id',
+            DB::raw("SUM(attendances.price) as total")
+        )->whereBetween(
+            'date',
+            [$request->from, $request->to]
+        )->groupBy('teacher_id')->get();
 
         if ($user) {
             $dataset["data"] = $user->pluck("total");
+            $dataset["teachers_ids"] = $user->pluck("teacher_id");
             $dataset["labels"] = $user->pluck("teacherName");
             return response()->json($dataset, 200);
         }
@@ -117,15 +94,33 @@ class AttendanceController extends Model
     }
 
 
+    public function getTeachersBenifits(Request $request)
+    {
+        $attendances = Attendance::select(
+            'attendances.teacherName',
+            'attendances.teacher_id',
+            DB::raw("SUM(attendances.price) as total")
+        )->whereBetween(
+            'date',
+            [$request->from, $request->to]
+        )->groupBy('teacher_id')->orderBy("total", "desc")->get();
+
+        if ($attendances) {
+            return response()->json($attendances, 200);
+        }
+        return BaseController::errorData(null, "السجل غير موجود");
+    }
+
+
     public function getTeacherBenifitById(Request $request)
     {
-        $user = Attendance::with('group.subj')
-            // ->join('subjs', 'attendances.subj_id', 'subjs.id')
-            ->select(
-                'attendances.group_id',
-                'attendances.teacher_id',
-                DB::raw("SUM(attendances.price) as 'total'")
-            )
+        $user = Attendance::select(
+            'attendances.group_id',
+            'attendances.teacher_id',
+            'attendances.subjName',
+            'attendances.groupName',
+            DB::raw("SUM(attendances.price) as 'total'")
+        )
             ->where('attendances.teacher_id', $request->teacher_id)
             ->whereBetween(
                 'date',
@@ -133,7 +128,7 @@ class AttendanceController extends Model
             )->groupBy(['group_id'])->get();
 
         if ($user) {
-            return BaseController::successData($user, "تم جلب البيانات بنجاح");
+            return response()->json($user, 200);
         }
         return BaseController::errorData($user, "السجل غير موجود");
     }

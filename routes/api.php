@@ -75,6 +75,8 @@ Route::post('subjLevelYear/add', 'LevelYearSubjController@store');
 
 Route::post('session/add', 'SessionController@store');
 Route::get('sessions/{start}/{end}', 'SessionController@index');
+Route::get('student/sessionsByStudentId', 'SessionController@getSessionsByStudentId');
+
 Route::delete('session/{id}', 'SessionController@remove');
 Route::delete('session/groupId/{id}/{start}', 'SessionController@removeSubj');
 
@@ -104,6 +106,7 @@ Route::put('expense/put', 'ExpenseController@put');
 Route::delete('expense/{id}', 'ExpenseController@remove');
 
 Route::get('attendances', 'AttendanceController@index');
+Route::get('attendance/getBenifitsTeachersChart', 'AttendanceController@getTeachersBenifitsChart');
 Route::get('attendance/getBenifitsTeachers', 'AttendanceController@getTeachersBenifits');
 Route::get('attendance/getBenifitByTeacherId', 'AttendanceController@getTeacherBenifitById');
 Route::post('attendance/add', 'AttendanceController@store');

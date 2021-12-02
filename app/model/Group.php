@@ -19,6 +19,11 @@ class Group extends Model
         return $this->hasMany(Attendance::class);
     }
 
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
+
     public function teacher()
     {
         return $this->belongsTo(Teacher::class, "teacher_id");
