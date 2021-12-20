@@ -1,19 +1,7 @@
 <?php
 
-use App\Http\Controllers\api\CategoryController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
 Route::post('/register', 'AuthController@register');
 Route::post('/me', "AuthController@me")->middleware('auth:sanctum');
@@ -87,12 +75,14 @@ Route::post('group/add', 'GroupController@store');
 Route::put('group/put', 'GroupController@put');
 Route::delete('group/{id}', 'GroupController@remove');
 Route::get('groups/groupSubjByTeacherId', 'GroupController@getGroupSubjById');
+Route::get('group/students', 'GroupController@getStudentByGroupId');
 
 
 Route::get('teacher/getGroupSubjById', 'TeacherController@getGroupSubjById');
 Route::get('teacher/getStudentsById', 'TeacherController@getStudentsById');
 
 
+Route::get('notificationsStudents', 'StudentGroupController@getNotifications');
 
 Route::get('sgs', 'StudentGroupController@getAllGroupSubjs');
 Route::get('sg/getGroupSubjByStudent', 'StudentGroupController@getGroupSubjsByStudent');
@@ -101,6 +91,7 @@ Route::post('sg/studentsByGroups', 'StudentGroupController@getStudentsByGroups')
 
 
 Route::get('expenses', 'ExpenseController@index');
+Route::get('expenses/expansesAnalytics', 'ExpenseController@getExpansesAnalytic');
 Route::post('expense/add', 'ExpenseController@store');
 Route::put('expense/put', 'ExpenseController@put');
 Route::delete('expense/{id}', 'ExpenseController@remove');
@@ -110,12 +101,12 @@ Route::get('attendance/getBenifitsTeachersChart', 'AttendanceController@getTeach
 Route::get('attendance/getBenifitsTeachers', 'AttendanceController@getTeachersBenifits');
 Route::get('attendance/getBenifitByTeacherId', 'AttendanceController@getTeacherBenifitById');
 Route::post('attendance/add', 'AttendanceController@store');
+Route::delete('attendance/{id}', 'AttendanceController@remove');
 
 
 Route::get('payments', 'PaymentController@index');
 Route::get('payments/getByTeacherId', 'PaymentController@getById');
 Route::get('payments/getPayementGrouped', 'PaymentController@getGrouped');
-
 Route::post('payment/add', 'PaymentController@store');
 Route::put('payment/put', 'PaymentController@put');
 Route::delete('payment/{id}', 'PaymentController@remove');

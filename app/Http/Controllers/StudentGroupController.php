@@ -6,6 +6,7 @@ use App\model\Group;
 use App\model\Student;
 use App\model\StudentGroup;
 use App\model\StudentGroupr;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -81,6 +82,18 @@ class StudentGroupController extends Model
         return BaseController::errorData($user, "السجل غير موجود");
     }
 
+    public function getNotifications(Request $request)
+    {
+        $StudentGrouprs = StudentGroup::orderBy("updated_at", "desc")
+            ->with(["group.teacher", "group.subj", "stduent"])
+            ->where("quotas", "<=", 0)
+            ->where(function ($q) {
+                $q->where("updated_at", ">=", Carbon::now()->subDays(30))
+                    ->orWhere("created_at", ">=", Carbon::now()->subDays(30));
+            })->get();
+
+        return response()->json($StudentGrouprs, 200);
+    }
 
     public function getStudentsByGroups(Request $request)
     {

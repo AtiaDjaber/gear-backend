@@ -32,4 +32,9 @@ class Group extends Model
     {
         return $this->belongsTo(Subj::class, "subj_id");
     }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, "std_group");
+    }
 }

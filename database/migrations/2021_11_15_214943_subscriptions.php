@@ -17,7 +17,7 @@ class Subscriptions extends Migration
             $table->id();
             $table->foreignId("student_id")->constrained();
             $table->foreignId("group_id")->constrained();
-            $table->foreignId("teacher_id")->constrained();
+            // $table->foreignId("teacher_id")->constrained();
             $table->double('quotas')->default('4');
             $table->decimal('price', 10, 2);
             $table->date("date", $precision = 0);

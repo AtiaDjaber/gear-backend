@@ -30,7 +30,8 @@ class StudentController extends Model
         $students = Student::orderBy('id', 'desc');
         if ($request->has("name")) {
             $students = $students->where("firstname", 'LIKE', '%' . $request->name . '%')
-                ->orWhere("lastname", 'LIKE', '%' . $request->name . '%');
+                ->orWhere("lastname", 'LIKE', '%' . $request->name . '%')
+                ->orWhere("barcode", 'LIKE', '%' . $request->name . '%');
         }
         $students = $students->paginate(10);
         return BaseController::successData($students, "تم جلب البيانات بنجاح");
@@ -84,7 +85,9 @@ class StudentController extends Model
                 $q->where('group_id', $request->get('group_id'))
                     ->where('date', $request->get('date'));
             }
-        )->whereHas("groups", function ($q) use ($request) {
+        )->whereHas("studentGroups", function ($q) use ($request) {
+            $q->where("quotas", ">", 0)->where("group_id", $request->group_id);
+        })->whereHas("groups", function ($q) use ($request) {
             $q->where('groups.id', $request->group_id);
         })->get();
 
@@ -93,7 +96,8 @@ class StudentController extends Model
 
     public function getGroup()
     {
-        $groups = Student::orderBy('id', 'desc')->with(['groups.subj', 'groups.teacher'])->paginate(10);
+        $groups = Student::orderBy('id', 'desc')
+            ->with(['groups.subj', 'groups.teacher'])->paginate(10);
         return BaseController::successData($groups, "تم جلب البيانات بنجاح");
     }
 

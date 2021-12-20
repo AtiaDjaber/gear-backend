@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\model\Attendance;
 use App\model\Student;
+use App\model\StudentGroup;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,34 +17,40 @@ class AttendanceController extends Model
     {
         return Validator::make(request()->all(), [
             'std_group_id' => 'required|exists:std_group,id',
+            'group_id' => 'required|exists:groups,id',
+            'student_id' => 'required|exists:students,id',
+            'teacher_id' => 'required|exists:teachers,id',
             'date' => 'required|date',
             'isPresent' => 'required|boolean',
             'isJsutified' => 'nullable|boolean'
         ]);
     }
-
     public function index(Request $request)
     {
         $Attendances = Attendance::orderBy('id', 'desc');
-        if ($request->studentName)
-            $Attendances = $Attendances->orWhere('studentName', 'LIKE', '%' . request()->studentName . '%');
-        if ($request->studentBarcode)
-            $Attendances = $Attendances->orWhere('studentBarcode', 'LIKE', '%' . request()->studentBarcode . '%');
-        if ($request->teacherName != null)
-            $Attendances = $Attendances->orWhere('teacherName', 'LIKE', '%' . request()->teacherName . '%');
-        if ($request->subjName != null)
-            $Attendances = $Attendances->orWhere('subjName', 'LIKE', '%' . request()->subjName . '%');
+        if ($request->name) {
+            $Attendances = $Attendances->where(function ($q) use ($request) {
+                $q->orWhere('studentName', 'LIKE', '%' . $request->name . '%')
+                    ->orWhere('studentBarcode', 'LIKE', '%' . $request->name . '%')
+                    ->orWhere('teacherName', 'LIKE', '%' . $request->name . '%');
+            });
+        }
+        if ($request->group_id != null)
+            $Attendances = $Attendances->where('group_id', '=', $request->group_id);
+        if ($request->teacher_id != null)
+            $Attendances = $Attendances->where('teacher_id', '=', $request->teacher_id);
+        if ($request->student_id != null)
+            $Attendances = $Attendances->where('student_id', '=', $request->student_id);
         if ($request->from != null)
             $Attendances = $Attendances->where('date', '>=', $request->from);
         if ($request->to != null)
             $Attendances = $Attendances->where('date', '<=', $request->to);
+        if ($request->isPresent != null)
+            $Attendances = $Attendances->where('isPresent', '=', $request->isPresent);
 
         $Attendances = $Attendances->paginate(10);
         return response()->json($Attendances, 200);
     }
-
-
-
 
     public function getAnalytics(Request $request)
     {
@@ -154,17 +161,40 @@ class AttendanceController extends Model
     //             'subjs.level', 'groups.price'
     //         ])->get();
 
-    public function store()
+    public function store(Request $request)
     {
-        // $validator = $this->validater();
-        // if ($validator->fails()) {
-        //     return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
-        // }
-        $user = Attendance::create(Request()->all());
-        if ($user) {
-            return response()->json(['message' => 'Created', 'data' => $user], 200);
+        $validator = $this->validater();
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+        DB::beginTransaction();
+        try {
+            $student =  Student::find($request->student_id);
+            $attendence =  Request()->all();
+            $attendence["studentName"] = $student->firstname . " " . $student->lastname;
+            $user = Attendance::create($attendence);
+            if ($user) {
+
+                $studentGroup = StudentGroup::where('student_id', $request->student_id)
+                    ->where('group_id', $request->group_id)->first();
+
+                if ($request->has("isPresent")) {
+                    if ($request->isPresent == 1) {
+
+                        $newQuotas =  $studentGroup->quotas - 1;
+                        StudentGroup::where('student_id', $request->student_id)
+                            ->where('group_id', $request->group_id)->update(['quotas' => $newQuotas]);
+                    }
+                }
+                DB::commit();
+
+                return response()->json(['message' => 'Created', 'data' => $user], 200);
+            }
+            return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Error ', 'data' => $e], 500);
+        }
     }
 
     public function put(Request $request)
@@ -181,10 +211,30 @@ class AttendanceController extends Model
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
-    public  function remove(Request $request)
+    public function remove(Request $request)
     {
-        $Attendance = Attendance::destroy($request->id);
-        return BaseController::successData($Attendance, "تمت العملية بنجاح");
+        DB::beginTransaction();
+
+        try {
+            $attendance =  Attendance::findOrFail($request->id);
+            $attendance->delete();
+
+            if ($attendance->isPresent == 1) {
+
+                $studentGroup = StudentGroup::where('student_id', $attendance->student_id)
+                    ->where('group_id', $attendance->group_id)->first();
+
+                $newQuotas =  $studentGroup->quotas + 1;
+                StudentGroup::where('student_id', $attendance->student_id)
+                    ->where('group_id', $attendance->group_id)->update(['quotas' => $newQuotas]);
+            }
+
+            DB::commit();
+            return BaseController::successData($attendance, "تمت العملية بنجاح");
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Error ', 'data' => $e], 500);
+        }
     }
 
     //

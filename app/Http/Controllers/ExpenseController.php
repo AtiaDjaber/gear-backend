@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\model\Expense;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ExpenseController extends Model
@@ -25,6 +26,7 @@ class ExpenseController extends Model
         $Expenses = Expense::orderBy('id', 'desc')->paginate(10);
         return BaseController::successData($Expenses, "تم جلب البيانات بنجاح");
     }
+
 
 
     public function getById(Request $request)
@@ -67,6 +69,25 @@ class ExpenseController extends Model
     {
         $Expense = Expense::destroy($request->id);
         return BaseController::successData($Expense, "تمت العملية بنجاح");
+    }
+
+
+
+
+    public function getExpansesAnalytic(Request $request)
+    {
+        $Expenses = Expense::select(
+            DB::raw("SUM(expenses.price) as 'total'")
+        )->whereBetween(
+            "date",
+            [
+                $request->from, $request->to
+            ]
+        )->first();
+        if ($Expenses) {
+            return response()->json($Expenses, 200);
+        }
+        return response()->json(null, 400);
     }
 
 

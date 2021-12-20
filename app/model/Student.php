@@ -4,7 +4,6 @@ namespace App\model;
 
 use Illuminate\Database\Eloquent\Model;
 use \Staudenmeir\EloquentHasManyDeep\HasManyDeep;
-use StdGroup;
 
 class Student extends Model
 {
@@ -33,6 +32,11 @@ class Student extends Model
     public function groups()
     {
         return $this->belongsToMany(Group::class, "std_group");
+    }
+
+    public function studentGroups()
+    {
+        return $this->hasMany(StudentGroup::class);
     }
 
     public function attendances()

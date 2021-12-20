@@ -16,6 +16,7 @@ class GroupController extends Model
             'name' => 'required|string',
             'subj_id' => 'required|exists:subjs,id',
             'teacher_id' => 'required|exists:teachers,id',
+            'price' => 'required|numeric'
         ]);
     }
 
@@ -40,6 +41,16 @@ class GroupController extends Model
     {
         $groups = Group::where('teacher_id', $request->teacher_id)->with(['subj'])
             ->get();
+        if ($groups) {
+            return response()->json($groups, 200);
+        }
+        return BaseController::errorData("erro data", "السجل غير موجود");
+    }
+
+    public function getStudentByGroupId(Request $request)
+    {
+        $groups = Group::with('students')
+            ->find($request->id);
         if ($groups) {
             return response()->json($groups, 200);
         }

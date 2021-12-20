@@ -20,14 +20,13 @@ class SubscriptionController extends Model
             'quotas' => 'required|numeric|gt:0',
             'date' => 'required|date',
             'student_id' => 'required|exists:students,id',
-            'group_id' => 'required|exists:groups,id',
-            'teacher_id' => 'required|exists:teachers,id',
+            'group_id' => 'required|exists:groups,id'
         ]);
     }
 
     public function index()
     {
-        $subscriptions = Subscription::with(['group.subj', 'student', 'teacher'])
+        $subscriptions = Subscription::with(['group.subj', 'student'])
             ->orderBy('id', 'desc')
             ->paginate(10);
         return response()->json($subscriptions, 200);
@@ -47,7 +46,7 @@ class SubscriptionController extends Model
 
     public function getById(Request $request)
     {
-        $subscriptions = Subscription::with(['group.subj', 'teacher'])
+        $subscriptions = Subscription::with(['group.subj'])
             ->where("student_id", $request->student_id);
         if ($request->has('from') && $request->has('to')) {
             $subscriptions = $subscriptions->whereBetween(
@@ -67,13 +66,14 @@ class SubscriptionController extends Model
 
     public function getGrouped(Request $request)
     {
-        $subscriptions = Subscription::with(['student', 'group.subj', 'teacher'])->select(
-            'subscriptions.student_id',
-            'subscriptions.teacher_id',
-            'subscriptions.group_id',
-            DB::raw("SUM(subscriptions.price) as 'total'")
-            // DB::raw("COUNT(attendances.student_id) as 'numberStudents'")
-        );
+        $subscriptions = Subscription::with(['student', 'group.subj'])
+            ->select(
+                'subscriptions.student_id',
+                'subscriptions.teacher_id',
+                'subscriptions.group_id',
+                DB::raw("SUM(subscriptions.price) as 'total'")
+                // DB::raw("COUNT(attendances.student_id) as 'numberStudents'")
+            );
         if ($request->has('from') && $request->has('to')) {
             $subscriptions =   $subscriptions->whereBetween(
                 'date',
@@ -107,7 +107,8 @@ class SubscriptionController extends Model
             StudentGroup::where('student_id', $request->student_id)
                 ->where('group_id', $request->group_id)->update(['quotas' => $newQuotas]);
             DB::commit();
-
+            $subscription = Subscription::with(['group.subj', 'teacher'])
+                ->find($subscription->id);
             return response()->json(['message' => 'Created', 'data' => $subscription], 200);
         } catch (\Exception $e) {
             DB::rollback();
@@ -135,7 +136,6 @@ class SubscriptionController extends Model
 
         try {
             $subscription =  Subscription::findOrFail($request->id);
-            // $SubSubscription = Subscription::destroy($request->id);
             $subscription->delete();
 
             $studentGroup = StudentGroup::where('student_id', $subscription->student_id)
