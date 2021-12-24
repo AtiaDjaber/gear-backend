@@ -16,14 +16,18 @@ class GroupController extends Model
             'name' => 'required|string',
             'subj_id' => 'required|exists:subjs,id',
             'teacher_id' => 'required|exists:teachers,id',
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
+            'quotas' => 'required|numeric'
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $Groups = Group::orderBy('id', 'desc')->with(['subj', 'teacher'])
-            ->paginate(10);
+        $Groups = Group::orderBy('id', 'desc')->with(['subj', 'teacher']);
+        if ($request->has("name")) {
+            $Groups = $Groups->where("name", 'LIKE', '%' . $request->name . '%');
+        }
+        $Groups =  $Groups->paginate(10);
         return response()->json($Groups, 200);
     }
 
@@ -65,8 +69,9 @@ class GroupController extends Model
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
         $user = Group::create($validator->validate());
+
         if ($user) {
-            return response()->json(['message' => 'Created', 'data' => $user], 200);
+            return response()->json(['message' => 'Created', 'data' => Group::where('id', $user->id)->with(['subj', 'teacher'])->first()], 200);
         }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
@@ -77,10 +82,9 @@ class GroupController extends Model
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        $Group = Group::find($request->id);
-        $Group->update($request->all());
-        if ($Group) {
-            return response()->json(['message' => 'updated', 'data' =>  $Group], 200);
+        $Group = Group::where('id', $request->id)->with(['subj', 'teacher'])->first();
+        if ($Group->update($request->all())) {
+            return response()->json(['message' => 'Created', 'data' => $Group], 200);
         }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
