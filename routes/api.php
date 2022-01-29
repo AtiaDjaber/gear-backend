@@ -30,21 +30,21 @@ Route::put('user/name', 'AuthController@updateName');
 Route::delete('user/delete/{id}', 'AuthController@remove');
 
 
-Route::get('student/generate', 'StudentController@generate');
-Route::get('student/getById', 'StudentController@getById');
-Route::get('students', 'StudentController@index');
-Route::post('student/add', 'StudentController@store');
-Route::put('student/put', 'StudentController@put');
-Route::delete('student/{id}', 'StudentController@deleteStudent');
-Route::get('student/getGroupSubjById', 'StudentController@getGroup');
-Route::get('students/absences', 'StudentController@getAbsences');
-Route::post('student/groupSubjByStudentForAttendance', 'StudentGroupController@getGroupSubjsByStudentforAttendance');
+Route::get('product/generate', 'ProductController@generate');
+Route::get('product/getById', 'ProductController@getById');
+Route::get('products', 'ProductController@index');
+Route::post('product/add', 'ProductController@store');
+Route::put('product/put', 'ProductController@put');
+Route::delete('product/{id}', 'ProductController@deleteProduct');
+Route::get('product/getGroupSubjById', 'ProductController@getGroup');
+Route::get('Products/absences', 'ProductController@getAbsences');
+Route::post('product/groupSubjByProductForAttendance', 'ProductGroupController@getGroupSubjsByProductforAttendance');
 
-Route::get('teacher/getById', 'TeacherController@getById');
-Route::get('teachers', 'TeacherController@index');
-Route::post('teacher/add', 'TeacherController@store');
-Route::put('teacher/put', 'TeacherController@put');
-Route::delete('teacher/{id}', 'TeacherController@deleteTeacher');
+Route::get('client/getById', 'ClientController@getById');
+Route::get('clients', 'ClientController@index');
+Route::post('client/add', 'ClientController@store');
+Route::put('client/put', 'ClientController@put');
+Route::delete('client/{id}', 'ClientController@deleteclient');
 
 Route::get('subject/getById', 'SubjectController@getById');
 Route::get('subjects', 'SubjectController@index');
@@ -63,7 +63,7 @@ Route::post('subjLevelYear/add', 'LevelYearSubjController@store');
 
 Route::post('session/add', 'SessionController@store');
 Route::get('sessions/{start}/{end}', 'SessionController@index');
-Route::get('student/sessionsByStudentId', 'SessionController@getSessionsByStudentId');
+Route::get('product/sessionsByProductId', 'SessionController@getSessionsByProductId');
 
 Route::delete('session/{id}', 'SessionController@remove');
 Route::delete('session/groupId/{id}/{start}', 'SessionController@removeSubj');
@@ -74,20 +74,20 @@ Route::get('group/getById', 'GroupController@getById');
 Route::post('group/add', 'GroupController@store');
 Route::put('group/put', 'GroupController@put');
 Route::delete('group/{id}', 'GroupController@remove');
-Route::get('groups/groupSubjByTeacherId', 'GroupController@getGroupSubjById');
-Route::get('group/students', 'GroupController@getStudentByGroupId');
+Route::get('groups/groupSubjByclientId', 'GroupController@getGroupSubjById');
+Route::get('group/Products', 'GroupController@getProductByGroupId');
 
 
-Route::get('teacher/getGroupSubjById', 'TeacherController@getGroupSubjById');
-Route::get('teacher/getStudentsById', 'TeacherController@getStudentsById');
+Route::get('client/getGroupSubjById', 'ClientController@getGroupSubjById');
+Route::get('client/getProductsById', 'ClientController@getProductsById');
 
 
-Route::get('notificationsStudents', 'StudentGroupController@getNotifications');
+Route::get('notificationsProducts', 'ProductGroupController@getNotifications');
 
-Route::get('sgs', 'StudentGroupController@getAllGroupSubjs');
-Route::get('sg/getGroupSubjByStudent', 'StudentGroupController@getGroupSubjsByStudent');
-Route::post('sg/add', 'StudentGroupController@store');
-Route::post('sg/studentsByGroups', 'StudentGroupController@getStudentsByGroups');
+Route::get('sgs', 'ProductGroupController@getAllGroupSubjs');
+Route::get('sg/getGroupSubjByProduct', 'ProductGroupController@getGroupSubjsByProduct');
+Route::post('sg/add', 'ProductGroupController@store');
+Route::post('sg/ProductsByGroups', 'ProductGroupController@getProductsByGroups');
 
 
 Route::get('expenses', 'ExpenseController@index');
@@ -97,15 +97,17 @@ Route::put('expense/put', 'ExpenseController@put');
 Route::delete('expense/{id}', 'ExpenseController@remove');
 
 Route::get('attendances', 'AttendanceController@index');
-Route::get('attendance/getBenifitsTeachersChart', 'AttendanceController@getTeachersBenifitsChart');
-Route::get('attendance/getBenifitsTeachers', 'AttendanceController@getTeachersBenifits');
-Route::get('attendance/getBenifitByTeacherId', 'AttendanceController@getTeacherBenifitById');
+Route::get('attendance/getBenifitsclientsChart', 'AttendanceController@getclientsBenifitsChart');
+Route::get('attendance/getBenifitsclients', 'AttendanceController@getclientsBenifits');
+Route::get('attendance/schoolBenifitChart', 'AttendanceController@getSchoolBenifitChart');
+Route::get('attendance/schoolBenifitPeriod', 'AttendanceController@getSchoolBenifitPeriod');
+Route::get('attendance/getBenifitByclientId', 'AttendanceController@getclientBenifitById');
 Route::post('attendance/add', 'AttendanceController@store');
 Route::delete('attendance/{id}', 'AttendanceController@remove');
 
 
 Route::get('payments', 'PaymentController@index');
-Route::get('payments/getByTeacherId', 'PaymentController@getById');
+Route::get('payments/getByclientId', 'PaymentController@getById');
 Route::get('payments/getPayementGrouped', 'PaymentController@getGrouped');
 Route::post('payment/add', 'PaymentController@store');
 Route::put('payment/put', 'PaymentController@put');
@@ -114,7 +116,7 @@ Route::delete('payment/{id}', 'PaymentController@remove');
 Route::post('subscription/add', 'SubscriptionController@store');
 Route::get('subscriptions', 'SubscriptionController@index');
 Route::get('subscriptions/subscriptionAmount', 'SubscriptionController@getSubscriptionAmount');
-Route::get('subscriptions/getByStudentId', 'SubscriptionController@getById');
-Route::get('subscriptions/getStudentGrouped', 'SubscriptionController@getGrouped');
+Route::get('subscriptions/getByProductId', 'SubscriptionController@getById');
+Route::get('subscriptions/getProductGrouped', 'SubscriptionController@getGrouped');
 Route::put('subscription/put', 'SubscriptionController@put');
 Route::delete('subscription/{id}', 'SubscriptionController@remove');

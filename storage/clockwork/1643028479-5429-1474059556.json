@@ -1,0 +1,191 @@
+{
+  "id": "1643028479-5429-1474059556",
+  "version": 1,
+  "type": "request",
+  "time": 1643028479.206106,
+  "method": "GET",
+  "url": "http:\/\/192.168.1.7:8000\/api\/attendance\/getBenifitsClients?from=2021-12-23&to=2022-01-24%2023%3A59%3A50",
+  "uri": "\/api\/attendance\/getBenifitsClients?from=2021-12-23&to=2022-01-24%2023:59:50",
+  "headers": {
+    "host": [
+      "192.168.1.7:8000"
+    ],
+    "connection": [
+      "keep-alive"
+    ],
+    "accept": [
+      "application\/json, text\/plain, *\/*"
+    ],
+    "user-agent": [
+      "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/97.0.4692.71 Safari\/537.36"
+    ],
+    "origin": [
+      "http:\/\/localhost:8080"
+    ],
+    "referer": [
+      "http:\/\/localhost:8080\/"
+    ],
+    "accept-encoding": [
+      "gzip, deflate"
+    ],
+    "accept-language": [
+      "en-US,en;q=0.9,ar-DZ;q=0.8,ar;q=0.7"
+    ],
+    "sec-gpc": [
+      "1"
+    ]
+  },
+  "controller": "App\\Http\\Controllers\\AttendanceController@getClientsBenifits",
+  "getData": {
+    "from": "2021-12-23",
+    "to": "2022-01-24 23:59:50"
+  },
+  "postData": [],
+  "requestData": "",
+  "sessionData": [],
+  "authenticatedUser": null,
+  "cookies": [],
+  "responseTime": 1643028479.843287,
+  "responseStatus": 200,
+  "responseDuration": 637.1810436248779,
+  "memoryUsage": 2097152,
+  "middleware": [
+    "api"
+  ],
+  "databaseQueries": [
+    {
+      "query": "SELECT `attendances`.`ClientName`, `attendances`.`Client_id`, SUM(attendances.ClientBenefit) as total FROM `attendances` WHERE `created_at` between '2021-12-23' and '2022-01-24 23:59:50' and `isPresent` = 1 GROUP BY `Client_id` ORDER BY `total` DESC",
+      "duration": 7.02,
+      "connection": "mysql",
+      "time": 1643028479.807114,
+      "trace": [
+        {
+          "call": "Illuminate\\Database\\Eloquent\\Builder->get()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\app\\Http\\Controllers\\AttendanceController.php",
+          "line": 104,
+          "isVendor": false
+        },
+        {
+          "call": "App\\Http\\Controllers\\AttendanceController->getClientsBenifits()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php",
+          "line": 48,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+          "line": 239,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Route->runController()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+          "line": 196,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Route->run()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 685,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+          "line": 128,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+          "line": 103,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Pipeline\\Pipeline->then()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 687,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->runRouteWithinStack()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 662,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->runRoute()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 628,
+          "isVendor": true
+        }
+      ],
+      "model": "App\\model\\Attendance",
+      "tags": []
+    }
+  ],
+  "databaseQueriesCount": 1,
+  "databaseSlowQueries": 0,
+  "databaseSelects": 1,
+  "databaseInserts": 0,
+  "databaseUpdates": 0,
+  "databaseDeletes": 0,
+  "databaseOthers": 0,
+  "databaseDuration": 7.02,
+  "cacheQueries": [],
+  "cacheReads": 0,
+  "cacheHits": 0,
+  "cacheWrites": 0,
+  "cacheDeletes": 0,
+  "cacheTime": null,
+  "modelsActions": [],
+  "modelsRetrieved": {
+    "App\\model\\Attendance": 1
+  },
+  "modelsCreated": [],
+  "modelsUpdated": [],
+  "modelsDeleted": [],
+  "redisCommands": [],
+  "queueJobs": [],
+  "timelineData": [
+    {
+      "description": "Controller",
+      "start": 1643028479.746629,
+      "end": 1643028479.843032,
+      "duration": 96.40288352966309,
+      "color": null,
+      "data": null
+    }
+  ],
+  "log": [],
+  "events": [],
+  "routes": [],
+  "notifications": [],
+  "emailsData": [],
+  "viewsData": [],
+  "userData": [],
+  "subrequests": [],
+  "xdebug": [],
+  "commandName": null,
+  "commandArguments": [],
+  "commandArgumentsDefaults": [],
+  "commandOptions": [],
+  "commandOptionsDefaults": [],
+  "commandExitCode": null,
+  "commandOutput": null,
+  "jobName": null,
+  "jobDescription": null,
+  "jobStatus": null,
+  "jobPayload": [],
+  "jobQueue": null,
+  "jobConnection": null,
+  "jobOptions": [],
+  "testName": null,
+  "testStatus": null,
+  "testStatusMessage": null,
+  "testAsserts": [],
+  "clientMetrics": [],
+  "webVitals": [],
+  "parent": null,
+  "updateToken": "c6dd778a"
+}

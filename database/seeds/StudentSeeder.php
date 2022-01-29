@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
 
-class StudentSeeder extends Seeder
+class ProductSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,7 +15,7 @@ class StudentSeeder extends Seeder
     {
         $faker = Faker::create();
         for ($i = 1; $i < 100; $i++) {
-            DB::table('students')->insert([
+            DB::table('Products')->insert([
                 'firstname' => $faker->firstName,
                 'lastname' => $faker->lastName,
                 'mobile' => $faker->e164PhoneNumber,

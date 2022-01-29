@@ -6,7 +6,7 @@ use \Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class StudentGroup extends Pivot
+class ProductGroup extends Pivot
 {
     // use \Znck\Eloquent\Traits\BelongsToThrough;
 
@@ -28,16 +28,16 @@ class StudentGroup extends Pivot
 
     public function stduent()
     {
-        return $this->belongsTo(Student::class, 'student_id');
+        return $this->belongsTo(Product::class, 'Product_id');
     }
 
-    public function groupTeacher()
+    public function groupClient()
     {
-        return $this->belongsTo(GroupTeacher::class);
+        return $this->belongsTo(GroupClient::class);
     }
     // public function groups()
     // {
-    //     return $this->hasManyThrough(Group::class, StudentGroup::class);
+    //     return $this->hasManyThrough(Group::class, ProductGroup::class);
     // }
 
 
@@ -47,17 +47,17 @@ class StudentGroup extends Pivot
     static public function alldata()
     {
         return
-            StudentGroup::Join('group_teacher', 'std_group_teacher.group_teacher_id', 'group_teacher.id')
-            ->Join('groups', 'group_teacher.group_id', 'groups.id')
-            ->Join('teachers', 'group_teacher.teacher_id', 'teachers.id')
-            ->Join('students', 'std_group_teacher.student_id', 'students.id')
+            ProductGroup::Join('group_Client', 'std_group_Client.group_Client_id', 'group_Client.id')
+            ->Join('groups', 'group_Client.group_id', 'groups.id')
+            ->Join('Clients', 'group_Client.Client_id', 'Clients.id')
+            ->Join('Products', 'std_group_Client.Product_id', 'Products.id')
             ->Join('subjs', 'groups.subj_id', 'subjs.id')
             ->select(
-                'std_group_teacher.created_at',
-                'teachers.id as teacherId',
-                'teachers.firstname as teacherFirstname',
-                'teachers.lastname as teacherLastname',
-                'teachers.mobile as teacherMobile',
+                'std_group_Client.created_at',
+                'Clients.id as ClientId',
+                'Clients.firstname as ClientFirstname',
+                'Clients.lastname as ClientLastname',
+                'Clients.mobile as ClientMobile',
                 //
                 'groups.id as groupId',
                 'groups.name as groupName',
@@ -67,20 +67,20 @@ class StudentGroup extends Pivot
                 'subjs.grade as subjGrade',
                 'subjs.level as subjLevel',
                 //
-                'students.id as studentId',
-                'students.firstname as studentFirstname',
-                'students.lastname as studentLastname',
-                'students.barcode',
-                'students.mobile'
+                'Products.id as ProductId',
+                'Products.firstname as ProductFirstname',
+                'Products.lastname as ProductLastname',
+                'Products.barcode',
+                'Products.mobile'
             );
     }
 
-    // static public function getGroupSubjsByStudent($id)
+    // static public function getGroupSubjsByProduct($id)
     // {
     //     return
-    //         StudentGroup::where('student_id', $id)->LeftJoin('group_teacher', 'std_group_teacher.group_teacher_id', 'group_teacher.id')
-    //         // ->Join('teachers', 'group_teacher.teacher_id', 'teachers.id')
-    //         ->Join('groups', 'group_teacher.group_id', 'groups.id')
+    //         ProductGroup::where('Product_id', $id)->LeftJoin('group_Client', 'std_group_Client.group_Client_id', 'group_Client.id')
+    //         // ->Join('Clients', 'group_Client.Client_id', 'Clients.id')
+    //         ->Join('groups', 'group_Client.group_id', 'groups.id')
     //         ->Join('subjs', 'groups.subj_id', 'subjs.id')
     //         ->select(
     //             'groups.id as groupId',
@@ -102,13 +102,13 @@ class StudentGroup extends Pivot
             ['id', 'subj_id']
         )->withIntermediate(Group::class);
     }
-    public function teacher()
+    public function Client()
     {
         return $this->hasManyDeep(
-            teacher::class,
+            Client::class,
             [Group::class],
             ['id', 'id'],
-            ['id', 'teacher_id']
+            ['id', 'Client_id']
         );
     }
 }

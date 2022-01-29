@@ -18,7 +18,7 @@ class GroupSeeder extends Seeder
             DB::table('groups')->insert([
                 'name' => $faker->sentence($nbWords = 1, $variableNbWords = true),
                 'subj_id' => $faker->numberBetween($min = 1, $max = 99),
-                'teacher_id' => $faker->numberBetween($min = 1, $max = 99)
+                'Client_id' => $faker->numberBetween($min = 1, $max = 99)
             ]);
         }
     }

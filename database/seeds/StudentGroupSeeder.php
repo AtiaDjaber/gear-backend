@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
 
-class StudentGroupSeeder extends Seeder
+class ProductGroupSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,7 +18,7 @@ class StudentGroupSeeder extends Seeder
             DB::table('std_group')->insert([
                 'quotas' => $faker->numberBetween($min = 4, $max = 8),
                 'group_id' => $faker->numberBetween($min = 1, $max = 99),
-                'student_id' => $faker->numberBetween($min = 1, $max = 99)
+                'Product_id' => $faker->numberBetween($min = 1, $max = 99)
             ]);
         }
     }

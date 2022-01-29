@@ -21,14 +21,12 @@ class CreateUsersTable extends Migration
             $table->string("status")->nullable();
             $table->string("photo")->nullable();
             $table->string("token")->nullable();
-            $table->string("grade")->nullable();
-            $table->double('teacher')->default('1');
-            $table->double('student')->default('1');
-            $table->double('subjgroup')->default('1');
+            $table->double('facture')->default('1');
+            $table->double('client')->default('1');
+            $table->double('expense')->default('1');
             $table->double('chart')->default('0');
             $table->double('user')->default('0');
             $table->string('password');
-            $table->rememberToken();
             $table->timestamps();
         });
     }

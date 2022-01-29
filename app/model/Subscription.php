@@ -12,14 +12,14 @@ class Subscription extends Model
         'updated_at' => 'datetime:Y-m-d H:i:s',
         'date' => 'datetime:Y-m-d',
     ];
-    public function student()
+    public function Product()
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(Product::class);
     }
 
-    public function teacher()
+    public function Client()
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsTo(Client::class);
     }
     public function group()
     {

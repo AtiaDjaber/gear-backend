@@ -17,13 +17,13 @@ class PaymentController extends Model
             'price' => 'required|numeric|gt:0|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
             'date' => 'required|date',
             'avance' => 'nullable|boolean',
-            'teacher_id' => 'required|exists:teachers,id',
+            'Client_id' => 'required|exists:Clients,id',
         ]);
     }
 
     public function index()
     {
-        $Payments = Payment::with(['teacher'])
+        $Payments = Payment::with(['Client'])
             ->orderBy('id', 'desc')
             ->paginate(10);
         return response()->json($Payments, 200);
@@ -31,7 +31,7 @@ class PaymentController extends Model
 
     public function getById(Request $request)
     {
-        $payments = Payment::where("teacher_id", $request->teacher_id);
+        $payments = Payment::where("Client_id", $request->Client_id);
         if ($request->has('from') && $request->has('to')) {
             $payments =   $payments->whereBetween(
                 'date',
@@ -48,9 +48,9 @@ class PaymentController extends Model
     public function getGrouped(Request $request)
     {
         $payments = Payment::select(
-            'payments.teacher_id',
+            'payments.Client_id',
             DB::raw("SUM(payments.price) as 'total'")
-            // DB::raw("COUNT(attendances.student_id) as 'numberStudents'")
+            // DB::raw("COUNT(attendances.Product_id) as 'numberProducts'")
         );
         if ($request->has('from') && $request->has('to')) {
             $payments =   $payments->whereBetween(
@@ -58,7 +58,7 @@ class PaymentController extends Model
                 [$request->from, $request->to]
             );
         }
-        $payments = $payments->with('teacher')->groupBy('teacher_id')->get();
+        $payments = $payments->with('Client')->groupBy('Client_id')->get();
         if ($payments) {
             return response()->json($payments, 200);
         }

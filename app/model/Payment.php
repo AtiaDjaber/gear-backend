@@ -8,9 +8,9 @@ class Payment extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function teacher()
+    public function Client()
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsTo(Client::class);
     }
 
     protected $casts = [

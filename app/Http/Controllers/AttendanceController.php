@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\model\Attendance;
-use App\model\Student;
-use App\model\StudentGroup;
+use App\model\Product;
+use App\model\ProductGroup;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,9 +19,11 @@ class AttendanceController extends Model
         return Validator::make(request()->all(), [
             'std_group_id' => 'required|exists:std_group,id',
             'group_id' => 'required|exists:groups,id',
-            'student_id' => 'required|exists:students,id',
-            'teacher_id' => 'required|exists:teachers,id',
+            'Product_id' => 'required|exists:Products,id',
+            'Client_id' => 'required|exists:Clients,id',
             'date' => 'required|date',
+            'ClientBenefit' => 'required|numeric',
+            'schoolBenefit' => 'required|numeric',
             'isPresent' => 'required|boolean',
             'isJsutified' => 'nullable|boolean'
         ]);
@@ -30,17 +33,17 @@ class AttendanceController extends Model
         $Attendances = Attendance::orderBy('id', 'desc');
         if ($request->name) {
             $Attendances = $Attendances->where(function ($q) use ($request) {
-                $q->orWhere('studentName', 'LIKE', '%' . $request->name . '%')
-                    ->orWhere('studentBarcode', 'LIKE', '%' . $request->name . '%')
-                    ->orWhere('teacherName', 'LIKE', '%' . $request->name . '%');
+                $q->orWhere('ProductName', 'LIKE', '%' . $request->name . '%')
+                    ->orWhere('ProductBarcode', 'LIKE', '%' . $request->name . '%')
+                    ->orWhere('ClientName', 'LIKE', '%' . $request->name . '%');
             });
         }
         if ($request->group_id != null)
             $Attendances = $Attendances->where('group_id', '=', $request->group_id);
-        if ($request->teacher_id != null)
-            $Attendances = $Attendances->where('teacher_id', '=', $request->teacher_id);
-        if ($request->student_id != null)
-            $Attendances = $Attendances->where('student_id', '=', $request->student_id);
+        if ($request->Client_id != null)
+            $Attendances = $Attendances->where('Client_id', '=', $request->Client_id);
+        if ($request->Product_id != null)
+            $Attendances = $Attendances->where('Product_id', '=', $request->Product_id);
         if ($request->from != null)
             $Attendances = $Attendances->where('date', '>=', $request->from);
         if ($request->to != null)
@@ -52,65 +55,53 @@ class AttendanceController extends Model
         return response()->json($Attendances, 200);
     }
 
-    public function getAnalytics(Request $request)
+
+    public function getGroupSubjsByProduct(Request $request)
     {
-        $Attendances = Attendance::orderBy('id', 'desc');
-        if ($request->from != null)
-            $Attendances = $Attendances->where('date', '>=', $request->from);
-        if ($request->to != null)
-            $Attendances = $Attendances->where('date', '<=', $request->to);
+        $Attendances = Attendance::getGroupSubjsByProduct($request->Product_id);
+        //        if ($request->ProductFirstname)
+        //            $Attendances =  $Attendances->where('Products.firstname', 'LIKE', '%' . request()->ProductFirstname . '%');
+        //        if ($request->ProductLastname != null)
+        //            $Attendances =  $Attendances->where('Products.lastname', 'LIKE', '%' . request()->ProductLastname . '%');
 
         $Attendances = $Attendances->paginate(10);
         return response()->json($Attendances, 200);
     }
 
-
-
-
-    public function getGroupSubjsByStudent(Request $request)
-    {
-        $Attendances = Attendance::getGroupSubjsByStudent($request->student_id);
-        //        if ($request->studentFirstname)
-        //            $Attendances =  $Attendances->where('students.firstname', 'LIKE', '%' . request()->studentFirstname . '%');
-        //        if ($request->studentLastname != null)
-        //            $Attendances =  $Attendances->where('students.lastname', 'LIKE', '%' . request()->studentLastname . '%');
-
-        $Attendances = $Attendances->paginate(10);
-        return response()->json($Attendances, 200);
-    }
-
-    public function getTeachersBenifitsChart(Request $request)
+    public function getClientsBenifitsChart(Request $request)
     {
         $dataset = [];
         $user = Attendance::select(
-            'attendances.teacherName',
-            'attendances.teacher_id',
-            DB::raw("SUM(attendances.price) as total")
+            'attendances.ClientName',
+            'attendances.Client_id',
+            DB::raw("SUM(attendances.ClientBenefit) as total")
         )->whereBetween(
-            'date',
+            'created_at',
             [$request->from, $request->to]
-        )->groupBy('teacher_id')->get();
+        )->where("isPresent", true)
+            ->groupBy('Client_id')->get();
 
         if ($user) {
             $dataset["data"] = $user->pluck("total");
-            $dataset["teachers_ids"] = $user->pluck("teacher_id");
-            $dataset["labels"] = $user->pluck("teacherName");
+            $dataset["Clients_ids"] = $user->pluck("Client_id");
+            $dataset["labels"] = $user->pluck("ClientName");
             return response()->json($dataset, 200);
         }
         return BaseController::errorData($user, "السجل غير موجود");
     }
 
 
-    public function getTeachersBenifits(Request $request)
+    public function getClientsBenifits(Request $request)
     {
         $attendances = Attendance::select(
-            'attendances.teacherName',
-            'attendances.teacher_id',
-            DB::raw("SUM(attendances.price) as total")
+            'attendances.ClientName',
+            'attendances.Client_id',
+            DB::raw("SUM(attendances.ClientBenefit) as total")
         )->whereBetween(
-            'date',
+            'created_at',
             [$request->from, $request->to]
-        )->groupBy('teacher_id')->orderBy("total", "desc")->get();
+        )->where("isPresent", true)->groupBy('Client_id')
+            ->orderBy("total", "desc")->get();
 
         if ($attendances) {
             return response()->json($attendances, 200);
@@ -119,20 +110,59 @@ class AttendanceController extends Model
     }
 
 
-    public function getTeacherBenifitById(Request $request)
+    public function getSchoolBenifitChart(Request $request)
+    {
+        $dataset = [];
+        $user = Attendance::select(
+            "id",
+            DB::raw("(sum(attendances.schoolBenefit)) as total"),
+            DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as month_year")
+        )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            // ->where("created_at", ">=", Carbon::now()->subYear())
+            ->where("isPresent", true)
+            ->get();
+
+        if ($user) {
+            $dataset["data"] = $user->pluck("total");
+            $dataset["labels"] = $user->pluck("month_year");
+            return response()->json($dataset, 200);
+        }
+        return BaseController::errorData($user, "السجل غير موجود");
+    }
+
+    public function getSchoolBenifitPeriod(Request $request)
+    {
+        $data = Attendance::select(
+            DB::raw("(sum(attendances.schoolBenefit)) as total")
+        )->whereBetween(
+            'created_at',
+            [$request->from, $request->to]
+        )->orderBy('created_at')->where("isPresent", true)->first();
+
+        if ($data) {
+            return response()->json($data->total, 200);
+        }
+        return BaseController::errorData(null, "السجل غير موجود");
+    }
+
+
+    public function getClientBenifitById(Request $request)
     {
         $user = Attendance::select(
             'attendances.group_id',
-            'attendances.teacher_id',
+            'attendances.Client_id',
             'attendances.subjName',
             'attendances.groupName',
-            DB::raw("SUM(attendances.price) as 'total'")
+            DB::raw("SUM(attendances.Clientbenefit) as 'total'")
         )
-            ->where('attendances.teacher_id', $request->teacher_id)
+            ->where('attendances.Client_id', $request->Client_id)
             ->whereBetween(
-                'date',
+                'created_at',
                 [$request->from, $request->to]
-            )->groupBy(['group_id'])->get();
+            )->where("isPresent", true)
+            ->groupBy(['group_id'])->get();
 
         if ($user) {
             return response()->json($user, 200);
@@ -140,26 +170,7 @@ class AttendanceController extends Model
         return BaseController::errorData($user, "السجل غير موجود");
     }
 
-    //  $user = Attendance::join('groups', 'attendances.group_id', 'groups.id')
-    //         ->join('subjs', 'groups.subj_id', 'subjs.id')
-    //         ->select(
-    //             'groups.id',
-    //             'groups.price',
-    //             'groups.name',
-    //             'subjs.name as subjName',
-    //             'subjs.grade',
-    //             'subjs.level',
-    //             DB::raw("SUM(groups.price) as 'total'"),
-    //             DB::raw("COUNT(attendances.id) as 'number'")
-    //         )
-    //         ->where('attendances.teacher_id', $request->teacher_id)
-    //         ->whereBetween(
-    //             'date',
-    //             [$request->from, $request->to]
-    //         )->groupBy([
-    //             'groups.id', 'groups.name', 'subjs.name', 'subjs.grade',
-    //             'subjs.level', 'groups.price'
-    //         ])->get();
+
 
     public function store(Request $request)
     {
@@ -169,20 +180,20 @@ class AttendanceController extends Model
         }
         DB::beginTransaction();
         try {
-            $student =  Student::find($request->student_id);
+            $Product =  Product::find($request->Product_id);
             $attendence =  Request()->all();
-            $attendence["studentName"] = $student->firstname . " " . $student->lastname;
+            $attendence["ProductName"] = $Product->firstname . " " . $Product->lastname;
             $user = Attendance::create($attendence);
             if ($user) {
 
-                $studentGroup = StudentGroup::where('student_id', $request->student_id)
+                $ProductGroup = ProductGroup::where('Product_id', $request->Product_id)
                     ->where('group_id', $request->group_id)->first();
 
                 if ($request->has("isPresent")) {
                     if ($request->isPresent == 1) {
 
-                        $newQuotas =  $studentGroup->quotas - 1;
-                        StudentGroup::where('student_id', $request->student_id)
+                        $newQuotas =  $ProductGroup->quotas - 1;
+                        ProductGroup::where('Product_id', $request->Product_id)
                             ->where('group_id', $request->group_id)->update(['quotas' => $newQuotas]);
                     }
                 }
@@ -221,11 +232,11 @@ class AttendanceController extends Model
 
             if ($attendance->isPresent == 1) {
 
-                $studentGroup = StudentGroup::where('student_id', $attendance->student_id)
+                $ProductGroup = ProductGroup::where('Product_id', $attendance->Product_id)
                     ->where('group_id', $attendance->group_id)->first();
 
-                $newQuotas =  $studentGroup->quotas + 1;
-                StudentGroup::where('student_id', $attendance->student_id)
+                $newQuotas =  $ProductGroup->quotas + 1;
+                ProductGroup::where('Product_id', $attendance->Product_id)
                     ->where('group_id', $attendance->group_id)->update(['quotas' => $newQuotas]);
             }
 

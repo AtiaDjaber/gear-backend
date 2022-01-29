@@ -15,15 +15,16 @@ class GroupController extends Model
         return Validator::make(request()->all(), [
             'name' => 'required|string',
             'subj_id' => 'required|exists:subjs,id',
-            'teacher_id' => 'required|exists:teachers,id',
+            'Client_id' => 'required|exists:Clients,id',
             'price' => 'required|numeric',
-            'quotas' => 'required|numeric'
+            'quotas' => 'required|numeric',
+            'percenatgeClient' => 'required|numeric'
         ]);
     }
 
     public function index(Request $request)
     {
-        $Groups = Group::orderBy('id', 'desc')->with(['subj', 'teacher']);
+        $Groups = Group::orderBy('id', 'desc')->with(['subj', 'Client']);
         if ($request->has("name")) {
             $Groups = $Groups->where("name", 'LIKE', '%' . $request->name . '%');
         }
@@ -33,7 +34,7 @@ class GroupController extends Model
 
     public function getById(Request $request)
     {
-        $user = Group::find($request->id)->with(['subj', 'teacher'])
+        $user = Group::find($request->id)->with(['subj', 'Client'])
             ->first();
         if ($user) {
             return BaseController::successData($user, "تم جلب البيانات بنجاح");
@@ -43,7 +44,7 @@ class GroupController extends Model
 
     public function getGroupSubjById(Request $request)
     {
-        $groups = Group::where('teacher_id', $request->teacher_id)->with(['subj'])
+        $groups = Group::where('Client_id', $request->Client_id)->with(['subj'])
             ->get();
         if ($groups) {
             return response()->json($groups, 200);
@@ -51,9 +52,9 @@ class GroupController extends Model
         return BaseController::errorData("erro data", "السجل غير موجود");
     }
 
-    public function getStudentByGroupId(Request $request)
+    public function getProductByGroupId(Request $request)
     {
-        $groups = Group::with('students')
+        $groups = Group::with('Products')
             ->find($request->id);
         if ($groups) {
             return response()->json($groups, 200);
@@ -71,7 +72,7 @@ class GroupController extends Model
         $user = Group::create($validator->validate());
 
         if ($user) {
-            return response()->json(['message' => 'Created', 'data' => Group::where('id', $user->id)->with(['subj', 'teacher'])->first()], 200);
+            return response()->json(['message' => 'Created', 'data' => Group::where('id', $user->id)->with(['subj', 'Client'])->first()], 200);
         }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
@@ -82,7 +83,7 @@ class GroupController extends Model
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        $Group = Group::where('id', $request->id)->with(['subj', 'teacher'])->first();
+        $Group = Group::where('id', $request->id)->with(['subj', 'Client'])->first();
         if ($Group->update($request->all())) {
             return response()->json(['message' => 'Created', 'data' => $Group], 200);
         }

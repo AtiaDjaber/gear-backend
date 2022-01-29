@@ -13,4 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('students/absences', 'StudentController@getAbsences');
+Route::get('Products/absences', 'ProductController@getAbsences');

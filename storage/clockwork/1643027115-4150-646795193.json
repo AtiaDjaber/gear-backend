@@ -1,0 +1,403 @@
+{
+  "id": "1643027115-4150-646795193",
+  "version": 1,
+  "type": "request",
+  "time": 1643027115.120929,
+  "method": "GET",
+  "url": "http:\/\/192.168.1.7:8000\/api\/sg\/getGroupSubjByProduct?Product_id=98",
+  "uri": "\/api\/sg\/getGroupSubjByProduct?Product_id=98",
+  "headers": {
+    "host": [
+      "192.168.1.7:8000"
+    ],
+    "connection": [
+      "keep-alive"
+    ],
+    "accept": [
+      "application\/json, text\/plain, *\/*"
+    ],
+    "user-agent": [
+      "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/97.0.4692.71 Safari\/537.36"
+    ],
+    "origin": [
+      "http:\/\/localhost:8080"
+    ],
+    "referer": [
+      "http:\/\/localhost:8080\/"
+    ],
+    "accept-encoding": [
+      "gzip, deflate"
+    ],
+    "accept-language": [
+      "en-US,en;q=0.9,ar-DZ;q=0.8,ar;q=0.7"
+    ],
+    "sec-gpc": [
+      "1"
+    ]
+  },
+  "controller": "App\\Http\\Controllers\\ProductGroupController@getGroupSubjsByProduct",
+  "getData": {
+    "Product_id": "98"
+  },
+  "postData": [],
+  "requestData": "",
+  "sessionData": [],
+  "authenticatedUser": null,
+  "cookies": [],
+  "responseTime": 1643027115.704791,
+  "responseStatus": 200,
+  "responseDuration": 583.8620662689209,
+  "memoryUsage": 2097152,
+  "middleware": [
+    "api"
+  ],
+  "databaseQueries": [
+    {
+      "query": "SELECT * FROM `std_group` WHERE `Product_id` = '98'",
+      "duration": 9.51,
+      "connection": "mysql",
+      "time": 1643027115.650794,
+      "trace": [
+        {
+          "call": "Illuminate\\Database\\Eloquent\\Builder->get()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\app\\Http\\Controllers\\ProductGroupController.php",
+          "line": 39,
+          "isVendor": false
+        },
+        {
+          "call": "App\\Http\\Controllers\\ProductGroupController->getGroupSubjsByProduct()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php",
+          "line": 48,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+          "line": 239,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Route->runController()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+          "line": 196,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Route->run()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 685,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+          "line": 128,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+          "line": 103,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Pipeline\\Pipeline->then()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 687,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->runRouteWithinStack()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 662,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->runRoute()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 628,
+          "isVendor": true
+        }
+      ],
+      "model": "App\\model\\ProductGroup",
+      "tags": []
+    },
+    {
+      "query": "SELECT * FROM `groups` WHERE `groups`.`id` in (99)",
+      "duration": 1.29,
+      "connection": "mysql",
+      "time": 1643027115.675843,
+      "trace": [
+        {
+          "call": "Illuminate\\Database\\Eloquent\\Builder->get()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\app\\Http\\Controllers\\ProductGroupController.php",
+          "line": 39,
+          "isVendor": false
+        },
+        {
+          "call": "App\\Http\\Controllers\\ProductGroupController->getGroupSubjsByProduct()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php",
+          "line": 48,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+          "line": 239,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Route->runController()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+          "line": 196,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Route->run()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 685,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+          "line": 128,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+          "line": 103,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Pipeline\\Pipeline->then()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 687,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->runRouteWithinStack()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 662,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->runRoute()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 628,
+          "isVendor": true
+        }
+      ],
+      "model": "App\\model\\Group",
+      "tags": []
+    },
+    {
+      "query": "SELECT * FROM `Clients` WHERE `Clients`.`id` in (76)",
+      "duration": 0.98,
+      "connection": "mysql",
+      "time": 1643027115.6789522,
+      "trace": [
+        {
+          "call": "Illuminate\\Database\\Eloquent\\Builder->get()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\app\\Http\\Controllers\\ProductGroupController.php",
+          "line": 39,
+          "isVendor": false
+        },
+        {
+          "call": "App\\Http\\Controllers\\ProductGroupController->getGroupSubjsByProduct()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php",
+          "line": 48,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+          "line": 239,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Route->runController()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+          "line": 196,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Route->run()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 685,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+          "line": 128,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+          "line": 103,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Pipeline\\Pipeline->then()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 687,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->runRouteWithinStack()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 662,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->runRoute()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 628,
+          "isVendor": true
+        }
+      ],
+      "model": "App\\model\\Client",
+      "tags": []
+    },
+    {
+      "query": "SELECT * FROM `subjs` WHERE `subjs`.`id` in (97)",
+      "duration": 0.79,
+      "connection": "mysql",
+      "time": 1643027115.682175,
+      "trace": [
+        {
+          "call": "Illuminate\\Database\\Eloquent\\Builder->get()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\app\\Http\\Controllers\\ProductGroupController.php",
+          "line": 39,
+          "isVendor": false
+        },
+        {
+          "call": "App\\Http\\Controllers\\ProductGroupController->getGroupSubjsByProduct()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php",
+          "line": 48,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+          "line": 239,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Route->runController()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+          "line": 196,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Route->run()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 685,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+          "line": 128,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+          "line": 103,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Pipeline\\Pipeline->then()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 687,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->runRouteWithinStack()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 662,
+          "isVendor": true
+        },
+        {
+          "call": "Illuminate\\Routing\\Router->runRoute()",
+          "file": "D:\\deploy\\cygwin\\home\\me\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+          "line": 628,
+          "isVendor": true
+        }
+      ],
+      "model": "App\\model\\Subj",
+      "tags": []
+    }
+  ],
+  "databaseQueriesCount": 4,
+  "databaseSlowQueries": 0,
+  "databaseSelects": 4,
+  "databaseInserts": 0,
+  "databaseUpdates": 0,
+  "databaseDeletes": 0,
+  "databaseOthers": 0,
+  "databaseDuration": 12.57,
+  "cacheQueries": [],
+  "cacheReads": 0,
+  "cacheHits": 0,
+  "cacheWrites": 0,
+  "cacheDeletes": 0,
+  "cacheTime": null,
+  "modelsActions": [],
+  "modelsRetrieved": {
+    "App\\model\\ProductGroup": 1,
+    "App\\model\\Group": 1,
+    "App\\model\\Client": 1,
+    "App\\model\\Subj": 1
+  },
+  "modelsCreated": [],
+  "modelsUpdated": [],
+  "modelsDeleted": [],
+  "redisCommands": [],
+  "queueJobs": [],
+  "timelineData": [
+    {
+      "description": "Controller",
+      "start": 1643027115.610148,
+      "end": 1643027115.704609,
+      "duration": 94.46096420288086,
+      "color": null,
+      "data": null
+    }
+  ],
+  "log": [],
+  "events": [],
+  "routes": [],
+  "notifications": [],
+  "emailsData": [],
+  "viewsData": [],
+  "userData": [],
+  "subrequests": [],
+  "xdebug": [],
+  "commandName": null,
+  "commandArguments": [],
+  "commandArgumentsDefaults": [],
+  "commandOptions": [],
+  "commandOptionsDefaults": [],
+  "commandExitCode": null,
+  "commandOutput": null,
+  "jobName": null,
+  "jobDescription": null,
+  "jobStatus": null,
+  "jobPayload": [],
+  "jobQueue": null,
+  "jobConnection": null,
+  "jobOptions": [],
+  "testName": null,
+  "testStatus": null,
+  "testStatusMessage": null,
+  "testAsserts": [],
+  "clientMetrics": [],
+  "webVitals": [],
+  "parent": null,
+  "updateToken": "4d1277b6"
+}

@@ -13,9 +13,9 @@ class Attendance extends Model
         return $this->belongsTo(Group::class);
     }
 
-    public function student()
+    public function Product()
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(Product::class);
     }
 
     protected $casts = [

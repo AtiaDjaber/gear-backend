@@ -15,7 +15,7 @@ class Payments extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("teacher_id")->constrained();
+            $table->foreignId("client_id")->constrained();
             $table->decimal('price', 10, 2)->default('0');
             $table->date("date", $precision = 0);
             $table->boolean("avance")->default('0');

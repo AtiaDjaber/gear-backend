@@ -24,17 +24,17 @@ class Group extends Model
         return $this->hasMany(Session::class);
     }
 
-    public function teacher()
+    public function Client()
     {
-        return $this->belongsTo(Teacher::class, "teacher_id");
+        return $this->belongsTo(Client::class, "Client_id");
     }
     public function subj()
     {
         return $this->belongsTo(Subj::class, "subj_id");
     }
 
-    public function students()
+    public function Products()
     {
-        return $this->belongsToMany(Student::class, "std_group");
+        return $this->belongsToMany(Product::class, "std_group");
     }
 }
