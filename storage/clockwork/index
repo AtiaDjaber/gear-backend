@@ -328,3 +328,13 @@
 1643484450-4907-340338026,1643484450.323,GET,/api/clients,"App\Http\Controllers\ClientController@index",200,380.03301620483,request
 1643484463-9119-1545371839,1643484463.6942,GET,/api/clients,"App\Http\Controllers\ClientController@index",200,416.77713394165,request
 1643484608-7559-306587793,1643484608.4159,GET,/api/clients,"App\Http\Controllers\ClientController@index",200,641.96705818176,request
+1643485934-7977-509259651,1643485934.5928,GET,/api/clients,"App\Http\Controllers\ClientController@index",200,415.51685333252,request
+1643486175-1848-1088261932,1643486174.9545,GET,/api/clients,"App\Http\Controllers\ClientController@index",200,444.1249370575,request
+1643486201-0821-2102369374,1643486200.8969,GET,/api/clients?name=,"App\Http\Controllers\ClientController@index",200,347.22304344177,request
+1643486205-6601-694665360,1643486205.4971,GET,/api/clients?name=,"App\Http\Controllers\ClientController@index",200,339.54191207886,request
+1643491828-6232-513599587,1643491828.3691,POST,/api/client/add,"App\Http\Controllers\ClientController@store",400,497.28894233704,request
+1643491844-5248-422171340,1643491844.3502,POST,/api/client/add,"App\Http\Controllers\ClientController@store",400,346.3819026947,request
+1643491882-8363-947400768,1643491882.6675,POST,/api/client/add,"App\Http\Controllers\ClientController@store",500,474.44486618042,request
+1643491892-9427-537121878,1643491892.7795,POST,/api/client/add,"App\Http\Controllers\ClientController@store",500,468.92809867859,request
+1643491900-9125-1023766138,1643491900.6891,POST,/api/client/add,"App\Http\Controllers\ClientController@store",500,474.31111335754,request
+1643491923-8831-647570473,1643491923.7084,POST,/api/client/add,"App\Http\Controllers\ClientController@store",200,368.96586418152,request

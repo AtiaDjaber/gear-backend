@@ -14,9 +14,11 @@ class ClientController extends Model
     {
         return Validator::make(request()->all(), [
             'mobile' => 'required|string|min:9|max:16',
-            'firstname' => 'required|string|min:3|max:10',
-            'lastname' => 'required|string|min:3|max:10',
-            'birthday' => 'required',
+            'name' => 'required|string|min:2',
+            'address' => 'nullable|string|min:3|max:10',
+            'ancien' => 'nullable|numeric',
+            'montant' => 'nullable|numeric',
+            'photo' => 'nullable|string',
             'email' => 'nullable|string',
         ]);
     }
