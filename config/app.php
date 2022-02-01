@@ -161,7 +161,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        LaravelFCM\FCMServiceProvider::class,
+        // LaravelFCM\FCMServiceProvider::class,
 
         // Barryvdh\Debugbar\ServiceProvider::class,
 
