@@ -30,7 +30,6 @@ class ClientController extends Model
             $Clients = $Clients->where("name", 'LIKE', '%' . $request->name . '%');
         }
 
-
         $Clients = $Clients->paginate(10);
         return response()->json($Clients, 200, [], JSON_NUMERIC_CHECK);
     }

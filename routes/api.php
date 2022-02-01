@@ -46,18 +46,18 @@ Route::post('client/add', 'ClientController@store');
 Route::put('client/put', 'ClientController@put');
 Route::delete('client/{id}', 'ClientController@deleteclient');
 
-Route::get('subject/getById', 'SubjectController@getById');
-Route::get('subjects', 'SubjectController@index');
-Route::post('subject/add', 'SubjectController@store');
-Route::put('subject/put', 'SubjectController@put');
-Route::delete('subject/{id}', 'SubjectController@deleteSubject');
+Route::get('sale/getById', 'SaleController@getById');
+Route::get('sales', 'SaleController@index');
+Route::post('sale/add', 'SaleController@store');
+Route::put('sale/put', 'SaleController@put');
+Route::delete('sale/{id}', 'SaleController@remove');
 
 
 Route::get('levelYear/getById', 'LevelYearController@getById');
 Route::get('levelYears', 'LevelYearController@index');
 Route::post('levelYear/add', 'LevelYearController@store');
 Route::put('levelYear/put', 'LevelYearController@put');
-Route::delete('levelYear/{id}', 'LevelYearController@deleteSubject');
+Route::delete('levelYear/{id}', 'LevelYearController@deletesale');
 Route::post('subjLevelYear/add', 'LevelYearSubjController@store');
 
 
@@ -96,14 +96,14 @@ Route::post('expense/add', 'ExpenseController@store');
 Route::put('expense/put', 'ExpenseController@put');
 Route::delete('expense/{id}', 'ExpenseController@remove');
 
-Route::get('attendances', 'AttendanceController@index');
-Route::get('attendance/getBenifitsclientsChart', 'AttendanceController@getclientsBenifitsChart');
-Route::get('attendance/getBenifitsclients', 'AttendanceController@getclientsBenifits');
-Route::get('attendance/schoolBenifitChart', 'AttendanceController@getSchoolBenifitChart');
-Route::get('attendance/schoolBenifitPeriod', 'AttendanceController@getSchoolBenifitPeriod');
-Route::get('attendance/getBenifitByclientId', 'AttendanceController@getclientBenifitById');
-Route::post('attendance/add', 'AttendanceController@store');
-Route::delete('attendance/{id}', 'AttendanceController@remove');
+Route::get('attendances', 'ChartController@index');
+Route::get('attendance/getBenifitsclientsChart', 'ChartController@getclientsBenifitsChart');
+Route::get('attendance/getBenifitsclients', 'ChartController@getclientsBenifits');
+Route::get('attendance/schoolBenifitChart', 'ChartController@getSchoolBenifitChart');
+Route::get('attendance/schoolBenifitPeriod', 'ChartController@getSchoolBenifitPeriod');
+Route::get('attendance/getBenifitByclientId', 'ChartController@getclientBenifitById');
+Route::post('attendance/add', 'ChartController@store');
+Route::delete('attendance/{id}', 'ChartController@remove');
 
 
 Route::get('payments', 'PaymentController@index');

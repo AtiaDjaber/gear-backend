@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Factures extends Migration
+class Sales extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,16 @@ class Factures extends Migration
      */
     public function up()
     {
-        Schema::create('factures', function (Blueprint $table) {
+        Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("product_id")->constrained();
+            $table->foreignId("facture_id")->constrained();
             $table->foreignId("client_id")->constrained();
-            $table->decimal('montant', 10, 2)->default('0');
-            $table->decimal('pay', 10, 2)->default('0');
-            $table->decimal('rest', 10, 2)->default('0');
-            $table->decimal('remise', 10, 2)->default('0');
-            $table->string("remark")->nullable();
+            $table->string("name");
+            $table->decimal("price", 10, 2)->default("0");
+            $table->decimal("priceRent", 10, 2)->default("0");
+            $table->double("quantity")->default("0");
+            $table->string("type");
             $table->softDeletes();
             $table->timestamps();
         });

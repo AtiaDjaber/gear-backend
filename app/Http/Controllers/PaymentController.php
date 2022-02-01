@@ -16,22 +16,20 @@ class PaymentController extends Model
         return Validator::make(request()->all(), [
             'price' => 'required|numeric|gt:0|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
             'date' => 'required|date',
-            'avance' => 'nullable|boolean',
-            'Client_id' => 'required|exists:Clients,id',
+            'client_id' => 'required|exists:clients,id',
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $Payments = Payment::with(['Client'])
-            ->orderBy('id', 'desc')
-            ->paginate(10);
+        $Payments = Payment::where('client_id', $request->client_id)
+            ->orderBy('id', 'desc')->paginate(10);
         return response()->json($Payments, 200);
     }
 
     public function getById(Request $request)
     {
-        $payments = Payment::where("Client_id", $request->Client_id);
+        $payments = Payment::where('client_id', $request->client_id);
         if ($request->has('from') && $request->has('to')) {
             $payments =   $payments->whereBetween(
                 'date',
@@ -45,25 +43,6 @@ class PaymentController extends Model
         return BaseController::errorData($payments, "السجل غير موجود");
     }
 
-    public function getGrouped(Request $request)
-    {
-        $payments = Payment::select(
-            'payments.Client_id',
-            DB::raw("SUM(payments.price) as 'total'")
-            // DB::raw("COUNT(attendances.Product_id) as 'numberProducts'")
-        );
-        if ($request->has('from') && $request->has('to')) {
-            $payments =   $payments->whereBetween(
-                'date',
-                [$request->from, $request->to]
-            );
-        }
-        $payments = $payments->with('Client')->groupBy('Client_id')->get();
-        if ($payments) {
-            return response()->json($payments, 200);
-        }
-        return BaseController::errorData($payments, "السجل غير موجود");
-    }
 
     public function store()
     {
@@ -95,11 +74,7 @@ class PaymentController extends Model
 
     public  function remove(Request $request)
     {
-
         $Payment = Payment::destroy($request->id);
         return BaseController::successData($Payment, "تمت العملية بنجاح");
     }
-
-
-    //
 }

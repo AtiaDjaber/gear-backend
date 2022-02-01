@@ -23,10 +23,12 @@ class CreateUsersTable extends Migration
             $table->string("token")->nullable();
             $table->double('facture')->default('1');
             $table->double('client')->default('1');
+            $table->double('sale')->default('1');
             $table->double('expense')->default('1');
             $table->double('chart')->default('0');
             $table->double('user')->default('0');
             $table->string('password');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

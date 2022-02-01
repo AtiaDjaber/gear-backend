@@ -22,6 +22,7 @@ class Products extends Migration
             $table->double("quantity")->default("0");
             $table->string("photo")->nullable();
             $table->string("type")->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

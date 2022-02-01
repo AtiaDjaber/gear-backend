@@ -23,6 +23,7 @@ class Clients extends Migration
             $table->string("address")->nullable();
             $table->string("photo")->nullable();
             $table->boolean("status")->default("1");
+            $table->softDeletes();
             $table->timestamps();
         });
         //

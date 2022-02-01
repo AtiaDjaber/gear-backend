@@ -20,6 +20,7 @@ class Expenses extends Migration
             $table->foreignId("user_id")->nullable()->constrained();
             $table->string("remarque")->nullable();
             $table->date("date");
+            $table->softDeletes();
             $table->timestamps();
         });
     }
