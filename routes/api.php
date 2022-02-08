@@ -36,9 +36,9 @@ Route::get('products', 'ProductController@index');
 Route::post('product/add', 'ProductController@store');
 Route::put('product/put', 'ProductController@put');
 Route::delete('product/{id}', 'ProductController@deleteProduct');
-Route::get('product/getGroupSubjById', 'ProductController@getGroup');
+Route::get('product/getconfigSubjById', 'ProductController@getconfig');
 Route::get('Products/absences', 'ProductController@getAbsences');
-Route::post('product/groupSubjByProductForAttendance', 'ProductGroupController@getGroupSubjsByProductforAttendance');
+Route::post('product/configSubjByProductForAttendance', 'ProductConfigController@getconfigSubjsByProductforAttendance');
 
 Route::get('client/getById', 'ClientController@getById');
 Route::get('clients', 'ClientController@index');
@@ -66,29 +66,13 @@ Route::get('sessions/{start}/{end}', 'SessionController@index');
 Route::get('product/sessionsByProductId', 'SessionController@getSessionsByProductId');
 
 Route::delete('session/{id}', 'SessionController@remove');
-Route::delete('session/groupId/{id}/{start}', 'SessionController@removeSubj');
+Route::delete('session/configId/{id}/{start}', 'SessionController@removeSubj');
 
 
-Route::get('groups', 'GroupController@index');
-Route::get('group/getById', 'GroupController@getById');
-Route::post('group/add', 'GroupController@store');
-Route::put('group/put', 'GroupController@put');
-Route::delete('group/{id}', 'GroupController@remove');
-Route::get('groups/groupSubjByclientId', 'GroupController@getGroupSubjById');
-Route::get('group/Products', 'GroupController@getProductByGroupId');
+Route::get('settings', 'ConfigController@index');
+Route::put('setting/put', 'ConfigController@put');
 
-
-Route::get('client/getGroupSubjById', 'ClientController@getGroupSubjById');
-Route::get('client/getProductsById', 'ClientController@getProductsById');
-
-
-Route::get('notificationsProducts', 'ProductGroupController@getNotifications');
-
-Route::get('sgs', 'ProductGroupController@getAllGroupSubjs');
-Route::get('sg/getGroupSubjByProduct', 'ProductGroupController@getGroupSubjsByProduct');
-Route::post('sg/add', 'ProductGroupController@store');
-Route::post('sg/ProductsByGroups', 'ProductGroupController@getProductsByGroups');
-
+Route::get('notificationsProducts', 'ProductConfigController@getNotifications');
 
 Route::get('expenses', 'ExpenseController@index');
 Route::get('expenses/expansesAnalytics', 'ExpenseController@getExpansesAnalytic');
@@ -108,7 +92,7 @@ Route::delete('attendance/{id}', 'ChartController@remove');
 
 Route::get('payments', 'PaymentController@index');
 Route::get('payments/getByclientId', 'PaymentController@getById');
-Route::get('payments/getPayementGrouped', 'PaymentController@getGrouped');
+Route::get('payments/getPayementconfiged', 'PaymentController@getconfiged');
 Route::post('payment/add', 'PaymentController@store');
 Route::put('payment/put', 'PaymentController@put');
 Route::delete('payment/{id}', 'PaymentController@remove');
@@ -117,6 +101,6 @@ Route::post('subscription/add', 'SubscriptionController@store');
 Route::get('subscriptions', 'SubscriptionController@index');
 Route::get('subscriptions/subscriptionAmount', 'SubscriptionController@getSubscriptionAmount');
 Route::get('subscriptions/getByProductId', 'SubscriptionController@getById');
-Route::get('subscriptions/getProductGrouped', 'SubscriptionController@getGrouped');
+Route::get('subscriptions/getProductconfiged', 'SubscriptionController@getconfiged');
 Route::put('subscription/put', 'SubscriptionController@put');
 Route::delete('subscription/{id}', 'SubscriptionController@remove');

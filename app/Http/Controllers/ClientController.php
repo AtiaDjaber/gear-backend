@@ -91,7 +91,6 @@ class ClientController extends Model
 
     public  function deleteClient(Request $request)
     {
-
         $Client = Client::destroy($request->id);
         return BaseController::successData($Client, "تمت العملية بنجاح");
     }

@@ -13,13 +13,13 @@ class GroupSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create();
-        for ($i = 1; $i < 100; $i++) {
-            DB::table('groups')->insert([
-                'name' => $faker->sentence($nbWords = 1, $variableNbWords = true),
-                'subj_id' => $faker->numberBetween($min = 1, $max = 99),
-                'Client_id' => $faker->numberBetween($min = 1, $max = 99)
-            ]);
-        }
+        // $faker = Faker::create();
+        // for ($i = 1; $i < 100; $i++) {
+        //     DB::table('groups')->insert([
+        //         'name' => $faker->sentence($nbWords = 1, $variableNbWords = true),
+        //         'subj_id' => $faker->numberBetween($min = 1, $max = 99),
+        //         'Client_id' => $faker->numberBetween($min = 1, $max = 99)
+        //     ]);
+        // }
     }
 }
