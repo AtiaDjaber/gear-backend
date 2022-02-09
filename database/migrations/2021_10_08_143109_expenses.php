@@ -19,7 +19,7 @@ class Expenses extends Migration
             $table->decimal("price", 10, 2);
             $table->foreignId("user_id")->nullable()->constrained();
             $table->string("remarque")->nullable();
-            $table->date("date");
+            $table->date("date")->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
