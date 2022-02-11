@@ -16,8 +16,7 @@ class ExpenseController extends Model
         return Validator::make(request()->all(), [
             'name' => 'required|string|min:1|max:100',
             'price' => 'required|min:0',
-            'remarque' => 'nullable|string',
-            'date' => 'required|date',
+            'remarque' => 'nullable|string'
         ]);
     }
 
