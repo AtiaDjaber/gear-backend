@@ -32,7 +32,7 @@ class ProductController extends Model
             $Products = $Products->where("name", 'LIKE', '%' . $request->name . '%');
         }
         $Products = $Products->paginate(10);
-        return response()->json($Products, 200, [], JSON_NUMERIC_CHECK);
+        return response()->json($Products, 200);
     }
 
 

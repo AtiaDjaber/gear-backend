@@ -14,8 +14,8 @@ class Product extends Model
 
     protected $casts = [
         // Change your format
-        'created_at' => 'datetime:Y-m-d H:i:s', // Change your format
-        'updated_at' => 'datetime:Y-m-d H:i:s'
+        'created_at' => 'datetime:Y-m-d H:i', // Change your format
+        'updated_at' => 'datetime:Y-m-d H:i'
     ];
 
 

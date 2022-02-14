@@ -12,8 +12,10 @@ class Client extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'created_at' => 'datetime:Y-m-d H:i:s', // Change your format
-        'updated_at' => 'datetime:Y-m-d H:i:s',
+        'created_at' => 'datetime:Y-m-d H:i', // Change your format
+        'updated_at' => 'datetime:Y-m-d H:i',
+        // 'montant' => 'double',
+        // 'ancien' => 'double',
     ];
     // protected $hidden=["pivot"];
     public function group()

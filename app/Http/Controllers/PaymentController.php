@@ -46,7 +46,6 @@ class PaymentController extends Model
 
     public function store()
     {
-
         $validator = $this->validater();
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);

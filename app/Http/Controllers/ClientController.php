@@ -31,26 +31,11 @@ class ClientController extends Model
         }
 
         $Clients = $Clients->paginate(10);
-        return response()->json($Clients, 200, [], JSON_NUMERIC_CHECK);
+        return response()->json($Clients, 200, []);
     }
 
-    public function getGroupSubjById(Request $request)
-    {
-        $user = Client::find($request->id);
-        if ($user) {
-            return response()->json($user->subjs, 200);
-        }
-        return BaseController::errorData($user, "السجل غير موجود");
-    }
 
-    public function getProductsById(Request $request)
-    {
-        $user = Client::find($request->id);
-        if ($user) {
-            return response()->json($user->Products()->paginate(10), 200);
-        }
-        return BaseController::errorData($user, "السجل غير موجود");
-    }
+
 
     public function getById(Request $request)
     {
@@ -94,7 +79,4 @@ class ClientController extends Model
         $Client = Client::destroy($request->id);
         return BaseController::successData($Client, "تمت العملية بنجاح");
     }
-
-
-    //
 }

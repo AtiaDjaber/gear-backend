@@ -28,16 +28,8 @@ class AuthController extends Controller
 
     public function store(Request $request)
     {
-        // $userFound = DB::table('users')->where('tel', "=", $request->get("tel"))->first();
-        $userFound = User::where("tel", "=", $request->get("tel"))->first();
 
-        if ($userFound) {
-            return response()->json(['message' => 'Found', 'data' => $userFound], 200);
-        }
-        // $validator = $this->validater();
-        // if ($validator->fails()) {
-        //     return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
-        // }
+
         $user = User::create(request()->all());
         if ($user) {
             return response()->json(['message' => 'Created', 'data' => $user], 200);

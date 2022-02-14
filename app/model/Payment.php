@@ -14,8 +14,8 @@ class Payment extends Model
     }
 
     protected $casts = [
-        'created_at' => 'datetime:Y-m-d H:i:s', // Change your format
-        'updated_at' => 'datetime:Y-m-d H:i:s',
+        'created_at' => 'datetime:Y-m-d H:i', // Change your format
+        'updated_at' => 'datetime:Y-m-d H:i',
         'date' => 'datetime:Y-m-d',
     ];
 }

@@ -7,12 +7,6 @@ Route::post('/register', 'AuthController@register');
 Route::post('/me', "AuthController@me")->middleware('auth:sanctum');
 Route::post('/login',  'AuthController@login');
 
-// Route::middleware('api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-// Route::middleware('api')->get('/categories', function (Request $request) {
-//     return CategoryController@index;
-// });
 
 Route::group(["middleware" => 'api', "namespace" => "api"], function () {
     Route::post('categories', "CategoryController@index");
@@ -28,7 +22,6 @@ Route::put('user/updateToken', 'AuthController@updateToken');
 Route::post('user/avatar', 'AuthController@avatar');
 Route::put('user/name', 'AuthController@updateName');
 Route::delete('user/delete/{id}', 'AuthController@remove');
-
 
 Route::get('product/generate', 'ProductController@generate');
 Route::get('product/getById', 'ProductController@getById');
@@ -51,7 +44,6 @@ Route::get('sales', 'SaleController@index');
 Route::post('sale/add', 'SaleController@store');
 Route::put('sale/put', 'SaleController@put');
 Route::delete('sale/{id}', 'SaleController@remove');
-
 
 Route::get('levelYear/getById', 'LevelYearController@getById');
 Route::get('levelYears', 'LevelYearController@index');
