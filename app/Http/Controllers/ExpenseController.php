@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\model\Expense;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ExpenseController extends Model
 {
-
+    use SoftDeletes;
     public function validater()
     {
         return Validator::make(request()->all(), [

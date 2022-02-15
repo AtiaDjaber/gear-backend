@@ -3,11 +3,13 @@
 namespace App\model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use \Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 
 class Client extends Model
 {
-    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+
+    use SoftDeletes, \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     protected $guarded = [];
 

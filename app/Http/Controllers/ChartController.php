@@ -60,11 +60,10 @@ class ChartController extends Model
         $dataset = [];
         $user = Facture::select(
             "id",
-            DB::raw("(sum(factures.price)) as total"),
+            DB::raw("(sum(factures.montant)) as total"),
             DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as month_year")
-        )->orderBy('created_at')
+        )->orderBy('created_at')->where("deleted_at", null)
             ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
-            ->where("isPresent", true)
             ->get();
 
         if ($user) {
@@ -78,11 +77,11 @@ class ChartController extends Model
     public function getSchoolBenifitPeriod(Request $request)
     {
         $data = Facture::select(
-            DB::raw("(sum(Factures.schoolBenefit)) as total")
+            DB::raw("(sum(Factures.montant)) as total")
         )->whereBetween(
             'created_at',
             [$request->from, $request->to]
-        )->orderBy('created_at')->where("isPresent", true)->first();
+        )->orderBy('created_at')->where("deleted_at", null)->first();
 
         if ($data) {
             return response()->json($data->total, 200);

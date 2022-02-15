@@ -3,11 +3,12 @@
 namespace App\model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use \Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 
 class Product extends Model
 {
-    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+    use SoftDeletes,  \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     //
     protected $guarded = ['id', 'created_at', 'updated_at'];
