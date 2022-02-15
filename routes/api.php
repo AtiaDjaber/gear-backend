@@ -75,7 +75,7 @@ Route::delete('expense/{id}', 'ExpenseController@remove');
 Route::get('attendances', 'ChartController@index');
 Route::get('attendance/getBenifitsclientsChart', 'ChartController@getclientsBenifitsChart');
 Route::get('attendance/getBenifitsclients', 'ChartController@getclientsBenifits');
-Route::get('attendance/schoolBenifitChart', 'ChartController@getSchoolBenifitChart');
+Route::get('chart/yearMonthChart', 'ChartController@getYearMonthChart');
 Route::get('attendance/schoolBenifitPeriod', 'ChartController@getSchoolBenifitPeriod');
 Route::get('attendance/getBenifitByclientId', 'ChartController@getclientBenifitById');
 Route::post('attendance/add', 'ChartController@store');

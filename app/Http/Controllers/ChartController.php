@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\model\Sale;
+use App\model\Expense;
+use App\model\Facture;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -15,10 +16,10 @@ class ChartController extends Model
     public function getClientsBenifitsChart(Request $request)
     {
         $dataset = [];
-        $user = Sale::select(
-            'Sales.ClientName',
-            'Sales.Client_id',
-            DB::raw("SUM(Sales.ClientBenefit) as total")
+        $user = Facture::select(
+            'factures.ClientName',
+            'factures.Client_id',
+            DB::raw("SUM(factures.ClientBenefit) as total")
         )->whereBetween(
             'created_at',
             [$request->from, $request->to]
@@ -37,34 +38,32 @@ class ChartController extends Model
 
     public function getClientsBenifits(Request $request)
     {
-        $Sales = Sale::select(
-            'Sales.ClientName',
-            'Sales.Client_id',
-            DB::raw("SUM(Sales.ClientBenefit) as total")
+        $Factures = Facture::select(
+            'Factures.ClientName',
+            'Factures.Client_id',
+            DB::raw("SUM(Factures.ClientBenefit) as total")
         )->whereBetween(
             'created_at',
             [$request->from, $request->to]
         )->where("isPresent", true)->groupBy('Client_id')
             ->orderBy("total", "desc")->get();
 
-        if ($Sales) {
-            return response()->json($Sales, 200);
+        if ($Factures) {
+            return response()->json($Factures, 200);
         }
         return BaseController::errorData(null, "السجل غير موجود");
     }
 
 
-    public function getSchoolBenifitChart(Request $request)
+    public function getYearMonthChart(Request $request)
     {
         $dataset = [];
-        $user = Sale::select(
+        $user = Facture::select(
             "id",
-            DB::raw("(sum(Sales.schoolBenefit)) as total"),
+            DB::raw("(sum(factures.price)) as total"),
             DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as month_year")
-        )
-            ->orderBy('created_at')
+        )->orderBy('created_at')
             ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
-            // ->where("created_at", ">=", Carbon::now()->subYear())
             ->where("isPresent", true)
             ->get();
 
@@ -78,8 +77,8 @@ class ChartController extends Model
 
     public function getSchoolBenifitPeriod(Request $request)
     {
-        $data = Sale::select(
-            DB::raw("(sum(Sales.schoolBenefit)) as total")
+        $data = Facture::select(
+            DB::raw("(sum(Factures.schoolBenefit)) as total")
         )->whereBetween(
             'created_at',
             [$request->from, $request->to]
@@ -94,14 +93,14 @@ class ChartController extends Model
 
     public function getClientBenifitById(Request $request)
     {
-        $user = Sale::select(
-            'Sales.group_id',
-            'Sales.Client_id',
-            'Sales.subjName',
-            'Sales.groupName',
-            DB::raw("SUM(Sales.Clientbenefit) as 'total'")
+        $user = Facture::select(
+            'Factures.group_id',
+            'Factures.Client_id',
+            'Factures.subjName',
+            'Factures.groupName',
+            DB::raw("SUM(Factures.Clientbenefit) as 'total'")
         )
-            ->where('Sales.Client_id', $request->Client_id)
+            ->where('Factures.Client_id', $request->Client_id)
             ->whereBetween(
                 'created_at',
                 [$request->from, $request->to]
@@ -112,5 +111,21 @@ class ChartController extends Model
             return response()->json($user, 200);
         }
         return BaseController::errorData($user, "السجل غير موجود");
+    }
+
+    public function getExpansesAnalytic(Request $request)
+    {
+        $Expenses = Expense::select(
+            DB::raw("SUM(expenses.price) as 'total'")
+        )->whereBetween(
+            "date",
+            [
+                $request->from, $request->to
+            ]
+        )->first();
+        if ($Expenses) {
+            return response()->json($Expenses, 200);
+        }
+        return response()->json(null, 400);
     }
 }
