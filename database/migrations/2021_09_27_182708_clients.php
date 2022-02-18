@@ -15,7 +15,7 @@ class Clients extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
+            $table->string("name")->unique();
             $table->string("mobile")->nullable();
             $table->decimal('montant', 10, 2)->default('0');
             $table->decimal('ancien', 10, 2)->default('0');

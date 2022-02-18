@@ -35,6 +35,7 @@ Route::post('product/configSubjByProductForAttendance', 'ProductConfigController
 
 Route::get('client/getById', 'ClientController@getById');
 Route::get('clients', 'ClientController@index');
+Route::get('allclients', 'ClientController@getAll');
 Route::post('client/add', 'ClientController@store');
 Route::put('client/put', 'ClientController@put');
 Route::delete('client/{id}', 'ClientController@deleteclient');

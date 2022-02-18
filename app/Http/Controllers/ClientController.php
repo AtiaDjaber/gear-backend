@@ -9,13 +9,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ClientController extends Model
 {
-
     public function validater()
     {
         return Validator::make(request()->all(), [
             'mobile' => 'required|string|min:9|max:16',
             'name' => 'required|string|min:2',
-            'address' => 'nullable|string|min:3|max:10',
+            'address' => 'nullable|string|min:2|max:10',
             'ancien' => 'nullable|numeric',
             'montant' => 'nullable|numeric',
             'photo' => 'nullable|string',
@@ -32,6 +31,15 @@ class ClientController extends Model
 
         $Clients = $Clients->paginate(10);
         return response()->json($Clients, 200, []);
+    }
+    public function getAll()
+    {
+        $Clients = Client::orderBy('id', 'desc');
+        // if ($request->name != null) {
+        //     $Clients = $Clients->where("name", 'LIKE', '%' . $request->name . '%');
+        // }
+        $Clients = $Clients->get();
+        return response()->json($Clients, 200);
     }
 
 
