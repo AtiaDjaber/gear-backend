@@ -72,6 +72,7 @@ Route::get('chart/yearMonthChart', 'ChartController@getYearMonthChart');
 Route::get('chart/schoolBenifitPeriod', 'ChartController@getSchoolBenifitPeriod');
 Route::get('chart/getBenifitByclientId', 'ChartController@getclientBenifitById');
 
+Route::get('factures/getByclientId', 'FactureController@index');
 
 Route::get('payments', 'PaymentController@index');
 Route::get('payments/getByclientId', 'PaymentController@getById');
