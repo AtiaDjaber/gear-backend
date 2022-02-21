@@ -46,12 +46,6 @@ Route::post('sale/add', 'SaleController@store');
 Route::put('sale/put', 'SaleController@put');
 Route::delete('sale/{id}', 'SaleController@remove');
 
-Route::post('session/add', 'SessionController@store');
-Route::get('sessions/{start}/{end}', 'SessionController@index');
-Route::get('product/sessionsByProductId', 'SessionController@getSessionsByProductId');
-
-Route::delete('session/{id}', 'SessionController@remove');
-Route::delete('session/configId/{id}/{start}', 'SessionController@removeSubj');
 
 
 Route::get('settings', 'ConfigController@index');
@@ -72,6 +66,7 @@ Route::get('chart/yearMonthChart', 'ChartController@getYearMonthChart');
 Route::get('chart/schoolBenifitPeriod', 'ChartController@getSchoolBenifitPeriod');
 Route::get('chart/getBenifitByclientId', 'ChartController@getclientBenifitById');
 
+Route::post('facture/add', 'FactureController@store');
 Route::get('factures/getByclientId', 'FactureController@index');
 
 Route::get('payments', 'PaymentController@index');

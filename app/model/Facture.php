@@ -16,4 +16,9 @@ class Facture extends Model
         'updated_at' => 'datetime:Y-m-d H:i',
         'date' => 'datetime:Y-m-d',
     ];
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
 }

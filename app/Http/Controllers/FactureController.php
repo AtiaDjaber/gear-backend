@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\model\Facture;
+use App\model\Sale;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,15 +15,18 @@ class FactureController extends Model
     public function validater()
     {
         return Validator::make(request()->all(), [
-            'price' => 'required|numeric|gt:0|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
-            'date' => 'required|date',
+            'montant' => 'required|numeric|gt:0|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
+            'pay' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
+            'rest' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
+            'remise' => 'nullable|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
+            'remark' => 'nullable|string',
             'client_id' => 'required|exists:clients,id',
         ]);
     }
 
     public function index(Request $request)
     {
-        $Factures = Facture::where('client_id', $request->client_id)
+        $Factures = Facture::with("sales")->where('client_id', $request->client_id)
             ->orderBy('id', 'desc')->paginate(10);
         return response()->json($Factures, 200);
     }
@@ -30,6 +34,7 @@ class FactureController extends Model
     public function getById(Request $request)
     {
         $Factures = Facture::where('client_id', $request->client_id);
+
         if ($request->has('from') && $request->has('to')) {
             $Factures =   $Factures->whereBetween(
                 'date',
@@ -51,6 +56,8 @@ class FactureController extends Model
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
         $user = Facture::create($validator->validate());
+
+
         if ($user) {
             return response()->json(['message' => 'Created', 'data' => $user], 200);
         }

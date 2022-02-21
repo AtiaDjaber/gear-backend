@@ -16,10 +16,16 @@ class SaleController extends Model
     public function validater()
     {
         return Validator::make(request()->all(), [
-            'product_id' => 'required|exists:products,id',
-            'facture_id' => 'required|exists:factures,id',
-            'name' => 'required|string|min:2',
-            'date' => 'required|date'
+            'product_id.*' => 'required|exists:products,id',
+            'facture_id.*' => 'required|exists:factures,id',
+            'client_id.*' => 'required|exists:clients,id',
+            'name.*' => 'required|string|min:2',
+            'quantity.*' => 'required|numeric',
+            'price.*' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
+            'priceRent.*' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
+            'type.*' => 'required|string',
+
+            // 'date' => 'required|date'
         ]);
     }
 
@@ -48,28 +54,68 @@ class SaleController extends Model
 
     public function store(Request $request)
     {
+        // foreach ($request->all() as $sale) {
         $validator = $this->validater();
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
+        $data = [];
+        // foreach ($request->all() as $e) {
+
+
+        //     $sale = Sale::create(
+        //         [
+        //             "name" => $e["name"],
+        //             "quantity" => $e["quantity"],
+        //             "price" => $e["price"],
+        //             "client_id" => $e["client_id"],
+        //             "product_id" => $e["product_id"],
+        //             "facture_id" => $e["facture_id"],
+        //             "priceRent" => $e["priceRent"], "type" => $e["type"],
+        //         ]
+        //     );
+        //     $data[] = $sale;
+        //     if ($sale) {
+
+        //         // $product = Product::where('id', $sale->product_id)->first();
+
+        //         // $newQuotas =  $product->quantity - $sale->quantity;
+        //         // Product::where('id', $sale->product_id)
+        //         //     ->update(['quantity' => $newQuotas]);
+        //     }
+        // }
+        // return response()->json(['message' => 'Created', 'data' => $data], 200);
+
         DB::beginTransaction();
         try {
+            foreach ($request->all() as $e) {
 
-            $sale = Sale::create($validator->validate());
-            if ($sale) {
 
-                $product = Product::where('id', $request->product_id)
-                    ->first();
+                $sale = Sale::create(
+                    [
+                        "name" => $e["name"],
+                        "quantity" => $e["quantity"],
+                        "price" => $e["price"],
+                        "client_id" => $e["client_id"],
+                        "product_id" => $e["product_id"],
+                        "facture_id" => $e["facture_id"],
+                        "priceRent" => $e["priceRent"], "type" => $e["type"],
+                    ]
+                );
+                if ($sale) {
 
-                $newQuotas =  $product->quotas - $request->quantity;
-                Product::where('id', $request->product_id)
-                    ->update(['quantity' => $newQuotas]);
+                    $product = Product::where('id', $sale->product_id)->first();
 
-                DB::commit();
+                    $newQuotas =  $product->quantity - $sale->quantity;
+                    Product::where('id', $sale->product_id)
+                        ->update(['quantity' => $newQuotas]);
 
-                return response()->json(['message' => 'Created', 'data' => $sale], 200);
+                    $data[] = $sale;
+                }
             }
-            return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+            DB::commit();
+
+            return response()->json(['message' => 'Created', 'data' => $data], 200);
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['message' => 'Error ', 'data' => $e], 500);
