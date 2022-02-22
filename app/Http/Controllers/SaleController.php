@@ -99,19 +99,18 @@ class SaleController extends Model
                         "client_id" => $e["client_id"],
                         "product_id" => $e["product_id"],
                         "facture_id" => $e["facture_id"],
-                        "priceRent" => $e["priceRent"], "type" => $e["type"],
+                        "priceRent" => $e["priceRent"],
+                        "type" => $e["type"],
                     ]
                 );
-                if ($sale) {
 
-                    $product = Product::where('id', $sale->product_id)->first();
+                $product = Product::where('id', $sale->product_id)->first();
 
-                    $newQuotas =  $product->quantity - $sale->quantity;
-                    Product::where('id', $sale->product_id)
-                        ->update(['quantity' => $newQuotas]);
+                $newQuotas =  $product->quantity - $sale->quantity;
+                Product::where('id', $sale->product_id)
+                    ->update(['quantity' => $newQuotas]);
 
-                    $data[] = $sale;
-                }
+                $data[] = $sale;
             }
             DB::commit();
 
@@ -144,10 +143,9 @@ class SaleController extends Model
             $Sale =  Sale::findOrFail($request->id);
             $Sale->delete();
 
-
             $ProductGroup = Product::where('id', $Sale->Product_id)->first();
 
-            $newQuotas =  $ProductGroup->quotas + 1;
+            $newQuotas =  $ProductGroup->quantity + 1;
             Product::where('id', $Sale->Product_id)->update(['quantity' => $newQuotas]);
 
 

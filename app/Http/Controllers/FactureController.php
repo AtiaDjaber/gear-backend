@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\model\Client;
 use App\model\Facture;
+use App\model\Product;
 use App\model\Sale;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -26,7 +28,7 @@ class FactureController extends Model
 
     public function index(Request $request)
     {
-        $Factures = Facture::with("sales")->where('client_id', $request->client_id)
+        $Factures = Facture::with("products")->where('client_id', $request->client_id)
             ->orderBy('id', 'desc')->paginate(10);
         return response()->json($Factures, 200);
     }
@@ -49,19 +51,26 @@ class FactureController extends Model
     }
 
 
-    public function store()
+    public function store(Request $request)
     {
         $validator = $this->validater();
-        if ($validator->fails()) {
+        if ($validator->fails())
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
-        }
-        $user = Facture::create($validator->validate());
 
+        DB::beginTransaction();
 
-        if ($user) {
-            return response()->json(['message' => 'Created', 'data' => $user], 200);
+        try {
+
+            $facture = Facture::create($validator->validate());
+            $client = Client::find($request->client_id);
+            $client->update(["montant" => $client->montant + $facture->rest]);
+            DB::commit();
+
+            return response()->json(['message' => 'Created', 'data' => $facture], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Error ', 'data' => $e], 500);
         }
-        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
     public function put(Request $request)
@@ -80,7 +89,30 @@ class FactureController extends Model
 
     public  function remove(Request $request)
     {
-        $Facture = Facture::destroy($request->id);
-        return BaseController::successData($Facture, "تمت العملية بنجاح");
+        DB::beginTransaction();
+        try {
+            $facture = Facture::find($request->id);
+            $client = Client::find($facture->client_id);
+            $client->update(["montant" => $client->montant - $facture->rest]);
+            $deletedFacture = Facture::destroy($request->id);
+
+            $listSales = Sale::where("facture_id", $request->id)->get();
+            foreach ($listSales as $sale) {
+                Sale::destroy($sale->id);
+
+                $product = Product::where('id', $sale->product_id)->first();
+
+                $newQuotas =  $product->quantity + $sale->quantity;
+                Product::where('id', $sale->product_id)
+                    ->update(['quantity' => $newQuotas]);
+            }
+
+            DB::commit();
+
+            return BaseController::successData($client->montant, "تمت العملية بنجاح");
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Error ', 'data' => $e], 500);
+        }
     }
 }

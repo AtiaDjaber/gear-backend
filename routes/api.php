@@ -40,13 +40,6 @@ Route::post('client/add', 'ClientController@store');
 Route::put('client/put', 'ClientController@put');
 Route::delete('client/{id}', 'ClientController@deleteclient');
 
-Route::get('sale/getById', 'SaleController@getById');
-Route::get('sales', 'SaleController@index');
-Route::post('sale/add', 'SaleController@store');
-Route::put('sale/put', 'SaleController@put');
-Route::delete('sale/{id}', 'SaleController@remove');
-
-
 
 Route::get('settings', 'ConfigController@index');
 Route::put('setting/put', 'ConfigController@put');
@@ -68,6 +61,14 @@ Route::get('chart/getBenifitByclientId', 'ChartController@getclientBenifitById')
 
 Route::post('facture/add', 'FactureController@store');
 Route::get('factures/getByclientId', 'FactureController@index');
+Route::delete('facture/{id}', 'FactureController@remove');
+
+Route::get('sale/getById', 'SaleController@getById');
+Route::get('sales', 'SaleController@index');
+Route::post('sale/add', 'SaleController@store');
+Route::put('sale/put', 'SaleController@put');
+Route::delete('sale/{id}', 'SaleController@remove');
+
 
 Route::get('payments', 'PaymentController@index');
 Route::get('payments/getByclientId', 'PaymentController@getById');

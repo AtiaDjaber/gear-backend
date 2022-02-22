@@ -17,7 +17,7 @@ class Facture extends Model
         'date' => 'datetime:Y-m-d',
     ];
 
-    public function sales()
+    public function products()
     {
         return $this->hasMany(Sale::class);
     }
