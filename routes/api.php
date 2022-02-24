@@ -60,7 +60,9 @@ Route::get('chart/schoolBenifitPeriod', 'ChartController@getSchoolBenifitPeriod'
 Route::get('chart/getBenifitByclientId', 'ChartController@getclientBenifitById');
 
 Route::post('facture/add', 'FactureController@store');
-Route::get('factures/getByclientId', 'FactureController@index');
+Route::get('factures/getByclientId', 'FactureController@getById');
+Route::get('factures', 'FactureController@index');
+
 Route::delete('facture/{id}', 'FactureController@remove');
 
 Route::get('sale/getById', 'SaleController@getById');

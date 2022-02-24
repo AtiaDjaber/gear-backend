@@ -21,4 +21,9 @@ class Facture extends Model
     {
         return $this->hasMany(Sale::class);
     }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 }

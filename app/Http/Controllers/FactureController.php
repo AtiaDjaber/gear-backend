@@ -28,18 +28,27 @@ class FactureController extends Model
 
     public function index(Request $request)
     {
-        $Factures = Facture::with("products")->where('client_id', $request->client_id)
-            ->orderBy('id', 'desc')->paginate(10);
+        $Factures = Facture::with(["products", "client"]);
+        if ($request->has('from') && $request->has('to')) {
+            $Factures =   $Factures->whereBetween(
+                'created_at',
+                [$request->from, $request->to]
+            );
+        }
+        if ($request->has('client_id')) {
+            $Factures =   $Factures->where('client_id', $request->client_id);
+        }
+        $Factures = $Factures->orderBy('id', 'desc')->paginate(10);
         return response()->json($Factures, 200);
     }
 
     public function getById(Request $request)
     {
-        $Factures = Facture::where('client_id', $request->client_id);
+        $Factures = Facture::with("products")->where('client_id', $request->client_id);
 
         if ($request->has('from') && $request->has('to')) {
             $Factures =   $Factures->whereBetween(
-                'date',
+                'created_at',
                 [$request->from, $request->to]
             );
         }
