@@ -118,7 +118,7 @@ class FactureController extends Model
 
             DB::commit();
 
-            return BaseController::successData($client->montant, "تمت العملية بنجاح");
+            return BaseController::successData(["montant" => $client->montant, "id" => $request->id], "تمت العملية بنجاح");
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['message' => 'Error ', 'data' => $e], 500);
