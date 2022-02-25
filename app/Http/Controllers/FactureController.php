@@ -28,7 +28,7 @@ class FactureController extends Model
 
     public function index(Request $request)
     {
-        $Factures = Facture::with(["products", "client"]);
+        $Factures = Facture::with(["sales", "client"]);
         if ($request->has('from') && $request->has('to')) {
             $Factures =   $Factures->whereBetween(
                 'created_at',
@@ -44,7 +44,7 @@ class FactureController extends Model
 
     public function getById(Request $request)
     {
-        $Factures = Facture::with("products")->where('client_id', $request->client_id);
+        $Factures = Facture::with("sales")->where('client_id', $request->client_id);
 
         if ($request->has('from') && $request->has('to')) {
             $Factures =   $Factures->whereBetween(

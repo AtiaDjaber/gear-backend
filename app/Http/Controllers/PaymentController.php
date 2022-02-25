@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\model\Client;
 use App\model\Payment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class PaymentController extends Model
     public function validater()
     {
         return Validator::make(request()->all(), [
-            'price' => 'required|numeric|gt:0|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
+            'price' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
             'date' => 'required|date',
             'client_id' => 'required|exists:clients,id',
         ]);
@@ -32,7 +33,7 @@ class PaymentController extends Model
         $payments = Payment::where('client_id', $request->client_id);
         if ($request->has('from') && $request->has('to')) {
             $payments =   $payments->whereBetween(
-                'date',
+                'created_at',
                 [$request->from, $request->to]
             );
         }
@@ -44,17 +45,30 @@ class PaymentController extends Model
     }
 
 
-    public function store()
+    public function store(Request $request)
     {
-        $validator = $this->validater();
-        if ($validator->fails()) {
-            return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+        DB::beginTransaction();
+
+        try {
+            $validator = $this->validater();
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => $validator->getMessageBag(),
+                    'data' => null
+                ], 400);
+            }
+            $payment = Payment::create($validator->validate());
+            $client = Client::find($request->client_id);
+            $client->update(["montant" => $client->montant - $payment->price]);
+
+            DB::commit();
+            return response()->json([
+                'message' => 'Created', 'montant' =>  $client->montant, 'data' => $payment
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Error ', 'data' => $e], 500);
         }
-        $user = Payment::create($validator->validate());
-        if ($user) {
-            return response()->json(['message' => 'Created', 'data' => $user], 200);
-        }
-        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
     public function put(Request $request)
@@ -73,7 +87,19 @@ class PaymentController extends Model
 
     public  function remove(Request $request)
     {
-        $Payment = Payment::destroy($request->id);
-        return BaseController::successData($Payment, "تمت العملية بنجاح");
+        DB::beginTransaction();
+        try {
+
+            $payment = Payment::find($request->id);
+            $client = Client::find($payment->client_id);
+            $client->update(["montant" => $client->montant + $payment->price]);
+            $payment->delete();
+
+            DB::commit();
+            return BaseController::successData($client->montant, "تمت العملية بنجاح");
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Error ', 'data' => $e], 500);
+        }
     }
 }
