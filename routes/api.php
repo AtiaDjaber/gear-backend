@@ -79,10 +79,4 @@ Route::post('payment/add', 'PaymentController@store');
 Route::put('payment/put', 'PaymentController@put');
 Route::delete('payment/{id}', 'PaymentController@remove');
 
-Route::post('subscription/add', 'SubscriptionController@store');
-Route::get('subscriptions', 'SubscriptionController@index');
-Route::get('subscriptions/subscriptionAmount', 'SubscriptionController@getSubscriptionAmount');
-Route::get('subscriptions/getByProductId', 'SubscriptionController@getById');
-Route::get('subscriptions/getProductconfiged', 'SubscriptionController@getconfiged');
-Route::put('subscription/put', 'SubscriptionController@put');
-Route::delete('subscription/{id}', 'SubscriptionController@remove');
+Route::get('reparations', 'ReparationController@index');

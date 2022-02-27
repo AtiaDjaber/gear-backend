@@ -28,16 +28,13 @@ class ClientController extends Model
         if ($request->name != null) {
             $Clients = $Clients->where("name", 'LIKE', '%' . $request->name . '%');
         }
-
         $Clients = $Clients->paginate(10);
         return response()->json($Clients, 200, []);
     }
     public function getAll()
     {
         $Clients = Client::orderBy('id', 'desc');
-        // if ($request->name != null) {
-        //     $Clients = $Clients->where("name", 'LIKE', '%' . $request->name . '%');
-        // }
+
         $Clients = $Clients->get();
         return response()->json($Clients, 200);
     }

@@ -5,10 +5,11 @@ namespace App\model;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Facture extends Model
+class Reparation extends Model
 {
 
     use SoftDeletes;
+
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
@@ -17,19 +18,14 @@ class Facture extends Model
         'date' => 'datetime:Y-m-d',
     ];
 
-    public function sales()
+    public function facture()
     {
-        return $this->hasMany(Sale::class);
-    }
-
-    public function reparations()
-    {
-        return $this->hasMany(Reparation::class);
+        return $this->belongsTo(Facture::class);
     }
 
 
-    public function client()
+    public function product()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Product::class);
     }
 }
