@@ -103,21 +103,10 @@ class ReparationController extends Model
     {
         DB::beginTransaction();
         try {
-            $Reparation = Reparation::find($request->id);
-            $client = Client::find($Reparation->client_id);
-            $client->update(["montant" => $client->montant - $Reparation->rest]);
-            $deletedReparation = Reparation::destroy($request->id);
-
-            $listSales = Sale::where("Reparation_id", $request->id)->get();
-            foreach ($listSales as $sale) {
-                Sale::destroy($sale->id);
-
-                $product = Product::where('id', $sale->product_id)->first();
-
-                $newQuotas =  $product->quantity + $sale->quantity;
-                Product::where('id', $sale->product_id)
-                    ->update(['quantity' => $newQuotas]);
-            }
+            $reparation = Reparation::find($request->id);
+            $client = Client::find($request->client_id);
+            $client->update(["montant" => $client->montant - $reparation->montant]);
+            Reparation::destroy($request->id);
 
             DB::commit();
 
