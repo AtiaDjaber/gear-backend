@@ -29,11 +29,25 @@ class FactureController extends Model
     public function index(Request $request)
     {
         $Factures = Facture::with(["sales", "client"]);
-        if ($request->has('from') && $request->has('to')) {
-            $Factures =   $Factures->whereBetween(
+
+        if ($request->from) {
+            $Factures = $Factures->where(
                 'created_at',
-                [$request->from, $request->to]
+                ">=",
+                $request->from
             );
+        }
+        if ($request->to) {
+            $Factures = $Factures->where(
+                'created_at',
+                "<=",
+                $request->to
+            );
+        }
+        if ($request->name) {
+            $Factures = $Factures->whereHas("sales", function ($query) use ($request) {
+                $query->where('sales.name', "LIKE", "%" . $request->name . "%");
+            });
         }
         if ($request->has('client_id')) {
             $Factures =   $Factures->where('client_id', $request->client_id);
