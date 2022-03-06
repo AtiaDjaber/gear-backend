@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\model\Client;
+use App\model\Facture;
 use App\model\Product;
 use App\model\Reparation;
 use App\model\Sale;
@@ -104,7 +105,9 @@ class ReparationController extends Model
         DB::beginTransaction();
         try {
             $reparation = Reparation::find($request->id);
-            $client = Client::find($request->client_id);
+            $facture = Facture::find($reparation->facture_id);
+
+            $client = Client::find($facture->client_id);
             $client->update(["montant" => $client->montant - $reparation->montant]);
             Reparation::destroy($request->id);
 
