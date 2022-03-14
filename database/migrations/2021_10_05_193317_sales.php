@@ -23,6 +23,7 @@ class Sales extends Migration
             $table->decimal("priceRent", 10, 2)->default("0");
             $table->double("quantity")->default("0");
             $table->string("type");
+            $table->string("type_table")->default("kira");
             $table->softDeletes();
             $table->timestamps();
         });

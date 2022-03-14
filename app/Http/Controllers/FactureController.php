@@ -53,7 +53,7 @@ class FactureController extends Model
             $Factures =   $Factures->where('client_id', $request->client_id);
         }
         $Factures = $Factures->whereHas("sales", function ($query) use ($request) {
-            $query->where('sales.type', $request->type);
+            $query->where('sales.type_table', $request->type);
         });
 
         $Factures = $Factures->orderBy('id', 'desc')->paginate(10);
