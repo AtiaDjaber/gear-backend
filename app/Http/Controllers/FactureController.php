@@ -52,9 +52,15 @@ class FactureController extends Model
         if ($request->has('client_id')) {
             $Factures =   $Factures->where('client_id', $request->client_id);
         }
+        $Factures = $Factures->whereHas("sales", function ($query) use ($request) {
+            $query->where('sales.type', $request->type);
+        });
+
         $Factures = $Factures->orderBy('id', 'desc')->paginate(10);
         return response()->json($Factures, 200);
     }
+
+
 
     public function getById(Request $request)
     {

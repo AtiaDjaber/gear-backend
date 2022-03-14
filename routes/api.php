@@ -80,3 +80,4 @@ Route::put('payment/put', 'PaymentController@put');
 Route::delete('payment/{id}', 'PaymentController@remove');
 
 Route::get('reparations', 'ReparationController@index');
+Route::delete('reparation/{id}', 'ReparationController@remove');
