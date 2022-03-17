@@ -16,9 +16,9 @@ class ClientSeeder extends Seeder
         $faker = Faker::create();
         for ($i = 1; $i < 100; $i++) {
             DB::table('clients')->insert([
-                'name' => $faker->firstName,
+                'name' => $faker->firstName . " " . $faker->lastName,
                 'ancien' => "0",
-                'montant' => $faker->randomDigit,
+                'montant' => "0",
                 'created_at' => $faker->date(),
                 'mobile' => $faker->e164PhoneNumber,
                 'address' => $faker->address,

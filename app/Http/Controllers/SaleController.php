@@ -22,10 +22,9 @@ class SaleController extends Model
             'name.*' => 'required|string|min:2',
             'quantity.*' => 'required|numeric',
             'price.*' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
-            'priceRent.*' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
-            'type.*' => 'required|string',
-
-            // 'date' => 'required|date'
+            'priceRentHour.*' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
+            'priceRentDay.*' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
+            'type.*' => 'required|string'
         ]);
     }
 
@@ -54,71 +53,49 @@ class SaleController extends Model
 
     public function store(Request $request)
     {
-        // foreach ($request->all() as $sale) {
         $validator = $this->validater();
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+            return response()->json(['message' => $validator->getMessageBag(), 'data' => "validation error"], 400);
         }
         $data = [];
-        // foreach ($request->all() as $e) {
 
-
-        //     $sale = Sale::create(
-        //         [
-        //             "name" => $e["name"],
-        //             "quantity" => $e["quantity"],
-        //             "price" => $e["price"],
-        //             "client_id" => $e["client_id"],
-        //             "product_id" => $e["product_id"],
-        //             "facture_id" => $e["facture_id"],
-        //             "priceRent" => $e["priceRent"], "type" => $e["type"],
-        //         ]
-        //     );
-        //     $data[] = $sale;
-        //     if ($sale) {
-
-        //         // $product = Product::where('id', $sale->product_id)->first();
-
-        //         // $newQuotas =  $product->quantity - $sale->quantity;
-        //         // Product::where('id', $sale->product_id)
-        //         //     ->update(['quantity' => $newQuotas]);
-        //     }
-        // }
-        // return response()->json(['message' => 'Created', 'data' => $data], 200);
-
-        DB::beginTransaction();
-        try {
-            foreach ($request->all() as $e) {
-
-
-                $sale = Sale::create(
-                    [
-                        "name" => $e["name"],
-                        "quantity" => $e["quantity"],
-                        "price" => $e["price"],
-                        "client_id" => $e["client_id"],
-                        "product_id" => $e["product_id"],
-                        "facture_id" => $e["facture_id"],
-                        "priceRent" => $e["priceRent"],
-                        "type" => $e["type"],
-                    ]
-                );
-
-                $product = Product::where('id', $sale->product_id)->first();
-
-                $newQuotas =  $product->quantity - $sale->quantity;
-                Product::where('id', $sale->product_id)
-                    ->update(['quantity' => $newQuotas]);
-
-                $data[] = $sale;
+        // DB::beginTransaction();
+        // try {
+        foreach ($request->all() as $e) {
+            // return response()->json(['message' => 'Created', 'data' => $e], 200);
+            $id = null;
+            if (array_key_exists('id', $e)) {
+                $id = $e["id"];
             }
-            DB::commit();
+            $sale = Sale::updateOrCreate(
+                ['id' => $id],
+                [
+                    "name" => $e["name"],
+                    "quantity" => $e["quantity"],
+                    // "price" => $e["price"],
+                    "client_id" => $e["client_id"],
+                    "product_id" => $e["product_id"],
+                    "facture_id" => $e["facture_id"],
+                    "duration" => $e["duration"],
+                    "priceRentHour" => $e["priceRentHour"],
+                    "priceRentDay" => $e["priceRentDay"],
+                    "type" => $e["type"]
+                ]
+            );
 
-            return response()->json(['message' => 'Created', 'data' => $data], 200);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['message' => 'Error ', 'data' => $e], 500);
+            // $product = Product::where('id', $e["product_id"])->first();
+            // $newQuotas =  $product->quantity - $e["quantity"];
+            // Product::where('id', $e["product_id"])->update(['quantity' => $newQuotas]);
+
+            $data[] = $sale;
         }
+        //     DB::commit();
+
+        //     return response()->json(['message' => 'Created', 'data' => $data], 200);
+        // } catch (\Exception $e) {
+        //     DB::rollback();
+        //     return response()->json(['message' => 'Transaction error sales', 'data' => $e], 500);
+        // }
     }
 
     public function put(Request $request)

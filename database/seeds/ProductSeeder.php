@@ -17,10 +17,11 @@ class ProductSeeder extends Seeder
         for ($i = 1; $i < 100; $i++) {
             DB::table('Products')->insert([
                 'name' => $faker->firstName,
-                'priceRentHour' => $faker->randomDigit,
-                'priceRentDay' => $faker->randomDigit,
+                'priceRentHour' => $faker->numberBetween($min = 10, $max = 100),
+                'priceRentDay' => $faker->numberBetween($min = 10, $max = 100),
                 'price' => $faker->randomDigit,
-                'quantity' => $faker->randomDigit
+                'quantity' => $faker->randomDigit,
+                'type' => $faker->randomElement($array = array('ساعة', 'يوم'))
             ]);
         }
     }

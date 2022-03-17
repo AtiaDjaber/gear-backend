@@ -17,7 +17,7 @@ class FactureController extends Model
     public function validater()
     {
         return Validator::make(request()->all(), [
-            'montant' => 'required|numeric|gt:0|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
+            'montant' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
             'pay' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
             'rest' => 'required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
             'remise' => 'nullable|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
@@ -49,7 +49,7 @@ class FactureController extends Model
                 $query->where('sales.name', "LIKE", "%" . $request->name . "%");
             });
         }
-        if ($request->has('client_id')) {
+        if ($request->client_id) {
             $Factures =   $Factures->where('client_id', $request->client_id);
         }
         $Factures = $Factures->whereHas("sales", function ($query) use ($request) {
@@ -64,7 +64,7 @@ class FactureController extends Model
 
     public function getById(Request $request)
     {
-        $Factures = Facture::with("sales")->where('client_id', $request->client_id);
+        $Factures = Facture::with(["sales", "client"])->where('client_id', $request->client_id);
 
         if ($request->has('from') && $request->has('to')) {
             $Factures =   $Factures->whereBetween(
@@ -84,13 +84,25 @@ class FactureController extends Model
     {
         $validator = $this->validater();
         if ($validator->fails())
-            return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+            return response()->json(['message' => $validator->getMessageBag(), 'data' => "validation"], 400);
 
         DB::beginTransaction();
 
         try {
 
-            $facture = Facture::create($validator->validate());
+            $facture = Facture::updateOrCreate(
+                ['id' => $request["id"]],
+                [
+                    "client_id" => $request["client_id"],
+                    "montant" => $request["montant"],
+                    "pay" => $request["pay"],
+                    "rest" => $request["rest"],
+                    "remise" => $request["remise"],
+                    "remark" => $request["remark"],
+                ]
+            );
+            // $validator->validate()
+
             $client = Client::find($request->client_id);
             $client->update(["montant" => $client->montant + $facture->rest]);
             DB::commit();
@@ -98,7 +110,7 @@ class FactureController extends Model
             return response()->json(['message' => 'Created', 'data' => $facture], 200);
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['message' => 'Error ', 'data' => $e], 500);
+            return response()->json(['message' => 'Transaction error facture', 'data' => $e], 500);
         }
     }
 
