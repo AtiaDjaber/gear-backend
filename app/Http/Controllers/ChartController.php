@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\model\Client;
 use App\model\Expense;
 use App\model\Facture;
+use App\model\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -13,27 +15,6 @@ class ChartController extends Model
 {
 
 
-    public function getClientsBenifitsChart(Request $request)
-    {
-        $dataset = [];
-        $user = Facture::select(
-            'factures.ClientName',
-            'factures.Client_id',
-            DB::raw("SUM(factures.ClientBenefit) as total")
-        )->whereBetween(
-            'created_at',
-            [$request->from, $request->to]
-        )->where("isPresent", true)
-            ->groupBy('Client_id')->get();
-
-        if ($user) {
-            $dataset["data"] = $user->pluck("total");
-            $dataset["Clients_ids"] = $user->pluck("Client_id");
-            $dataset["labels"] = $user->pluck("ClientName");
-            return response()->json($dataset, 200);
-        }
-        return BaseController::errorData($user, "السجل غير موجود");
-    }
 
 
     public function getClientsBenifits(Request $request)
@@ -60,7 +41,7 @@ class ChartController extends Model
         $dataset = [];
         $user = Facture::select(
             "id",
-            DB::raw("(sum(factures.montant)) as total"),
+            DB::raw("(sum(factures.montant-factures.remise)) as total"),
             DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as month_year")
         )->orderBy('created_at')->where("deleted_at", null)
             ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
@@ -77,7 +58,7 @@ class ChartController extends Model
     public function getSchoolBenifitPeriod(Request $request)
     {
         $data = Facture::select(
-            DB::raw("(sum(Factures.montant)) as total")
+            DB::raw("(sum(Factures.montant-factures.remise)) as total")
         )->whereBetween(
             'created_at',
             [$request->from, $request->to]
@@ -103,27 +84,49 @@ class ChartController extends Model
             ->whereBetween(
                 'created_at',
                 [$request->from, $request->to]
-            )->where("isPresent", true)
-            ->groupBy(['group_id'])->get();
+            )->groupBy(['group_id'])->get();
 
         if ($user) {
             return response()->json($user, 200);
         }
         return BaseController::errorData($user, "السجل غير موجود");
     }
+    public function getInventoryAnalytic(Request $request)
+    {
+        $products = Product::select(
+            DB::raw("SUM(products.price) as 'total'")
+        )->first();
+        if ($products) {
+            return response()->json($products, 200);
+        }
+        return response()->json(null, 400);
+    }
 
     public function getExpansesAnalytic(Request $request)
     {
-        $Expenses = Expense::select(
-            DB::raw("SUM(expenses.price) as 'total'")
-        )->whereBetween(
-            "date",
-            [
-                $request->from, $request->to
-            ]
-        )->first();
+        $Expenses = Expense::select(DB::raw("SUM(expenses.price) as 'total'"));
+
+        if ($request->from) {
+            $Expenses = $Expenses->where("created_at", ">=", $request->from);
+        }
+        if ($request->to) {
+            $Expenses = $Expenses->where("created_at", "<=", $request->to);
+        }
+
+        $Expenses = $Expenses->first();
         if ($Expenses) {
             return response()->json($Expenses, 200);
+        }
+        return response()->json(null, 400);
+    }
+
+    public function getDuesClientsAnalytic(Request $request)
+    {
+        $products = Client::select(
+            DB::raw("SUM(clients.montant) as 'total'")
+        )->first();
+        if ($products) {
+            return response()->json($products, 200);
         }
         return response()->json(null, 400);
     }

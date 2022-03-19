@@ -75,22 +75,5 @@ class ExpenseController extends Model
 
 
 
-    public function getExpansesAnalytic(Request $request)
-    {
-        $Expenses = Expense::select(
-            DB::raw("SUM(expenses.price) as 'total'")
-        )->whereBetween(
-            "date",
-            [
-                $request->from, $request->to
-            ]
-        )->first();
-        if ($Expenses) {
-            return response()->json($Expenses, 200);
-        }
-        return response()->json(null, 400);
-    }
-
-
     //
 }

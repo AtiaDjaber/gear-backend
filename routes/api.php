@@ -47,17 +47,18 @@ Route::put('setting/put', 'ConfigController@put');
 Route::get('notificationsProducts', 'ProductConfigController@getNotifications');
 
 Route::get('expenses', 'ExpenseController@index');
-Route::get('expenses/expansesAnalytics', 'ExpenseController@getExpansesAnalytic');
 Route::post('expense/add', 'ExpenseController@store');
 Route::put('expense/put', 'ExpenseController@put');
 Route::delete('expense/{id}', 'ExpenseController@remove');
 
 Route::get('charts', 'ChartController@index');
-Route::get('chart/getBenifitsclientsChart', 'ChartController@getclientsBenifitsChart');
 Route::get('chart/getBenifitsclients', 'ChartController@getclientsBenifits');
 Route::get('chart/yearMonthChart', 'ChartController@getYearMonthChart');
-Route::get('chart/schoolBenifitPeriod', 'ChartController@getSchoolBenifitPeriod');
+Route::get('chart/benifitPeriod', 'ChartController@getSchoolBenifitPeriod');
 Route::get('chart/getBenifitByclientId', 'ChartController@getclientBenifitById');
+Route::get('chart/products_inventory', 'ChartController@getInventoryAnalytic');
+Route::get('chart/clients_dues', 'ChartController@getDuesClientsAnalytic');
+Route::get('chart/expanses', 'ChartController@getExpansesAnalytic');
 
 Route::post('facture/add', 'FactureController@store');
 Route::put('facture/close', 'FactureController@closeFacture');
