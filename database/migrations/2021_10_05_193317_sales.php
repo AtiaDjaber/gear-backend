@@ -19,13 +19,13 @@ class Sales extends Migration
             $table->foreignId("facture_id")->constrained();
             $table->foreignId("client_id")->constrained();
             $table->string("name");
-            // $table->decimal("price", 10, 2)->default("0");
+            $table->decimal("total", 10, 2)->default("0");
             $table->decimal("priceRentHour", 10, 2)->default("0");
             $table->decimal("priceRentDay", 10, 2)->default("0");
             $table->double("quantity")->default("0");
             $table->double("duration")->default("0");
             $table->string("type");
-            $table->string("type_table")->default("kira");
+            // $table->string("type_table")->default("kira");
             $table->softDeletes();
             $table->timestamps();
         });

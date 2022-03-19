@@ -60,6 +60,7 @@ Route::get('chart/schoolBenifitPeriod', 'ChartController@getSchoolBenifitPeriod'
 Route::get('chart/getBenifitByclientId', 'ChartController@getclientBenifitById');
 
 Route::post('facture/add', 'FactureController@store');
+Route::put('facture/close', 'FactureController@closeFacture');
 Route::get('factures/getByclientId', 'FactureController@getById');
 Route::get('factures', 'FactureController@index');
 

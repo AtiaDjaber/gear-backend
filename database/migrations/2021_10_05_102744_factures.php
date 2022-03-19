@@ -21,6 +21,7 @@ class Factures extends Migration
             $table->decimal('rest', 10, 2)->default('0');
             $table->decimal('remise', 10, 2)->default('0');
             $table->string("remark")->nullable();
+            $table->string("type")->default('kira');
             $table->softDeletes();
             $table->timestamps();
         });

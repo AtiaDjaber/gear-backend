@@ -28,7 +28,7 @@ class ProductController extends Model
     public function index(Request $request)
     {
         $Products = Product::orderBy('id', 'desc');
-        if ($request->name != null) {
+        if ($request->name) {
             $Products = $Products->where("name", 'LIKE', '%' . $request->name . '%');
         }
         $Products = $Products->paginate(10);

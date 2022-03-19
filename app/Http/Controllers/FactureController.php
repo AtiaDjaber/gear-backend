@@ -31,30 +31,25 @@ class FactureController extends Model
         $Factures = Facture::with(["sales", "client"]);
 
         if ($request->from) {
-            $Factures = $Factures->where(
-                'created_at',
-                ">=",
-                $request->from
-            );
+            $Factures = $Factures->where('created_at', ">=", $request->from);
         }
         if ($request->to) {
-            $Factures = $Factures->where(
-                'created_at',
-                "<=",
-                $request->to
-            );
+            $Factures = $Factures->where('created_at', "<=", $request->to);
         }
         if ($request->name) {
             $Factures = $Factures->whereHas("sales", function ($query) use ($request) {
                 $query->where('sales.name', "LIKE", "%" . $request->name . "%");
             });
         }
+        if ($request->type) {
+            $Factures = $Factures->where('type', $request->type);
+        }
         if ($request->client_id) {
             $Factures =   $Factures->where('client_id', $request->client_id);
         }
-        $Factures = $Factures->whereHas("sales", function ($query) use ($request) {
-            $query->where('sales.type_table', $request->type);
-        });
+        // $Factures = $Factures->whereHas("sales", function ($query) use ($request) {
+        //     $query->where('sales.type_table', $request->type);
+        // });
 
         $Factures = $Factures->orderBy('id', 'desc')->paginate(10);
         return response()->json($Factures, 200);
@@ -66,11 +61,11 @@ class FactureController extends Model
     {
         $Factures = Facture::with(["sales", "client"])->where('client_id', $request->client_id);
 
-        if ($request->has('from') && $request->has('to')) {
-            $Factures =   $Factures->whereBetween(
-                'created_at',
-                [$request->from, $request->to]
-            );
+        if ($request->from) {
+            $Factures = $Factures->where('created_at', ">=", $request->from);
+        }
+        if ($request->to) {
+            $Factures = $Factures->where('created_at', "<=", $request->to);
         }
         $Factures = $Factures->orderBy('id', 'desc')->paginate(10);
         if ($Factures) {
@@ -86,10 +81,18 @@ class FactureController extends Model
         if ($validator->fails())
             return response()->json(['message' => $validator->getMessageBag(), 'data' => "validation"], 400);
 
-        DB::beginTransaction();
 
         try {
+            DB::beginTransaction();
 
+            $oldMontant = 0;
+            if ($request->id) {
+                // $oldFacture = Facture::find($request->id);
+                // $oldMontant = $oldFacture->montant;
+                Sale::where("facture_id", $request->id)->delete();
+                // $client = Client::find($request->client_id);
+                // $client->update(["montant" => $client->montant - $oldFacture->montant]);
+            }
             $facture = Facture::updateOrCreate(
                 ['id' => $request["id"]],
                 [
@@ -103,8 +106,8 @@ class FactureController extends Model
             );
             // $validator->validate()
 
-            $client = Client::find($request->client_id);
-            $client->update(["montant" => $client->montant + $facture->rest]);
+            // $client = Client::find($request->client_id);
+            // $client->update(["montant" => $client->montant + ($facture->montant - $oldMontant)]);
             DB::commit();
 
             return response()->json(['message' => 'Created', 'data' => $facture], 200);
@@ -114,18 +117,28 @@ class FactureController extends Model
         }
     }
 
-    public function put(Request $request)
+    public function closeFacture(Request $request)
     {
         $validator = $this->validater();
         if ($validator->fails()) {
             return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
         }
-        $Facture = Facture::find($request->id);
-        $Facture->update($request->all());
-        if ($Facture) {
-            return response()->json(['message' => 'updated', 'data' =>  $Facture], 200);
+
+        try {
+            DB::beginTransaction();
+
+            $facture = Facture::find($request->id);
+            $facture->update($request->all());
+            $client = Client::find($request->client_id);
+            $client->update(["montant" => $client->montant + ($request->rest - $request->remise)]);
+
+            DB::commit();
+
+            return response()->json(['message' => 'Created', 'data' => $facture], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Transaction error facture', 'data' => $e], 500);
         }
-        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
     public  function remove(Request $request)
@@ -133,8 +146,10 @@ class FactureController extends Model
         DB::beginTransaction();
         try {
             $facture = Facture::find($request->id);
-            $client = Client::find($facture->client_id);
-            $client->update(["montant" => $client->montant - $facture->rest]);
+            if ($facture->type == "history") {
+                $client = Client::find($facture->client_id);
+                $client->update(["montant" => $client->montant - $facture->rest]);
+            }
             $deletedFacture = Facture::destroy($request->id);
 
             $listSales = Sale::where("facture_id", $request->id)->get();
@@ -144,8 +159,7 @@ class FactureController extends Model
                 $product = Product::where('id', $sale->product_id)->first();
 
                 $newQuotas =  $product->quantity + $sale->quantity;
-                Product::where('id', $sale->product_id)
-                    ->update(['quantity' => $newQuotas]);
+                Product::where('id', $sale->product_id)->update(['quantity' => $newQuotas]);
             }
 
             DB::commit();

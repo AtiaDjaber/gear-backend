@@ -59,43 +59,44 @@ class SaleController extends Model
         }
         $data = [];
 
-        // DB::beginTransaction();
-        // try {
-        foreach ($request->all() as $e) {
-            // return response()->json(['message' => 'Created', 'data' => $e], 200);
-            $id = null;
-            if (array_key_exists('id', $e)) {
-                $id = $e["id"];
+        try {
+            DB::beginTransaction();
+
+            foreach ($request->all() as $e) {
+                // return response()->json(['message' => 'Created', 'data' => $e], 200);
+                $id = null;
+                if (array_key_exists('id', $e)) {
+                    $id = $e["id"];
+                }
+                $sale = Sale::updateOrCreate(
+                    ['id' => $id],
+                    [
+                        "name" => $e["name"],
+                        "quantity" => $e["quantity"],
+                        "total" => $e["total"],
+                        "client_id" => $e["client_id"],
+                        "product_id" => $e["product_id"],
+                        "facture_id" => $e["facture_id"],
+                        "duration" => $e["duration"],
+                        "priceRentHour" => $e["priceRentHour"],
+                        "priceRentDay" => $e["priceRentDay"],
+                        "type" => $e["type"]
+                    ]
+                );
+
+                // $product = Product::where('id', $e["product_id"])->first();
+                // $newQuotas =  $product->quantity - $e["quantity"];
+                // Product::where('id', $e["product_id"])->update(['quantity' => $newQuotas]);
+
+                $data[] = $sale;
             }
-            $sale = Sale::updateOrCreate(
-                ['id' => $id],
-                [
-                    "name" => $e["name"],
-                    "quantity" => $e["quantity"],
-                    // "price" => $e["price"],
-                    "client_id" => $e["client_id"],
-                    "product_id" => $e["product_id"],
-                    "facture_id" => $e["facture_id"],
-                    "duration" => $e["duration"],
-                    "priceRentHour" => $e["priceRentHour"],
-                    "priceRentDay" => $e["priceRentDay"],
-                    "type" => $e["type"]
-                ]
-            );
+            DB::commit();
 
-            // $product = Product::where('id', $e["product_id"])->first();
-            // $newQuotas =  $product->quantity - $e["quantity"];
-            // Product::where('id', $e["product_id"])->update(['quantity' => $newQuotas]);
-
-            $data[] = $sale;
+            return response()->json(['message' => 'Created', 'data' => $data], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Transaction error sales', 'data' => $e], 500);
         }
-        //     DB::commit();
-
-        //     return response()->json(['message' => 'Created', 'data' => $data], 200);
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     return response()->json(['message' => 'Transaction error sales', 'data' => $e], 500);
-        // }
     }
 
     public function put(Request $request)
@@ -120,11 +121,9 @@ class SaleController extends Model
             $Sale =  Sale::findOrFail($request->id);
             $Sale->delete();
 
-            $ProductGroup = Product::where('id', $Sale->Product_id)->first();
-
-            $newQuotas =  $ProductGroup->quantity + 1;
-            Product::where('id', $Sale->Product_id)->update(['quantity' => $newQuotas]);
-
+            $product = Product::find($Sale->product_id);
+            $newQuotas =  $product->quantity + $Sale->quantity;
+            Product::where('id', $Sale->product_id)->update(['quantity' => $newQuotas]);
 
             DB::commit();
             return BaseController::successData($Sale, "تمت العملية بنجاح");
