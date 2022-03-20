@@ -22,9 +22,13 @@ class ExpenseController extends Model
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $Expenses = Expense::orderBy('id', 'desc')->paginate(10);
+        $Expenses = Expense::orderBy('id', 'desc');
+        if ($request->name) {
+            $Expenses = $Expenses->where("name", 'LIKE', '%' . $request->name . '%');
+        }
+        $Expenses = $Expenses->paginate(10);
         return BaseController::successData($Expenses, "تم جلب البيانات بنجاح");
     }
 

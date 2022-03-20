@@ -74,6 +74,18 @@ class FactureController extends Model
         return BaseController::errorData($Factures, "السجل غير موجود");
     }
 
+    public function  removeProductFromFactureAndReturnStock($facture_id)
+    {
+        if ($facture_id) {
+            $listSales = Sale::where("facture_id", $facture_id)->get();
+            foreach ($listSales as $sale) {
+                Sale::destroy($sale->id);
+                $product = Product::where('id', $sale->product_id)->first();
+                $newQuotas =  $product->quantity + $sale->quantity;
+                Product::where('id', $sale->product_id)->update(['quantity' => $newQuotas]);
+            }
+        }
+    }
 
     public function store(Request $request)
     {
@@ -81,18 +93,9 @@ class FactureController extends Model
         if ($validator->fails())
             return response()->json(['message' => $validator->getMessageBag(), 'data' => "validation"], 400);
 
-
         try {
             DB::beginTransaction();
 
-            $oldMontant = 0;
-            if ($request->id) {
-                // $oldFacture = Facture::find($request->id);
-                // $oldMontant = $oldFacture->montant;
-                Sale::where("facture_id", $request->id)->delete();
-                // $client = Client::find($request->client_id);
-                // $client->update(["montant" => $client->montant - $oldFacture->montant]);
-            }
             $facture = Facture::updateOrCreate(
                 ['id' => $request["id"]],
                 [
@@ -104,10 +107,42 @@ class FactureController extends Model
                     "remark" => $request["remark"],
                 ]
             );
-            // $validator->validate()
+
+            $this->removeProductFromFactureAndReturnStock($request->id);
+
+            foreach ($request->sales as $e) {
+                // return response()->json(['message' => 'Created', 'data' => $e], 200);
+                $id = null;
+                if (array_key_exists('id', $e)) {
+                    $id = $e["id"];
+                }
+                $sale = Sale::updateOrCreate(
+                    ['id' => $id],
+                    [
+                        "name" => $e["name"],
+                        "quantity" => $e["quantity"],
+                        "total" => $e["total"],
+                        "client_id" => $facture->client_id,
+                        "product_id" => $e["product_id"],
+                        "facture_id" => $facture->id,
+                        "duration" => $e["duration"],
+                        "priceRentHour" => $e["priceRentHour"],
+                        "priceRentDay" => $e["priceRentDay"],
+                        "type" => $e["type"]
+                    ]
+                );
+
+                $product = Product::where('id', $e["product_id"])->first();
+                $newQuotas =  $product->quantity - $e["quantity"];
+                Product::where('id', $e["product_id"])->update(['quantity' => $newQuotas]);
+
+                $data[] = $sale;
+            }
 
             // $client = Client::find($request->client_id);
             // $client->update(["montant" => $client->montant + ($facture->montant - $oldMontant)]);
+            $facture
+                = $facture->sales = $data;
             DB::commit();
 
             return response()->json(['message' => 'Created', 'data' => $facture], 200);
@@ -152,15 +187,7 @@ class FactureController extends Model
             }
             $deletedFacture = Facture::destroy($request->id);
 
-            $listSales = Sale::where("facture_id", $request->id)->get();
-            foreach ($listSales as $sale) {
-                Sale::destroy($sale->id);
-
-                $product = Product::where('id', $sale->product_id)->first();
-
-                $newQuotas =  $product->quantity + $sale->quantity;
-                Product::where('id', $sale->product_id)->update(['quantity' => $newQuotas]);
-            }
+            $this->removeProductFromFactureAndReturnStock($request->id);
 
             DB::commit();
 

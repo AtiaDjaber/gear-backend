@@ -84,9 +84,9 @@ class SaleController extends Model
                     ]
                 );
 
-                // $product = Product::where('id', $e["product_id"])->first();
-                // $newQuotas =  $product->quantity - $e["quantity"];
-                // Product::where('id', $e["product_id"])->update(['quantity' => $newQuotas]);
+                $product = Product::where('id', $e["product_id"])->first();
+                $newQuotas =  $product->quantity - $e["quantity"];
+                Product::where('id', $e["product_id"])->update(['quantity' => $newQuotas]);
 
                 $data[] = $sale;
             }
