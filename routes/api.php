@@ -43,6 +43,7 @@ Route::delete('client/{id}', 'ClientController@deleteclient');
 
 Route::get('settings', 'ConfigController@index');
 Route::put('setting/put', 'ConfigController@put');
+Route::post('setting/upload', 'ConfigController@uploadImage');
 
 Route::get('notificationsProducts', 'ProductConfigController@getNotifications');
 

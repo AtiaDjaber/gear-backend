@@ -6,9 +6,11 @@ use App\model\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Traits\UploadTrait;
 
 class ConfigController extends Model
 {
+    use UploadTrait;
     // public function validater()
     // {
     //     return Validator::make(request()->all(), [
@@ -30,6 +32,19 @@ class ConfigController extends Model
     {
         $Config = Config::where('id', 1)->first();
         if ($Config->update($request->all())) {
+            return response()->json($Config, 200);
+        }
+        return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
+    }
+
+
+    public function uploadImage(Request $request)
+    {
+        $Config = Config::where('id', 1)->first();
+
+        $logo = $this->uploadFile($request->file('logo'), "");
+
+        if ($Config->update(["logo" => $logo])) {
             return response()->json($Config, 200);
         }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
