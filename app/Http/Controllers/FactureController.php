@@ -165,7 +165,10 @@ class FactureController extends Model
             $facture = Facture::find($request->id);
             $facture->update($request->all());
             $client = Client::find($request->client_id);
-            $client->update(["montant" => $client->montant + ($request->rest - $request->remise)]);
+            $client->update([
+                "type" => "history",
+                "montant" => $client->montant + ($request->rest)
+            ]);
 
             DB::commit();
 
