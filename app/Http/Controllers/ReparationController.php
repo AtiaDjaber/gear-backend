@@ -22,6 +22,8 @@ class ReparationController extends Model
             'remark' => 'nullable|string',
             'facture_id' => 'required|exists:factures,id',
             'product_id' => 'required|exists:products,id',
+            'date' => 'required',
+            'quantity' => 'required|numeric|gt:0|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/',
         ]);
     }
 
@@ -79,7 +81,7 @@ class ReparationController extends Model
             $client->update(["montant" => $client->montant + $Reparation->montant]);
             DB::commit();
 
-            return response()->json(['message' => 'Created', 'data' => $Reparation], 200);
+            return response()->json(['message' => 'Created', 'data' => $Reparation, "montant" => $client], 200);
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['message' => 'Error ', 'data' => $e], 500);

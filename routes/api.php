@@ -82,5 +82,6 @@ Route::post('payment/add', 'PaymentController@store');
 Route::put('payment/put', 'PaymentController@put');
 Route::delete('payment/{id}', 'PaymentController@remove');
 
-Route::get('reparations', 'ReparationController@index');
+Route::get('reparations/{id}', 'ReparationController@getById');
+Route::post('reparation/add', 'ReparationController@store');
 Route::delete('reparation/{id}', 'ReparationController@remove');

@@ -18,8 +18,10 @@ class CreateTableReparations extends Migration
             // $table->foreignId("client_id")->constrained();
             $table->foreignId("product_id")->constrained();
             $table->foreignId("facture_id")->constrained();
+            $table->double("quantity")->default("0");
             $table->string("remark")->nullable();
             $table->decimal("montant", 10, 2)->default("0");
+            $table->date("date", $precision = 0);
             $table->softDeletes();
             $table->timestamps();
         });
