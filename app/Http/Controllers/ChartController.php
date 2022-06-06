@@ -6,6 +6,7 @@ use App\model\Client;
 use App\model\Expense;
 use App\model\Facture;
 use App\model\Product;
+use App\model\Reparation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -74,13 +75,12 @@ class ChartController extends Model
     public function getClientBenifitById(Request $request)
     {
         $user = Facture::select(
-            'Factures.group_id',
-            'Factures.Client_id',
-            'Factures.subjName',
-            'Factures.groupName',
-            DB::raw("SUM(Factures.Clientbenefit) as 'total'")
+            'Factures.id',
+            'Factures.client_id',
+
+            DB::raw("SUM(Factures.montant) as 'total'")
         )
-            ->where('Factures.Client_id', $request->Client_id)
+            ->where('Factures.client_id', $request->client_id)
             ->whereBetween(
                 'created_at',
                 [$request->from, $request->to]
@@ -98,6 +98,24 @@ class ChartController extends Model
         )->first();
         if ($products) {
             return response()->json($products, 200);
+        }
+        return response()->json(null, 400);
+    }
+
+    public function getReparationAnalytic(Request $request)
+    {
+        $Expenses = Reparation::select(DB::raw("SUM(reparations.total) as 'total'"));
+
+        if ($request->from) {
+            $Expenses = $Expenses->where("created_at", ">=", $request->from);
+        }
+        if ($request->to) {
+            $Expenses = $Expenses->where("created_at", "<=", $request->to);
+        }
+
+        $Expenses = $Expenses->first();
+        if ($Expenses) {
+            return response()->json($Expenses, 200);
         }
         return response()->json(null, 400);
     }

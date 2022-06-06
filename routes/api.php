@@ -60,6 +60,7 @@ Route::get('chart/getBenifitByclientId', 'ChartController@getclientBenifitById')
 Route::get('chart/products_inventory', 'ChartController@getInventoryAnalytic');
 Route::get('chart/clients_dues', 'ChartController@getDuesClientsAnalytic');
 Route::get('chart/expanses', 'ChartController@getExpansesAnalytic');
+Route::get('chart/reparations', 'ChartController@getReparationAnalytic');
 
 Route::post('facture/add', 'FactureController@store');
 Route::put('facture/close', 'FactureController@closeFacture');
