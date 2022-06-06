@@ -154,25 +154,53 @@ class FactureController extends Model
 
     public function closeFacture(Request $request)
     {
-        $validator = $this->validater();
-        if ($validator->fails()) {
-            return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+        // $validator = $this->validater();
+        // if ($validator->fails()) {
+        //     return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+        // }
+
+        try {
+
+            DB::beginTransaction();
+
+            $facture = Facture::find($request->id);
+            $facture->update(["type" => "history"]);
+            $client = Client::find($facture->client_id);
+            $client->update([
+                "montant" => $client->montant + ($facture->rest)
+            ]);
+
+            DB::commit();
+
+            return response()->json(['message' => 'Updated', 'data' => $client], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Transaction error facture', 'data' => $e], 500);
         }
+    }
+
+    public function openFacture(Request $request)
+    {
+        // $validator = $this->validater();
+        // if ($validator->fails()) {
+        //     return response()->json(['message' => $validator->getMessageBag(), 'data' => null], 400);
+        // }
 
         try {
             DB::beginTransaction();
 
             $facture = Facture::find($request->id);
-            $facture->update($request->all());
-            $client = Client::find($request->client_id);
+            $facture->update([
+                "type" => "kira"
+            ]);
+            $client = Client::find($facture->client_id);
             $client->update([
-                "type" => "history",
-                "montant" => $client->montant + ($request->rest)
+                "montant" => $client->montant - ($facture->rest)
             ]);
 
             DB::commit();
 
-            return response()->json(['message' => 'Created', 'data' => $facture], 200);
+            return response()->json(['message' => 'Created', 'data' => $client], 200);
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['message' => 'Transaction error facture', 'data' => $e], 500);

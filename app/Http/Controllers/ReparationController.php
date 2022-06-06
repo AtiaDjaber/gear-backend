@@ -29,7 +29,7 @@ class ReparationController extends Model
 
     public function index(Request $request)
     {
-        $Reparations = Reparation::with(["product"]);
+        $Reparations = Reparation::with(["product", "facture.client"]);
         if ($request->has('from') && $request->has('to')) {
             $Reparations =   $Reparations->whereBetween(
                 'created_at',
@@ -50,7 +50,7 @@ class ReparationController extends Model
 
     public function getById(Request $request)
     {
-        $Reparations = Reparation::where('client_id', $request->client_id);
+        $Reparations = Reparation::with('product')->where('client_id', $request->client_id);
 
         if ($request->has('from') && $request->has('to')) {
             $Reparations =   $Reparations->whereBetween(

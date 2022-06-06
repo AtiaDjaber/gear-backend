@@ -18,6 +18,7 @@ class Products extends Migration
             $table->string("name");
             $table->decimal("priceRentHour", 10, 2)->default("0");
             $table->decimal("priceRentDay", 10, 2)->default("0");
+            $table->decimal("priceCompensation", 10, 2)->default("0");
             $table->decimal("price", 10, 2)->default("0");
             $table->double("quantity")->default("0");
             $table->string("photo")->nullable();
