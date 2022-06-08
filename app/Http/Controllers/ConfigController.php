@@ -43,8 +43,8 @@ class ConfigController extends Model
         $Config = Config::where('id', 1)->first();
 
         $logo = $this->uploadFile($request->file('logo'), "");
-
-        if ($Config->update(["logo" => $logo])) {
+        $image = base64_encode(file_get_contents($logo));
+        if ($Config->update(["logo" => 'data:image/png;base64,' . $image])) {
             return response()->json($Config, 200);
         }
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
