@@ -28,7 +28,7 @@ class FactureController extends Model
 
     public function index(Request $request)
     {
-        $Factures = Facture::with(["sales", "client"]);
+        $Factures = Facture::with(["sales.product", "client"]);
 
         if ($request->from) {
             $Factures = $Factures->where('created_at', ">=", $request->from);
@@ -59,7 +59,7 @@ class FactureController extends Model
 
     public function getById(Request $request)
     {
-        $Factures = Facture::with(["sales", "client"])->where('client_id', $request->client_id);
+        $Factures = Facture::with(["sales.product", "client"])->where('client_id', $request->client_id);
 
         if ($request->from) {
             $Factures = $Factures->where('created_at', ">=", $request->from);
