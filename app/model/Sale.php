@@ -17,8 +17,8 @@ class Sale extends Model
         'date' => 'datetime:Y-m-d H:i:s',
     ];
 
-    public function subjs()
+    public function product()
     {
-        return $this->BelongsToMany(Subj::class);
+        return $this->belongsTo(Product::class);
     }
 }
