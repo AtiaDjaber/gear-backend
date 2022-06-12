@@ -143,6 +143,7 @@ class FactureController extends Model
             // $client->update(["montant" => $client->montant + ($facture->montant - $oldMontant)]);
             $facture
                 = $facture->sales = $data;
+            Facture::with(["sales.product", "client"])->find($facture->id);
             DB::commit();
 
             return response()->json(['message' => 'Created', 'data' => $facture], 200);
