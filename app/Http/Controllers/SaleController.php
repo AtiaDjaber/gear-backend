@@ -113,6 +113,32 @@ class SaleController extends Model
         return response()->json(['message' => 'Error Ocurred', 'data' => null], 400);
     }
 
+
+    public function statusSale(Request $request)
+    {
+
+        try {
+
+            DB::beginTransaction();
+
+            $sale = Sale::find($request->id);
+            if ($sale->status == false) {
+                $sale->update(["returned" => true]);
+
+                $product = Product::find($sale->product_id);
+                $newQuotas =  $product->quantity + $sale->quantity;
+                Product::where('id', $sale->product_id)->update(['quantity' => $newQuotas]);
+            }
+            DB::commit();
+
+            return response()->json(['message' => 'Updated', 'data' => $sale], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Transaction error facture', 'data' => $e], 500);
+        }
+    }
+
+
     public function remove(Request $request)
     {
         DB::beginTransaction();

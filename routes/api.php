@@ -73,6 +73,8 @@ Route::delete('facture/{id}', 'FactureController@remove');
 Route::get('sale/getById', 'SaleController@getById');
 Route::get('sales', 'SaleController@index');
 Route::post('sale/add', 'SaleController@store');
+Route::put('sale/status', 'SaleController@statusSale');
+
 Route::put('sale/put', 'SaleController@put');
 Route::delete('sale/{id}', 'SaleController@remove');
 

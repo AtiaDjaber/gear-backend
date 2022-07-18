@@ -22,7 +22,7 @@ class Configs extends Migration
             $table->string("email")->nullable();
             $table->string("remark")->nullable();
             $table->string("warning")->nullable();
-            $table->text("logo")->nullable();
+            $table->longText("logo")->nullable();
             $table->string("printer")->nullable();
             $table->timestamps();
         });

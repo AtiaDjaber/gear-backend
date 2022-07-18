@@ -142,8 +142,8 @@ class FactureController extends Model
             // $client = Client::find($request->client_id);
             // $client->update(["montant" => $client->montant + ($facture->montant - $oldMontant)]);
             $facture
-                = $facture->sales = $data;
-            Facture::with(["sales.product", "client"])->find($facture->id);
+                =
+                Facture::with(["sales.product", "client"])->find($facture->id);
             DB::commit();
 
             return response()->json(['message' => 'Created', 'data' => $facture], 200);
@@ -164,7 +164,14 @@ class FactureController extends Model
 
             DB::beginTransaction();
 
-            $facture = Facture::find($request->id);
+            $facture = Facture::with('sales')->find($request->id);
+            foreach ($facture->sales as $key => $sale) {
+                if ($sale['returned'] == false) {
+                    $product = Product::where('id', $sale['product_id'])->first();
+                    $newQuotas =  $product->quantity + $sale['quantity'];
+                    $product->update(['quantity' => $newQuotas,'returned' => true]);
+                }
+            }
             $facture->update(["type" => "history"]);
             $client = Client::find($facture->client_id);
             $client->update([

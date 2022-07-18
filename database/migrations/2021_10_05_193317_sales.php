@@ -25,6 +25,7 @@ class Sales extends Migration
             $table->double("quantity")->default("0");
             $table->double("duration")->default("0");
             $table->string("type");
+            $table->boolean("returned")->default(false);
             // $table->string("type_table")->default("kira");
             $table->softDeletes();
             $table->timestamps();
